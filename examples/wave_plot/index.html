@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wave plot — p5.penplotter + p5.waves</title>
+  <link rel="stylesheet" href="../showcase.css">
+  <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.waves@v3.4.0/p5.waves.min.js"></script>
+</head>
+<body>
+  <header><a href="../../index.html"><span>p5</span>.penplotter</a><a href="../../docs/examples.html">All examples</a></header>
+  <main>
+    <div class="canvas-wrap" id="p5-preview"></div>
+    <aside class="panel">
+      <p class="tag">02 · p5.waves 3.4.0</p>
+      <h1>Wave plot</h1>
+      <p>p5.waves returns numbers. p5.penplotter sends their point paths into the independent engine.</p>
+      <dl>
+        <div><dt>Paths</dt><dd id="paths">—</dd></div>
+        <div><dt>Pen lifts</dt><dd id="lifts">—</dd></div>
+        <div><dt>Travel</dt><dd id="travel">—</dd></div>
+      </dl>
+      <button id="reroll" type="button">Choose another wave</button>
+    </aside>
+  </main>
+  <script type="module" src="sketch.js"></script>
+</body>
+</html>

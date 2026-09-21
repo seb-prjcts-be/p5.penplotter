@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Direct plot — p5.penplotter + p5.waves</title>
+  <link rel="stylesheet" href="../showcase.css">
+  <style>
+    button + button { margin-top:10px; }
+    button.stop { background:var(--signal); border-color:var(--signal); }
+    #status { margin:0 0 12px; padding:10px 12px; border-left:3px solid var(--signal); background:rgba(0,0,0,.04); color:var(--ink); font-size:14px; }
+    code { font-family:"DM Mono",monospace; font-size:.92em; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.waves@v3.4.0/p5.waves.min.js"></script>
+</head>
+<body>
+  <header><a href="../../index.html"><span>p5</span>.penplotter</a><a href="../../docs/examples.html">All examples</a></header>
+  <main>
+    <div class="canvas-wrap" id="p5-preview"></div>
+    <aside class="panel">
+      <p class="tag">03 · Sketch to pen</p>
+      <h1>Direct plot</h1>
+      <p>Every <code>plot.…</code> call draws on the canvas and is remembered for the plotter. <code>plot.go()</code> sends it to an iDraw HSE / A2 — no SVG in between. Use Chrome or Edge, and park the carriage in the home corner first.</p>
+      <dl>
+        <div><dt>On the bed</dt><dd id="size">—</dd></div>
+        <div><dt>From home</dt><dd id="place">—</dd></div>
+        <div><dt>Paths</dt><dd id="paths">—</dd></div>
+      </dl>
+      <p id="status" role="status">Press P or the button to plot.</p>
+      <button id="go" type="button">plot.go()</button>
+      <button id="stop" class="stop" type="button">plot.stop() — pen up</button>
+      <button id="reroll" class="secondary" type="button">Choose another wave</button>
+    </aside>
+  </main>
+  <script type="module" src="sketch.js"></script>
+</body>
+</html>

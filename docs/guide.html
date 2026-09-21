@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guide — p5.penplotter</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="../index.html"><span>p5</span>.penplotter</a>
+    <div class="nav-links"><a href="examples.html">Examples</a><a href="architecture.md">Architecture</a></div>
+  </nav>
+  <main class="page">
+    <header class="page-header">
+      <p class="eyebrow">Guide · p5.js 2.2.2</p>
+      <h1>Connect a sketch to the engine.</h1>
+      <p class="lead">p5.penplotter stays small: install it, build paths, then draw the actual plan.</p>
+    </header>
+
+    <h2>1. Load p5.js</h2>
+    <pre><code>&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
+&lt;script type="module" src="sketch.js"&gt;&lt;/script&gt;</code></pre>
+
+    <h2>2. Install the adapter</h2>
+    <pre><code>import { PlotterEngine } from "https://seb-prjcts-be.github.io/vanilla.penplotter/vanilla.penplotter.js";
+import { installP5Penplotter } from "https://seb-prjcts-be.github.io/p5.penplotter/p5.penplotter.js";
+
+installP5Penplotter(p5, PlotterEngine);</code></pre>
+    <p class="note">The core URL becomes live after vanilla.penplotter is published to GitHub Pages.</p>
+
+    <h2>3. Global mode</h2>
+    <pre><code>let plot;
+
+function setup() {
+  createCanvas(800, 800);
+  plot = createPlotterEngine();
+  plot.line(40, 40, 760, 760);
+  drawPlotPlan(plot.plan());
+}</code></pre>
+
+    <h2>4. Instance mode</h2>
+    <pre><code>new p5(function sketch(p) {
+  p.setup = function setup() {
+    p.createCanvas(800, 800);
+    const plot = p.createPlotterEngine();
+    plot.circle(400, 400, 180);
+    p.drawPlotPlan(plot.plan());
+  };
+});</code></pre>
+
+    <h2>5. p5.waves</h2>
+    <p>Load p5.waves after p5.js. Sample it inside a regular loop and pass plain point objects to the plotter.</p>
+    <pre><code>const points = [];
+for (let x = 40; x <= 760; x += 4) {
+  points.push({
+    x,
+    y: 400 + Waves.wave(x, {
+      wave: "triangle sine",
+      t: 0,
+      amplitude: 80
+    })
+  });
+}
+plot.polyline(points);</code></pre>
+
+    <h2>6. Straight to the pen</h2>
+    <p>Hand the core's driver to the adapter. Every <code>plot.…</code> call then draws on the canvas and is remembered for the plotter; <code>plot.go()</code> sends it — no SVG in between. Use Chrome or Edge, call <code>go()</code> from a key or mouse handler, and park the carriage in the home corner first.</p>
+    <pre><code>import * as Ebb from "../vanilla.penplotter/src/driver/ebb.js";
+installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
+
+let plot;
+
+function setup() {
+  createCanvas(400, 250);
+  plot = createPlot({ x: 80, y: 150, width: 80 }); // mm on the bed
+  noLoop();
+}
+
+function draw() {
+  background(255);   // screen only
+  plot.clear();
+  plot.rect(10, 10, 380, 230);
+}
+
+function keyPressed() {
+  if (key === "p") plot.go();
+  if (key === "s") plot.stop();
+}</code></pre>
+    <p class="note">Tested on one machine so far: an iDraw HSE / A2 with EBB firmware 3.0.2.</p>
+
+    <h2>7. Continue in vanilla.penplotter</h2>
+    <p>The returned object is the complete core engine. Use its layers, tools, hatch fills, optimizer, planner, statistics and exports without adapter-specific alternatives.</p>
+  </main>
+</body>
+</html>

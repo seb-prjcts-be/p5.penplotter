@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>p5.penplotter — p5.js into a physical plot plan</title>
+  <meta name="description" content="The p5.js adapter for vanilla.penplotter: build generative paths, inspect the planned route, and export for pen plotters.">
+  <link rel="stylesheet" href="docs/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.waves@v3.4.0/p5.waves.min.js"></script>
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="#top"><span>p5</span>.penplotter</a>
+    <button class="menu" type="button" aria-label="Toggle navigation">Menu</button>
+    <div class="nav-links">
+      <a href="#bridge">Bridge</a>
+      <a href="docs/examples.html">Examples</a>
+      <a href="docs/guide.html">Guide</a>
+      <a href="docs/architecture.md">Architecture</a>
+    </div>
+  </nav>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">p5.js adapter · v0.2.0</p>
+        <h1>Sketch.<br><em>Then plot.</em></h1>
+        <p class="lead">Turn p5.js and p5.waves geometry into a real vanilla.penplotter job—without capturing pixels or rebuilding the machine pipeline.</p>
+        <div class="actions">
+          <a class="button primary" href="docs/guide.html">Connect p5.js</a>
+          <a class="button" href="docs/examples.html">Explore examples</a>
+        </div>
+      </div>
+      <div class="plot-card">
+        <div class="plot-toolbar"><span>p5.waves → PlotPlan</span><span>p5.js 2.2.2</span></div>
+        <div id="hero-plot" aria-label="p5.js preview of a planned wave plot"></div>
+        <div class="plot-stats" aria-live="polite">
+          <span><strong id="stat-paths">—</strong> paths</span>
+          <span><strong id="stat-lifts">—</strong> lifts</span>
+          <span><strong id="stat-travel">—</strong> px travel</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="pipeline" id="bridge">
+      <div class="section-intro">
+        <p class="eyebrow">A deliberately small bridge</p>
+        <h2>Three p5 methods.<br>One real engine.</h2>
+      </div>
+      <ol class="pipeline-list">
+        <li><span>01</span><strong>createPlotterEngine()</strong><p>Uses the current canvas size as a friendly default and returns the independent core engine.</p></li>
+        <li><span>02</span><strong>drawPlotPlan()</strong><p>Draws the actual ordered plan, including path reversals and relocated seams.</p></li>
+        <li><span>03</span><strong>createPlot()</strong><p>Every <code>plot.…</code> call draws on the canvas and is remembered for the plotter; <code>plot.go()</code> sends it straight to the pen, no SVG in between. <a href="examples/direct_plot/index.html">Direct plot →</a></p></li>
+        <li><span>Core</span><strong>vanilla.penplotter</strong><p>Owns geometry, optimization, planning, exports, statistics and hardware drivers.</p></li>
+      </ol>
+    </section>
+
+    <section class="code-section">
+      <div>
+        <p class="eyebrow">Explicit installation</p>
+        <h2>No hidden<br>dependency.</h2>
+        <p class="lead small">The adapter receives the p5 constructor and core class explicitly. Versions and loading order stay visible.</p>
+      </div>
+      <pre><code>import { PlotterEngine } from "vanilla.penplotter";
+import { installP5Penplotter } from "p5.penplotter";
+
+installP5Penplotter(p5, PlotterEngine);
+
+function setup() {
+  createCanvas(800, 800);
+  const plot = createPlotterEngine();
+  plot.circle(400, 400, 180);
+  drawPlotPlan(plot.plan());
+}</code></pre>
+    </section>
+  </main>
+
+  <footer><span>p5.penplotter · adapter for vanilla.penplotter</span><span>MIT · 2026</span></footer>
+  <script type="module" src="docs/app.js"></script>
+</body>
+</html>

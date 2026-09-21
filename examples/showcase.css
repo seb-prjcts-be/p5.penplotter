@@ -1,0 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;600&display=swap");
+:root { --paper:#f2efe6; --ink:#171815; --line:#bdb8ab; --signal:#ee573d; --muted:#66665f; }
+* { box-sizing: border-box; }
+body { margin:0; min-height:100vh; background:var(--paper); color:var(--ink); font-family:"Manrope",Arial,sans-serif; }
+header { display:flex; justify-content:space-between; gap:20px; align-items:center; padding:18px 4vw; border-bottom:1px solid var(--line); }
+header a { color:var(--ink); text-decoration:none; font-family:"DM Mono",monospace; }
+header a span { color:var(--signal); }
+main { display:grid; grid-template-columns:minmax(0,1fr) minmax(280px,360px); min-height:calc(100vh - 65px); }
+.canvas-wrap { display:grid; place-items:center; min-height:650px; padding:36px; overflow:hidden; }
+canvas { display:block; max-width:100%; max-height:78vh; border:1px solid var(--line); background:#fffdf6; }
+.panel { padding:40px 28px; border-left:1px solid var(--line); }
+.tag { margin:0 0 12px; color:var(--signal); font:500 12px "DM Mono",monospace; text-transform:uppercase; letter-spacing:.08em; }
+h1 { margin:0; font-size:clamp(44px,6vw,78px); line-height:.95; letter-spacing:-.055em; }
+p { color:var(--muted); line-height:1.6; }
+dl { margin:32px 0; }
+dl div { display:flex; justify-content:space-between; gap:12px; padding:11px 0; border-top:1px solid var(--line); }
+dt { color:var(--muted); } dd { margin:0; font-family:"DM Mono",monospace; }
+button { width:100%; min-height:44px; border:1px solid var(--ink); background:var(--ink); color:var(--paper); font-weight:600; cursor:pointer; }
+button.secondary { margin-top:10px; background:transparent; color:var(--ink); }
+@media(max-width:800px){ main{grid-template-columns:1fr}.canvas-wrap{min-height:440px;padding:20px}.panel{border-left:0;border-top:1px solid var(--line)} }
