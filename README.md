@@ -53,6 +53,20 @@ installP5Penplotter(p5, PlotterEngine);
 
 ## Global mode
 
+Een module maakt geen globals, dus `function setup()` in een module-`sketch.js`
+ziet p5 nooit. Zet voor global mode de imports in `index.html` en laat
+`sketch.js` een gewoon script zijn:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
+<script type="module">
+  import { PlotterEngine } from "https://seb-prjcts-be.github.io/vanilla.penplotter/vanilla.penplotter.js";
+  import { installP5Penplotter } from "https://seb-prjcts-be.github.io/p5.penplotter/p5.penplotter.js";
+  installP5Penplotter(p5, PlotterEngine);
+</script>
+<script src="sketch.js"></script>
+```
+
 ```js
 let plot;
 
@@ -63,6 +77,10 @@ function setup() {
   drawPlotPlan(plot.plan());
 }
 ```
+
+De module draait nadat de pagina gelezen is en vóór `load`, het moment waarop
+p5 de sketch start. Alle vier de koppelingen, met de tijdlijn erachter, staan in
+[docs/setup.html](https://seb-prjcts-be.github.io/p5.penplotter/docs/setup.html).
 
 ## Instance mode
 
