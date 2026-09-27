@@ -63,6 +63,7 @@ assert.throws(() => drawPlanWithP5(instance, { routes: [] }), /vanilla.penplotte
 
 const files = [
   "index.html",
+  "docs/setup.html",
   "docs/guide.html",
   "docs/examples.html",
   "examples/first_plot/index.html",

@@ -9,7 +9,7 @@
 <body>
   <nav class="nav">
     <a class="brand" href="../index.html"><span>p5</span>.penplotter</a>
-    <div class="nav-links"><a href="examples.html">Examples</a><a href="architecture.md">Architecture</a></div>
+    <div class="nav-links"><a href="setup.html">Setup</a><a href="examples.html">Examples</a><a href="architecture.md">Architecture</a></div>
   </nav>
   <main class="page">
     <header class="page-header">
@@ -30,6 +30,14 @@ installP5Penplotter(p5, PlotterEngine);</code></pre>
     <p class="note">The core URL becomes live after vanilla.penplotter is published to GitHub Pages.</p>
 
     <h2>3. Global mode</h2>
+    <p>A module creates no globals, so <code>function setup()</code> inside a module <code>sketch.js</code> is never seen by p5. For global mode, keep the imports in <code>index.html</code> and make <code>sketch.js</code> a plain script:</p>
+    <pre><code>&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
+&lt;script type="module"&gt;
+  import { PlotterEngine } from "https://seb-prjcts-be.github.io/vanilla.penplotter/vanilla.penplotter.js";
+  import { installP5Penplotter } from "https://seb-prjcts-be.github.io/p5.penplotter/p5.penplotter.js";
+  installP5Penplotter(p5, PlotterEngine);
+&lt;/script&gt;
+&lt;script src="sketch.js"&gt;&lt;/script&gt;</code></pre>
     <pre><code>let plot;
 
 function setup() {
@@ -38,6 +46,7 @@ function setup() {
   plot.line(40, 40, 760, 760);
   drawPlotPlan(plot.plan());
 }</code></pre>
+    <p class="note">The module runs after the page is read and before <code>load</code>, when p5 starts the sketch. All four wirings, with the timeline behind them, are in <a href="setup.html">Setup</a>.</p>
 
     <h2>4. Instance mode</h2>
     <pre><code>new p5(function sketch(p) {
