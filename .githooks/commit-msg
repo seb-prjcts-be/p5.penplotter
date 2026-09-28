@@ -1,0 +1,11 @@
+#!/bin/sh
+# Rejects commit messages that carry an AI-agent trailer. Commits in this
+# repository are authored by the maintainer only.
+# Enable once per clone: git config core.hooksPath .githooks
+msg="$1"
+if grep -Eiq '^(Co-Authored-By|Claude-Session|Codex-Session|Signed-off-by: *(Claude|Codex))' "$msg" \
+   || grep -Eiq 'Generated with \[?(Claude|Codex)' "$msg"; then
+  echo "commit-msg: rejected. The message contains an AI-agent trailer; commits are authored by the maintainer only." >&2
+  exit 1
+fi
+exit 0
