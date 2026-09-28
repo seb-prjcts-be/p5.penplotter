@@ -138,6 +138,37 @@ tekent één keer: plotten is altijd de momentopname van het laatste frame.
 
 Getest op één machine: iDraw HSE / A2 (EBB-firmware 3.0.2) op 2026-09-21.
 
+## Vormen en vullingen
+
+`plot.…` kent dezelfde 2D-vormen als p5, met dezelfde argumenten: `point`,
+`line`, `circle`, `ellipse`, `arc`, `rect`, `square`, `triangle`, `quad`.
+Punten voor `polyline` en `polygon` mogen `[x, y]` zijn of `{ x, y }`.
+Hoeken volgen `angleMode()`.
+
+```js
+plot.point(20, 20);
+plot.square(30, 10, 40);
+plot.triangle(80, 50, 120, 10, 160, 50);
+plot.ellipse(260, 30, 60, 30);
+plot.arc(330, 30, 40, 40, 0, HALF_PI, PIE);
+plot.polygon([[0, 0], [40, 0], [40, 40]]);
+```
+
+Een pen kan geen stip zetten: `point()` wordt een streepje van een kwart
+millimeter, zoals `stipple` dat al deed. Een ovaal wordt een 96-hoek, precies
+zoals de engine zelf een cirkel afvlakt.
+
+Vullingen komen uit `vanilla.penplotter` en worden op het canvas teruggetekend,
+zodat scherm en papier dezelfde arcering tonen. De afstand is in millimeter op
+het bed, niet in pixels:
+
+```js
+let vierkant = [[20, 80], [120, 80], [120, 180], [20, 180]];
+plot.hatch(vierkant, 3, PI / 4);   // afstand in mm, hoek
+plot.crossHatch(vierkant, 4);      // tweede richting haaks op de eerste
+plot.stipple(vierkant, 150, 3);    // aantal, seed: zelfde seed, zelfde stippen
+```
+
 ## p5.waves
 
 `Waves.wave()` retourneert één getal. Bouw daarmee gewone punten en geef die aan
@@ -175,7 +206,7 @@ op EBB-machines zoals de iDraw HSE en plant de hele tekening vóór de pen bewee
 
 - `installP5Penplotter(p5, PlotterEngine, { driver })` — installeert de adapter expliciet; `driver` is optioneel en alleen nodig voor `plot.go()`.
 - `createPlotterEngine(options)` — maakt een core-engine met standaard de huidige canvasmaat en `px` als unit.
-- `createPlot(options)` — maakt een `P5Plot`: `line`, `circle`, `rect`, `polyline` en `polygon` tekenen op het canvas én nemen op in mm; `clear()`, `plan()`, `connect()`, `go()` en `stop()` sturen de opdracht. Opties: `x`, `y`, `width` (mm op het bed) of `mmPerPixel`, `profile`, `confirm`, `log`.
+- `createPlot(options)` — maakt een `P5Plot`: `point`, `line`, `circle`, `ellipse`, `arc`, `rect`, `square`, `triangle`, `quad`, `polyline` en `polygon` tekenen op het canvas én nemen op in mm, met dezelfde argumenten als in p5; `hatch`, `crossHatch` en `stipple` vullen een polygoon; `clear()`, `plan()`, `connect()`, `go()` en `stop()` sturen de opdracht. Opties: `x`, `y`, `width` (mm op het bed) of `mmPerPixel`, `profile`, `confirm`, `log`.
 - `drawPlotPlan(plan, options)` — tekent het echte geplande resultaat via p5.js.
 - `drawPlanWithP5(p, plan, options)` — dezelfde renderer zonder prototype-helper.
 

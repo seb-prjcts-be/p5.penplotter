@@ -67,6 +67,26 @@ function toPoint(value) {
   return Array.isArray(value) ? { x: value[0], y: value[1] } : { x: value.x, y: value.y };
 }
 
+// p5 sketches may run in angleMode(DEGREES); the engine always takes radians.
+function toRadians(p, angle) {
+  return typeof p.angleMode === "function" && p.angleMode() === "degrees" ? (angle * Math.PI) / 180 : angle;
+}
+
+// An ellipse or arc as points, the way the engine itself flattens a circle.
+function ellipsePoints(x, y, w, h, start, stop) {
+  const span = stop - start;
+  const segments = Math.max(2, Math.ceil(Math.abs(span) / (Math.PI / 48)));
+  const points = [];
+  for (let index = 0; index <= segments; index += 1) {
+    const angle = start + (span * index) / segments;
+    points.push({ x: x + (Math.cos(angle) * w) / 2, y: y + (Math.sin(angle) * h) / 2 });
+  }
+  return points;
+}
+
+// A pen cannot dot: a point is a dash of a quarter millimetre, like stipple.
+const POINT_RADIUS_MM = 0.12;
+
 // One object for screen and paper: every shape method draws on the p5 canvas
 // with the current p5 style AND records the same shape, in millimetres, in a
 // vanilla.penplotter engine. The adapter holds no planner or hardware code; the
@@ -103,6 +123,17 @@ export class P5Plot {
     return { x: this.offset.x + x * this.scale, y: this.offset.y + y * this.scale };
   }
 
+  toPx(point) {
+    return { x: (point.x - this.offset.x) / this.scale, y: (point.y - this.offset.y) / this.scale };
+  }
+
+  point(x, y) {
+    this.p.point(x, y);
+    const c = this.toMm(x, y);
+    this.engine.line(c.x - POINT_RADIUS_MM, c.y, c.x + POINT_RADIUS_MM, c.y);
+    return this;
+  }
+
   line(x1, y1, x2, y2) {
     this.p.line(x1, y1, x2, y2);
     const a = this.toMm(x1, y1);
@@ -119,11 +150,49 @@ export class P5Plot {
     return this;
   }
 
+  // Like p5: width and height, not radii. A circle-shaped ellipse stays a circle.
+  ellipse(x, y, w, h = w) {
+    this.p.ellipse(x, y, w, h);
+    const c = this.toMm(x, y);
+    if (w === h) this.engine.circle(c.x, c.y, (w / 2) * this.scale);
+    else this.engine.polygon(ellipsePoints(c.x, c.y, w * this.scale, h * this.scale, 0, Math.PI * 2).slice(0, -1));
+    return this;
+  }
+
+  // Like p5: angles follow angleMode(); mode is OPEN (default), CHORD or PIE.
+  arc(x, y, w, h, start, stop, mode) {
+    this.p.arc(x, y, w, h, start, stop, mode);
+    const c = this.toMm(x, y);
+    const a = toRadians(this.p, start);
+    const b = toRadians(this.p, stop);
+    const points = ellipsePoints(c.x, c.y, w * this.scale, h * this.scale, a, b);
+    if (mode === "pie") this.engine.polygon([...points, c]);
+    else if (mode === "chord") this.engine.polygon(points);
+    else this.engine.polyline(points);
+    return this;
+  }
+
   // Like p5 in its default rectMode(CORNER).
   rect(x, y, width, height) {
     this.p.rect(x, y, width, height);
     const c = this.toMm(x, y);
     this.engine.rect(c.x, c.y, width * this.scale, height * this.scale);
+    return this;
+  }
+
+  square(x, y, size) {
+    return this.rect(x, y, size, size);
+  }
+
+  triangle(x1, y1, x2, y2, x3, y3) {
+    this.p.triangle(x1, y1, x2, y2, x3, y3);
+    this.engine.polygon([this.toMm(x1, y1), this.toMm(x2, y2), this.toMm(x3, y3)]);
+    return this;
+  }
+
+  quad(x1, y1, x2, y2, x3, y3, x4, y4) {
+    this.p.quad(x1, y1, x2, y2, x3, y3, x4, y4);
+    this.engine.polygon([this.toMm(x1, y1), this.toMm(x2, y2), this.toMm(x3, y3), this.toMm(x4, y4)]);
     return this;
   }
 
@@ -147,6 +216,33 @@ export class P5Plot {
     const mm = list.map((point) => this.toMm(point.x, point.y));
     if (closed) this.engine.polygon(mm);
     else this.engine.polyline(mm);
+    return this;
+  }
+
+  // Fills, as the engine plans them: spacing in millimetres on the bed, angle
+  // in the sketch's angleMode(). The engine's own lines are drawn back on the
+  // canvas so screen and paper show the same hatching.
+  hatch(points, spacing = 2, angle = Math.PI / 4) {
+    return this.pattern("hatch", points, { spacing, angle: toRadians(this.p, angle) });
+  }
+
+  crossHatch(points, spacing = 2, angle = Math.PI / 4) {
+    return this.pattern("crossHatch", points, { spacing, angle: toRadians(this.p, angle) });
+  }
+
+  stipple(points, count = 200, seed = 1) {
+    return this.pattern("stipple", points, { count, seed });
+  }
+
+  pattern(kind, points, options) {
+    const mm = points.map(toPoint).map((point) => this.toMm(point.x, point.y));
+    const paths = this.engine[kind](mm, options);
+    for (const path of paths) {
+      const a = this.toPx(path.points[0]);
+      const b = this.toPx(path.points[path.points.length - 1]);
+      if (kind === "stipple") this.p.point((a.x + b.x) / 2, (a.y + b.y) / 2);
+      else this.p.line(a.x, a.y, b.x, b.y);
+    }
     return this;
   }
 

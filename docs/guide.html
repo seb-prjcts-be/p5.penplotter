@@ -98,7 +98,19 @@ function keyPressed() {
 }</code></pre>
     <p class="note">Tested on one machine so far: an iDraw HSE / A2 with EBB firmware 3.0.2.</p>
 
-    <h2>7. Continue in vanilla.penplotter</h2>
+    <h2>7. Shapes and fills</h2>
+    <p><code>plot.…</code> has the same 2D primitives as p5, with the same arguments: <code>point</code>, <code>line</code>, <code>circle</code>, <code>ellipse</code>, <code>arc</code>, <code>rect</code>, <code>square</code>, <code>triangle</code>, <code>quad</code>, plus <code>polyline</code> and <code>polygon</code>, which take <code>[x, y]</code> pairs or <code>{ x, y }</code> objects. Angles follow <code>angleMode()</code>. A point becomes a quarter-millimetre dash, because a pen cannot dot.</p>
+    <pre><code>plot.square(30, 10, 40);
+plot.triangle(80, 50, 120, 10, 160, 50);
+plot.arc(330, 30, 40, 40, 0, HALF_PI, PIE);
+plot.polygon([[0, 0], [40, 0], [40, 40]]);</code></pre>
+    <p>Fills come from the core and are drawn back on the canvas, so screen and paper show the same hatching. Spacing is in millimetres on the bed.</p>
+    <pre><code>let square = [[20, 80], [120, 80], [120, 180], [20, 180]];
+plot.hatch(square, 3, PI / 4);   // spacing in mm, angle
+plot.crossHatch(square, 4);      // second direction at right angles
+plot.stipple(square, 150, 3);    // count, seed</code></pre>
+
+    <h2>8. Continue in vanilla.penplotter</h2>
     <p>The returned object is the complete core engine. Use its layers, tools, hatch fills, optimizer, planner, statistics and exports without adapter-specific alternatives.</p>
   </main>
 </body>
