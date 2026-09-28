@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Molnár grid — p5.penplotter</title>
+  <link rel="stylesheet" href="../showcase.css">
+  <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
+  <script type="module">
+    // The core is a sibling of this repository, both on localhost and on GitHub Pages.
+    import { PlotterEngine } from "../../../vanilla.penplotter/vanilla.penplotter.js";
+    import * as Ebb from "../../../vanilla.penplotter/src/driver/ebb.js";
+    import { installP5Penplotter } from "../../p5.penplotter.js";
+    installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
+  </script>
+  <script src="sketch.js"></script>
+</head>
+<body>
+  <header><a href="../../index.html"><span>p5</span>.penplotter</a><a href="../../docs/examples.html">All examples</a></header>
+  <main>
+    <div class="canvas-wrap" id="p5-preview"></div>
+    <aside class="panel">
+      <p class="tag">04 · Order and disorder</p>
+      <h1>Molnár grid</h1>
+      <p>Ten rows of nested squares. The top row is exact; each row down, the squares drift and turn a little more, until the bottom row has come apart. One seed, one rule, one plain global-mode sketch — no imports in <code>sketch.js</code>.</p>
+      <dl>
+        <div><dt>Seed</dt><dd id="seed">—</dd></div>
+        <div><dt>Paths</dt><dd id="paths">—</dd></div>
+        <div><dt>On the bed</dt><dd id="size">—</dd></div>
+      </dl>
+      <p id="status" role="status">R for another seed, P to plot, S to stop.</p>
+    </aside>
+  </main>
+</body>
+</html>

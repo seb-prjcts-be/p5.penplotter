@@ -68,7 +68,8 @@ const files = [
   "docs/examples.html",
   "examples/first_plot/index.html",
   "examples/wave_plot/index.html",
-  "examples/direct_plot/index.html"
+  "examples/direct_plot/index.html",
+  "examples/molnar_grid/index.html"
 ];
 for (const relative of files) {
   const full = path.join(root, relative);
