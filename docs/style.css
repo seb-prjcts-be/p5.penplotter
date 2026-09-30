@@ -154,7 +154,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #000; outline-offset:
   gap: clamp(32px, 6vw, 80px);
   align-items: center;
   padding: clamp(48px, 7vw, 96px) 2.5rem;
-  max-width: 1300px;
+  max-width: 1100px;
   margin: 0 auto;
 }
 .hero h1 {
@@ -198,7 +198,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #000; outline-offset:
   letter-spacing: 0.03em;
   color: #000;
 }
-.pipeline-list { list-style: none; margin: 0 auto; padding: 0; max-width: 1000px; border-top: 1px solid var(--border-mid); }
+.pipeline-list { list-style: none; margin: 0 auto; padding: 0; max-width: 1100px; border-top: 1px solid var(--border-mid); }
 .pipeline-list li {
   display: grid;
   grid-template-columns: 64px minmax(170px, .4fr) 1fr;
@@ -211,7 +211,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #000; outline-offset:
 .pipeline-list strong { font-family: 'Oswald', sans-serif; font-size: clamp(1.3rem, 2.6vw, 1.9rem); font-weight: 500; letter-spacing: 0.02em; color: #000; }
 .pipeline-list p { margin: 0; color: var(--text-muted); line-height: 1.65; }
 .pipeline-list a { color: #000; }
-.code-section { display: grid; grid-template-columns: .85fr 1.15fr; gap: 4rem; align-items: start; max-width: 1200px; margin: 0 auto; }
+.code-section { display: grid; grid-template-columns: .85fr 1.15fr; gap: 4rem; align-items: start; max-width: 1100px; margin: 0 auto; }
 
 /* ── FOOTER ── */
 footer {
@@ -227,36 +227,39 @@ footer a { color: var(--text); text-decoration: underline; text-underline-offset
 footer a:hover { color: #000; }
 
 /* ── DOC PAGES ── */
-.page { max-width: 960px; margin: 0 auto; padding: 5rem 2rem 5rem; }
+.page { max-width: 1100px; margin: 0 auto; padding: 5rem 2rem 5rem; }
 .page.wide { max-width: 1100px; }
 .page-header { margin-bottom: 2.5rem; }
 .page h1 { font-size: 2.8rem; font-weight: 400; margin-bottom: 0.6rem; }
 .page h2 { font-size: 1.5rem; margin: 3rem 0 0.7rem; text-transform: uppercase; letter-spacing: .05em; border-bottom: 2px solid #000; padding-bottom: 0.3rem; }
 .page h3 { font-size: 1.1rem; margin: 1.8rem 0 0.4rem; text-transform: uppercase; letter-spacing: .04em; }
-.page p, .page li { line-height: 1.7; color: var(--text-muted); max-width: 800px; }
+.page p, .page li { line-height: 1.7; color: var(--text-muted); max-width: 760px; }
 .page p { margin: 0 0 0.8rem; }
 .page .lead { color: var(--text); font-size: 1.1rem; }
 .page a { color: #000; text-decoration: underline; }
 .page a:hover { color: #555; }
-.page pre { max-width: 900px; margin: 0.8rem 0 1.4rem; }
+.page pre { max-width: 100%; margin: 0.8rem 0 1.4rem; }
 .page ol, .page ul { padding-left: 22px; margin: 0 0 1rem; }
 .page li + li { margin-top: 0.4rem; }
-.page table { width: 100%; max-width: 900px; margin: 0.8rem 0 1.4rem; border-collapse: collapse; font-size: 0.86rem; }
+.page table { width: 100%; table-layout: fixed; margin: 0.8rem 0 1.4rem; border-collapse: collapse; font-size: 0.86rem; }
 .page th { text-align: left; font-family: 'Oswald', sans-serif; font-size: 0.74rem; text-transform: uppercase; letter-spacing: .06em; padding: 0.4rem 0.8rem; background: #000; color: #fff; }
-.page td { padding: 0.45rem 0.8rem; border-bottom: 1px solid #e8e8e8; color: var(--text); vertical-align: top; }
+.page td { padding: 0.45rem 0.8rem; border-bottom: 1px solid #e8e8e8; color: var(--text); vertical-align: top; overflow-wrap: anywhere; }
+.page th:first-child, .page td:first-child { width: 24%; }
+.page th:nth-child(2) { width: 38%; }
 .page tr:last-child td { border-bottom: none; }
-.page td:first-child { font-family: 'Courier New', monospace; white-space: nowrap; }
+.page td:first-child { font-family: 'Courier New', monospace; }
 .table-wrap { overflow-x: auto; }
 .example-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
 .example-card { padding: 1.4rem; border: 1px solid var(--border-mid); background: var(--surface); }
 .example-card h2 { margin: 0.4rem 0 0.8rem; font-size: 1.4rem; border: 0; padding: 0; }
 
 /* Example and possibility sections: preview left, copy right. */
-.ex { display: grid; grid-template-columns: minmax(260px, .9fr) 1.1fr; gap: 2.2rem; align-items: start; margin-top: 3.5rem; padding-top: 2.5rem; border-top: 1px solid var(--border-mid); }
+.ex { display: grid; grid-template-columns: 420px minmax(0, 1fr); gap: 2.2rem; align-items: start; margin-top: 3.5rem; padding-top: 2.5rem; border-top: 1px solid var(--border-mid); }
+.ex-copy { min-width: 0; }
 .ex h2 { margin-top: 0; }
 .ex-preview canvas, .ex-preview iframe, .ex-preview .ex-text { display: block; width: 100%; height: auto; border: 1px solid var(--border-mid); background: var(--surface); }
-.ex-preview iframe { aspect-ratio: 1 / 1.1; }
-.ex-preview .ex-text { margin: 0; padding: 1rem; min-height: 220px; font-size: 0.78rem; line-height: 1.65; white-space: pre; overflow: auto; background: var(--paper); }
+.ex-preview canvas[data-example], .ex-preview iframe { aspect-ratio: 4 / 5; object-fit: contain; }
+.ex-preview .ex-text { margin: 0; padding: 1rem; aspect-ratio: 520 / 220; height: auto; font-size: 0.78rem; line-height: 1.65; white-space: pre; overflow: auto; background: var(--paper); }
 .ex-link {
   display: inline-block;
   margin-top: 0.5rem;

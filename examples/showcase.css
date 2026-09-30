@@ -23,8 +23,8 @@ body { margin:0; min-height:100vh; padding-top:56px; background:var(--bg); color
 
 /* ── LAYOUT ── */
 main { display:grid; grid-template-columns:minmax(0,1fr) minmax(300px,400px); min-height:calc(100vh - 56px); }
-.canvas-wrap { display:grid; place-items:center; min-height:600px; padding:2rem; overflow:hidden; }
-canvas { display:block; max-width:100%; max-height:78vh; border:1px solid var(--border-mid); background:var(--surface); }
+.canvas-wrap { display:grid; place-items:center; min-height:calc(100vh - 56px); padding:2rem; overflow:hidden; }
+canvas { display:block; max-width:100%; max-height:calc(100vh - 56px - 4rem); border:1px solid var(--border-mid); background:var(--surface); }
 .panel { padding:2.5rem 1.8rem; border-left:1px solid var(--border-mid); background:var(--bg); }
 .tag { display:inline-block; margin:0 0 .8rem; padding:.2rem .8rem; border:1px solid var(--border-mid); color:var(--text-muted); font:.7rem 'Consolas','Courier New',monospace; letter-spacing:.14em; text-transform:uppercase; }
 h1 { margin:0 0 .6rem; font-family:'Oswald',sans-serif; font-size:2rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; line-height:1.05; }
@@ -61,8 +61,8 @@ a:focus-visible, button:focus-visible { outline:2px solid #000; outline-offset:3
 html.embed #navbar, html.embed .panel { display:none; }
 html.embed body { padding-top:0; }
 html.embed main { grid-template-columns:1fr; min-height:0; }
-html.embed .canvas-wrap { min-height:0; padding:12px; }
-html.embed canvas { max-height:none; }
+html.embed .canvas-wrap { min-height:0; height:100vh; padding:12px; }
+html.embed canvas { max-width:100%; max-height:100%; width:auto !important; height:auto !important; }
 
 @media (max-width:900px) {
   main { grid-template-columns:1fr; }
