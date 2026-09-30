@@ -3,3 +3,6 @@ node_modules/
 *.zip
 .DS_Store
 Thumbs.db
+
+# Local agent configuration and app worktrees never belong in the repository.
+.claude/
