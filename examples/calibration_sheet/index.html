@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Molnár grid — p5.penplotter</title>
+  <title>Calibration sheet — p5.penplotter</title>
   <link rel="icon" href="../../docs/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../showcase.css">
   <script>if (location.search.includes("embed")) document.documentElement.classList.add("embed");</script>
@@ -22,15 +22,14 @@
   <main>
     <div class="canvas-wrap" id="p5-preview"></div>
     <aside class="panel">
-      <p class="tag">04 · Order and disorder</p>
-      <h1>Molnár grid</h1>
-      <p>Ten rows of nested squares. The top row is exact; each row down, the squares drift and turn a little more, until the bottom row has come apart. One seed, one rule, one plain global-mode sketch — no imports in <code>sketch.js</code>.</p>
+      <p class="tag">Ruler · tone · circles · spacing</p>
+      <h1>Calibration sheet</h1>
+      <p>What your pen does on your paper, in millimetres. A 100 mm ruler to check the scale, hatch and cross-hatch scales from 6 to 0.8 mm, stipple densities, circles from 2 to 40 mm, and line pairs from 0.3 to 2 mm apart. Only physical variables: nothing a screen could fake. Plot it once per pen and keep the sheet.</p>
       <dl>
-        <div><dt>Seed</dt><dd id="seed">—</dd></div>
+        <div><dt>On the bed</dt><dd>200 × 280 mm</dd></div>
         <div><dt>Paths</dt><dd id="paths">—</dd></div>
-        <div><dt>On the bed</dt><dd id="size">—</dd></div>
       </dl>
-      <p id="status" role="status">R for another seed, P to plot, S to stop.</p>
+      <p id="status" role="status">P to plot, S to stop.</p>
     </aside>
   </main>
 </body>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architecture of p5.penplotter — p5.penplotter</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="../index.html"><span>p5</span>.penplotter</a>
+    <div class="nav-links"><a href="setup.html">Setup</a><a href="guide.html">Guide</a><a href="examples.html">Examples</a><a href="architecture.html">Architecture</a><a href="about.html">About</a></div>
+  </nav>
+  <main class="page">
+    <header class="page-header">
+      <p class="eyebrow">Architecture · an adapter, not a second engine</p>
+      <h1>Architecture of p5.penplotter</h1>
+      <p class="lead">Generated from <a href="architecture.md">architecture.md</a>; edit the Markdown and run <code>npm run docs</code>.</p>
+    </header>
+<p><code>p5.penplotter</code> is an adapter, not a second engine.</p>
+<h2>Responsibilities</h2>
+<ul><li>explicitly bind the <code>PlotterEngine</code> class to p5.js;</li><li>use canvas dimensions as convenient defaults;</li><li>draw a <code>PlotPlan</code> with p5.js;</li><li>with <code>createPlot()</code>, both draw on the canvas and record in mm in a single call, and pass that job on to the supplied driver;</li><li>support global and instance mode;</li><li>show p5.waves examples.</li></ul>
+<h2>Not here</h2>
+<p>Geometry, SVG import, hatch, stippling, optimization, route planning, exports, machine profiles and drivers remain exclusively in <code>vanilla.penplotter</code>. A bugfix in that pipeline must never be copied into this repository.</p>
+<h2>Installation contract</h2>
+<p>Automatic detection of global scripts looks simple but makes load order and versions implicit. That is why installation is explicit:</p>
+<pre><code>installP5Penplotter(p5, PlotterEngine);</code></pre>
+<p>This works with browser ESM, import maps and future package managers. The adapter validates every plan against schema <code>vanilla.penplotter/plan@1</code> before it is drawn.</p>
+<h2>Driver contract</h2>
+<p><code>plot.go()</code> contains no protocol, step or machine knowledge. The adapter is handed the driver module of <code>vanilla.penplotter</code>:</p>
+<pre><code>installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
+<p>and uses only <code>EBB_PROFILES</code> (work area for the page size), <code>createWebSerialTransport()</code> and <code>EbbDriver</code> from it. Converting pixels to millimetres is adapter work, though: that is the translation from canvas to bed. Bounds checking, speeds, safe stopping and the confirmation requirement remain in the core; on top of that, the adapter itself asks the user for a confirmation.</p>
+<h2>Version contract</h2>
+<p>The dependency runs in one direction: <code>p5.penplotter</code> uses <code>vanilla.penplotter</code>, never the other way round. What the adapter needs is stated once in the code, as <code>REQUIRES</code> in <code>p5.penplotter.js</code>. <code>package.json</code>, the manifest and the <em>Requirements</em> table in the README are tested against it, and that table is literally identical in the README of <code>vanilla.penplotter</code>.</p>
+<p>When a driver is supplied, the adapter reads <code>PlotterEngine.version</code> and refuses a core older than <code>REQUIRES.core</code> with a plain sentence instead of an incomprehensible error later on. Without a driver, <code>createPlotterEngine()</code> and <code>drawPlotPlan()</code> keep working with any core.</p>
+<p>The examples on this site deliberately load the core as a sibling folder, so that site and core move together; they therefore get the latest version, not a pinned one. The version check is the guardrail there, and when publishing the rule is: first <code>vanilla.penplotter</code>, then <code>p5.penplotter</code>. Anyone who wants a fixed version in their own project loads both libraries via jsDelivr on a tag, for example <code>https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.2.0/vanilla.penplotter.js</code>.</p>
+<h2>Rendering contract</h2>
+<p><code>drawPlotPlan()</code> draws <code>plan.routes</code>, not the original artwork. Preview, SVG and hardware thereby show the same planned geometry and path reversal. Pen-up travel remains a core preview feature and is not implemented twice.</p>
+  </main>
+</body>
+</html>

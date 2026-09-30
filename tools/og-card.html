@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Social preview cards</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; padding: 24px; background: #ddd; font: 14px "DM Mono", Consolas, monospace; }
+    canvas { display: block; margin: 0 0 24px; width: 600px; height: 315px; border: 1px solid #999; }
+  </style>
+</head>
+<body>
+  <p>Draws the 1200 × 630 social preview cards with the engine itself; each canvas can be saved as <code>docs/images/og-image.png</code>. No server needed beyond this folder and the sibling engine.</p>
+  <canvas id="vanilla" width="1200" height="630"></canvas>
+  <canvas id="p5" width="1200" height="630"></canvas>
+  <script type="module">
+    import { PlotterEngine } from "../../vanilla.penplotter/vanilla.penplotter.js";
+
+    function card(id, title, subtitle, build) {
+      const canvas = document.getElementById(id);
+      const context = canvas.getContext("2d");
+      context.fillStyle = "#f2efe6";
+      context.fillRect(0, 0, 1200, 630);
+      // The plan, drawn on the right two thirds.
+      const plot = new PlotterEngine({ units: "mm", page: { width: 200, height: 160, margin: 0 } });
+      build(plot);
+      const plan = plot.plan({ strategy: "nearest" });
+      const scale = 3.6;
+      const offsetX = 1200 - 200 * scale - 40;
+      const offsetY = (630 - 160 * scale) / 2;
+      context.fillStyle = "#fffdf6";
+      context.fillRect(offsetX, offsetY, 200 * scale, 160 * scale);
+      context.strokeStyle = "#bdb8ab";
+      context.strokeRect(offsetX + 0.5, offsetY + 0.5, 200 * scale, 160 * scale);
+      context.lineCap = "round";
+      context.lineJoin = "round";
+      context.strokeStyle = "#171815";
+      context.lineWidth = 1.6;
+      for (const move of plan.moves) {
+        if (move.type !== "draw") continue;
+        context.beginPath();
+        move.points.forEach((p, index) => context[index ? "lineTo" : "moveTo"](offsetX + p.x * scale, offsetY + p.y * scale));
+        context.stroke();
+      }
+      // Text on the left.
+      context.fillStyle = "#171815";
+      context.font = "500 64px Manrope, Arial, sans-serif";
+      context.fillText(title, 60, 300);
+      context.fillStyle = "#ee573d";
+      context.fillRect(60, 322, 120, 6);
+      context.fillStyle = "#66665f";
+      context.font = "24px Manrope, Arial, sans-serif";
+      subtitle.forEach((line, index) => context.fillText(line, 60, 380 + index * 36));
+      context.fillStyle = "#171815";
+      context.font = "18px 'DM Mono', Consolas, monospace";
+      context.fillText("seb-prjcts-be.github.io", 60, 560);
+    }
+
+    await Promise.all([
+      document.fonts.load("500 64px Manrope"),
+      document.fonts.load("24px Manrope"),
+      document.fonts.load("18px 'DM Mono'")
+    ]);
+    window.cardsReady = true;
+
+    card("vanilla", "vanilla.penplotter", ["Generative geometry", "to physical motion.", "No SVG in between."], (plot) => {
+      for (let row = 0; row < 12; row += 1) {
+        const points = [];
+        for (let x = 12; x <= 188; x += 0.5) {
+          points.push({ x, y: 18 + row * 11 + Math.sin(x * 0.09 + row * 0.7) * 4 + Math.sin(x * 0.023) * 5 });
+        }
+        plot.polyline(points);
+      }
+      plot.hatch([{ x: 120, y: 95 }, { x: 188, y: 95 }, { x: 188, y: 150 }, { x: 120, y: 150 }], { spacing: 2.4, angle: Math.PI / 4 });
+    });
+
+    card("p5", "p5.penplotter", ["Sketch. Then plot.", "The p5.js adapter for", "vanilla.penplotter."], (plot) => {
+      const n = 8;
+      const cell = 200 / n;
+      let seed = 7;
+      const random = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+      for (let row = 0; row < 6; row += 1) {
+        const disorder = row / 5;
+        for (let column = 0; column < n; column += 1) {
+          const cx = column * cell + cell / 2;
+          const cy = 10 + row * cell + cell / 2;
+          for (let k = 1; k <= 3; k += 1) {
+            const r = (cell * 0.4 * k) / 3;
+            const angle = (random() * 2 - 1) * disorder * 0.6;
+            const dx = (random() * 2 - 1) * disorder * cell * 0.15;
+            const dy = (random() * 2 - 1) * disorder * cell * 0.15;
+            const points = [];
+            for (let i = 0; i < 4; i += 1) {
+              const a = angle + Math.PI / 4 + (Math.PI / 2) * i;
+              points.push({ x: cx + dx + Math.cos(a) * r, y: cy + dy + Math.sin(a) * r });
+            }
+            plot.polygon(points);
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

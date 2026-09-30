@@ -1,4 +1,5 @@
-import { PlotterEngine } from "https://seb-prjcts-be.github.io/vanilla.penplotter/vanilla.penplotter.js";
+// The core is a sibling of this repository, both on localhost and on GitHub Pages.
+import { PlotterEngine } from "../../vanilla.penplotter/vanilla.penplotter.js";
 import { installP5Penplotter } from "../p5.penplotter.js";
 
 installP5Penplotter(p5, PlotterEngine);

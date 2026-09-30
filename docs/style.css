@@ -191,3 +191,16 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--blue); outline-
   html { scroll-behavior: auto; }
   .button:hover { transform: none; }
 }
+
+/* Example sections: live page left, copy right. */
+.page.wide { max-width: 1240px; }
+.ex { display: grid; grid-template-columns: minmax(260px, .9fr) 1.1fr; gap: 36px; align-items: start; margin-top: 70px; padding-top: 40px; border-top: 1px solid var(--line); }
+.ex h2 { margin-top: 0; }
+.ex-preview iframe { display: block; width: 100%; aspect-ratio: 1 / 1.1; border: 1px solid var(--line); background: var(--white); }
+.ex-link { display: inline-block; margin-top: 8px; font-weight: 700; }
+.page table { width: 100%; max-width: 900px; margin: 24px 0; border-collapse: collapse; font-size: 15px; }
+.page th, .page td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; color: var(--muted); }
+.page th { color: var(--ink); font-weight: 600; }
+.page ol, .page ul { padding-left: 22px; }
+.page li + li { margin-top: 6px; }
+@media (max-width: 900px) { .ex { grid-template-columns: 1fr; } }

@@ -4,44 +4,118 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Examples — p5.penplotter</title>
+  <meta name="description" content="Seven p5.js sketches that plan for a pen plotter: from a first plot to a calibration sheet, a wave field and a spirograph.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <nav class="nav">
     <a class="brand" href="../index.html"><span>p5</span>.penplotter</a>
-    <div class="nav-links"><a href="setup.html">Setup</a><a href="guide.html">Guide</a><a href="architecture.md">Architecture</a></div>
+    <div class="nav-links"><a href="setup.html">Setup</a><a href="guide.html">Guide</a><a href="examples.html">Examples</a><a href="architecture.html">Architecture</a><a href="about.html">About</a></div>
   </nav>
-  <main class="page">
+  <main class="page wide">
     <header class="page-header">
-      <p class="eyebrow">Standalone examples</p>
+      <p class="eyebrow">Standalone examples · v0.2.0</p>
       <h1>p5 geometry. Physical planning.</h1>
+      <p class="lead">Every preview is the example's own page, running live. Open one for the full sketch, its keys and its source. The wave examples load p5.waves; the plotting ones need Chrome or Edge.</p>
     </header>
-    <div class="example-grid">
-      <article class="example-card">
-        <p class="eyebrow">01 · p5.js</p>
+
+    <section class="ex" id="first_plot">
+      <div class="ex-preview"><iframe src="../examples/first_plot/index.html?embed" title="First plot" loading="lazy"></iframe></div>
+      <div class="ex-copy">
+        <p class="eyebrow">createPlotterEngine() · drawPlotPlan()</p>
         <h2>First plot</h2>
-        <p>Create the core engine from a p5 canvas and draw its optimized plan.</p>
-        <a href="../examples/first_plot/index.html">Open example →</a>
-      </article>
-      <article class="example-card">
-        <p class="eyebrow">02 · p5.waves</p>
+        <p>Create the core engine from a p5 canvas, build a hatched polygon and a circle, and draw the optimized plan back with p5: the same order and seams the machine would get.</p>
+        <pre><code>const plot = p.createPlotterEngine();
+plot.hatch(boundary, { spacing: 14, angle: Math.PI / 6 });
+plot.circle(324, 374, 126);
+p.drawPlotPlan(plot.plan());</code></pre>
+        <a class="ex-link" href="../examples/first_plot/index.html">Open example →</a>
+      </div>
+    </section>
+
+    <section class="ex" id="wave_plot">
+      <div class="ex-preview"><iframe src="../examples/wave_plot/index.html?embed" title="Wave plot" loading="lazy"></iframe></div>
+      <div class="ex-copy">
+        <p class="eyebrow">p5.waves · Waves.wave() · plot.polyline()</p>
         <h2>Wave plot</h2>
-        <p>Sample one of 34 wave formulas into paths and inspect the planned route.</p>
-        <a href="../examples/wave_plot/index.html">Open example →</a>
-      </article>
-      <article class="example-card">
-        <p class="eyebrow">03 · Sketch to pen</p>
+        <p>Sample one of 34 wave formulas into 24 rows of points and inspect the planned route. p5.waves returns numbers; the adapter passes their points to the engine.</p>
+        <pre><code>const waveY = Waves.wave(x + row * 7, { wave: waveSeed, t: 0, amplitude: 22, frequency: 0.045 });
+points.push({ x, y: 86 + row * 24 + waveY });
+plot.polyline(points);</code></pre>
+        <a class="ex-link" href="../examples/wave_plot/index.html">Open example →</a>
+      </div>
+    </section>
+
+    <section class="ex" id="direct_plot">
+      <div class="ex-preview"><iframe src="../examples/direct_plot/index.html?embed" title="Direct plot" loading="lazy"></iframe></div>
+      <div class="ex-copy">
+        <p class="eyebrow">createPlot() · plot.go() · plot.stop()</p>
         <h2>Direct plot</h2>
-        <p>Draw with <code>plot.…</code>, press P, and the sketch goes straight to the plotter.</p>
-        <a href="../examples/direct_plot/index.html">Open example →</a>
-      </article>
-      <article class="example-card">
-        <p class="eyebrow">04 · Order and disorder</p>
+        <p>Every <code>plot.…</code> call draws on the canvas and is remembered for the plotter. Press P and the last frame goes to an iDraw HSE / A2, no SVG in between.</p>
+        <pre><code>plot = p.createPlot({ x: 80, y: 150, width: 80 });   // mm on the bed
+plot.rect(10, 10, 380, 230);
+plot.polyline(points);
+if (p.key === "p") plot.go();</code></pre>
+        <a class="ex-link" href="../examples/direct_plot/index.html">Open example →</a>
+      </div>
+    </section>
+
+    <section class="ex" id="molnar_grid">
+      <div class="ex-preview"><iframe src="../examples/molnar_grid/index.html?embed" title="Molnár grid" loading="lazy"></iframe></div>
+      <div class="ex-copy">
+        <p class="eyebrow">global mode · random() · plot.polygon()</p>
         <h2>Molnár grid</h2>
-        <p>Nested squares that drift and turn a little more with every row. One seed, one rule, a plain global-mode sketch.</p>
-        <a href="../examples/molnar_grid/index.html">Open example →</a>
-      </article>
-    </div>
+        <p>Ten rows of nested squares. The top row is exact; each row down, the squares drift and turn a little more, until the bottom row has come apart. One seed, one rule, a plain global-mode sketch with no imports.</p>
+        <pre><code>let disorder = row / (n - 1);
+let angle = random(-1, 1) * disorder * QUARTER_PI;
+plot.polygon(corners(cx + dx, cy + dy, radius, angle));</code></pre>
+        <a class="ex-link" href="../examples/molnar_grid/index.html">Open example →</a>
+      </div>
+    </section>
+
+    <section class="ex" id="calibration_sheet">
+      <div class="ex-preview"><iframe src="../examples/calibration_sheet/index.html?embed" title="Calibration sheet" loading="lazy"></iframe></div>
+      <div class="ex-copy">
+        <p class="eyebrow">plot.hatch() · plot.crossHatch() · plot.stipple() · plot.circle()</p>
+        <h2>Calibration sheet</h2>
+        <p>What your pen does on your paper: a 100 mm ruler, hatch and cross-hatch scales down to 0.8 mm, stipple densities, circles from 2 to 40 mm and line pairs from 0.3 mm apart. Only physical variables. Plot it once per pen and keep the sheet.</p>
+        <pre><code>[6, 4, 3, 2, 1.5, 1.2, 1, 0.8].forEach((spacing, i) => {
+  plot.hatch(cellAt(20 + i * 22, 45, 18), spacing, QUARTER_PI);
+});</code></pre>
+        <a class="ex-link" href="../examples/calibration_sheet/index.html">Open example →</a>
+      </div>
+    </section>
+
+    <section class="ex" id="wave_field">
+      <div class="ex-preview"><iframe src="../examples/wave_field/index.html?embed" title="Wave field" loading="lazy"></iframe></div>
+      <div class="ex-copy">
+        <p class="eyebrow">p5.waves · streamlines · plot.polyline()</p>
+        <h2>Wave field</h2>
+        <p>Two waves, one per axis, give every point a direction; sixty lines follow it until they leave the frame. The seed picks the wave shape: thirty-four fields in one sketch.</p>
+        <pre><code>const angle = (Waves.wave(x * 0.012, { wave: shape, t: 0 })
+             + Waves.wave(y * 0.012 + 3, { wave: shape, t: 0 })) * PI;
+x += cos(angle) * 2.4;
+y += sin(angle) * 2.4;</code></pre>
+        <a class="ex-link" href="../examples/wave_field/index.html">Open example →</a>
+      </div>
+    </section>
+
+    <section class="ex" id="spirograph">
+      <div class="ex-preview"><iframe src="../examples/spirograph/index.html?embed" title="Spirograph" loading="lazy"></iframe></div>
+      <div class="ex-copy">
+        <p class="eyebrow">hypotrochoids · one polyline each</p>
+        <h2>Spirograph</h2>
+        <p>Three hypotrochoids around one centre; the seed picks the gear ratios. Each curve is one unbroken polyline, so the pen never lifts until it closes.</p>
+        <pre><code>const t = (i / steps) * TWO_PI * turns;
+points.push([cx + (R - r) * cos(t) + d * cos(((R - r) / r) * t),
+             cy + (R - r) * sin(t) - d * sin(((R - r) / r) * t)]);
+plot.polyline(points);</code></pre>
+        <a class="ex-link" href="../examples/spirograph/index.html">Open example →</a>
+      </div>
+    </section>
+
+    <p class="note">The engine's own examples, without p5.js, are on the sister site: <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/examples.html">vanilla.penplotter examples</a>, and its <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/possibilities.html">Possibilities</a> page shows what a pen can do.</p>
   </main>
 </body>
 </html>

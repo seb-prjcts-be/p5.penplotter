@@ -1,6 +1,6 @@
 {
   "version": "0.2.0",
-  "generated": "2026-09-28",
+  "generated": "2026-09-30",
   "p5js_target": "2.2.2",
   "core": "vanilla.penplotter@>=0.2.0",
   "core_plan_schema": "vanilla.penplotter/plan@1",
@@ -10,9 +10,12 @@
     "drawPlotPlan"
   ],
   "examples": [
+    "calibration_sheet",
     "direct_plot",
     "first_plot",
     "molnar_grid",
+    "spirograph",
+    "wave_field",
     "wave_plot"
   ]
 }

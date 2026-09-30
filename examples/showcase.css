@@ -18,3 +18,8 @@ dt { color:var(--muted); } dd { margin:0; font-family:"DM Mono",monospace; }
 button { width:100%; min-height:44px; border:1px solid var(--ink); background:var(--ink); color:var(--paper); font-weight:600; cursor:pointer; }
 button.secondary { margin-top:10px; background:transparent; color:var(--ink); }
 @media(max-width:800px){ main{grid-template-columns:1fr}.canvas-wrap{min-height:440px;padding:20px}.panel{border-left:0;border-top:1px solid var(--line)} }
+/* Embedded in the examples gallery (?embed): only the canvas. */
+html.embed header, html.embed .panel { display:none; }
+html.embed main { grid-template-columns:1fr; min-height:0; }
+html.embed .canvas-wrap { min-height:0; padding:12px; }
+html.embed canvas { max-height:none; }

@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Molnár grid — p5.penplotter</title>
+  <title>Wave field — p5.penplotter + p5.waves</title>
   <link rel="icon" href="../../docs/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../showcase.css">
   <script>if (location.search.includes("embed")) document.documentElement.classList.add("embed");</script>
   <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.waves@v3.4.0/p5.waves.min.js"></script>
   <script type="module">
     // The core is a sibling of this repository, both on localhost and on GitHub Pages.
     import { PlotterEngine } from "../../../vanilla.penplotter/vanilla.penplotter.js";
@@ -22,13 +23,14 @@
   <main>
     <div class="canvas-wrap" id="p5-preview"></div>
     <aside class="panel">
-      <p class="tag">04 · Order and disorder</p>
-      <h1>Molnár grid</h1>
-      <p>Ten rows of nested squares. The top row is exact; each row down, the squares drift and turn a little more, until the bottom row has come apart. One seed, one rule, one plain global-mode sketch — no imports in <code>sketch.js</code>.</p>
+      <p class="tag">p5.waves 3.4.0 · streamlines</p>
+      <h1>Wave field</h1>
+      <p>Two waves, one per axis, give every point of the sheet a direction. Sixty lines start on a loose grid and follow it until they leave the frame. The wave shape comes from the seed: thirty-four fields in one sketch.</p>
       <dl>
         <div><dt>Seed</dt><dd id="seed">—</dd></div>
+        <div><dt>Wave</dt><dd id="wave">—</dd></div>
         <div><dt>Paths</dt><dd id="paths">—</dd></div>
-        <div><dt>On the bed</dt><dd id="size">—</dd></div>
+        <div><dt>On the bed</dt><dd>300 × 300 mm</dd></div>
       </dl>
       <p id="status" role="status">R for another seed, P to plot, S to stop.</p>
     </aside>

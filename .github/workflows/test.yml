@@ -1,0 +1,26 @@
+name: test
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: p5.penplotter
+      # The examples and the requirements test use the core as a sibling folder.
+      - uses: actions/checkout@v4
+        with:
+          repository: seb-prjcts-be/vanilla.penplotter
+          path: vanilla.penplotter
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm test
+        working-directory: p5.penplotter
+      - run: npm run docs && npm run manifest && git diff --exit-code -- docs
+        working-directory: p5.penplotter

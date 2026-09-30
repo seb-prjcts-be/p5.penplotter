@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>p5.penplotter — p5.js into a physical plot plan</title>
   <meta name="description" content="The p5.js adapter for vanilla.penplotter: build generative paths, inspect the planned route, and export for pen plotters.">
+  <meta property="og:title" content="p5.penplotter — p5.js into a physical plot plan">
+  <meta property="og:description" content="Every plot.… call draws on the canvas and is remembered for the plotter; plot.go() sends it straight to the pen.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://seb-prjcts-be.github.io/p5.penplotter/">
+  <meta property="og:image" content="https://seb-prjcts-be.github.io/p5.penplotter/docs/images/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="docs/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="docs/style.css">
   <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.waves@v3.4.0/p5.waves.min.js"></script>
@@ -14,11 +21,12 @@
     <a class="brand" href="#top"><span>p5</span>.penplotter</a>
     <button class="menu" type="button" aria-label="Toggle navigation">Menu</button>
     <div class="nav-links">
-      <a href="#bridge">Bridge</a>
-      <a href="docs/examples.html">Examples</a>
       <a href="docs/setup.html">Setup</a>
       <a href="docs/guide.html">Guide</a>
-      <a href="docs/architecture.md">Architecture</a>
+      <a href="docs/examples.html">Examples</a>
+      <a href="docs/architecture.html">Architecture</a>
+      <a href="docs/about.html">About</a>
+      <a href="https://github.com/seb-prjcts-be/p5.penplotter">GitHub</a>
     </div>
   </nav>
 
@@ -29,7 +37,7 @@
         <h1>Sketch.<br><em>Then plot.</em></h1>
         <p class="lead">Turn p5.js and p5.waves geometry into a real vanilla.penplotter job—without capturing pixels or rebuilding the machine pipeline.</p>
         <div class="actions">
-          <a class="button primary" href="docs/guide.html">Connect p5.js</a>
+          <a class="button primary" href="docs/setup.html">Connect p5.js</a>
           <a class="button" href="docs/examples.html">Explore examples</a>
         </div>
       </div>
@@ -77,7 +85,7 @@ function setup() {
     </section>
   </main>
 
-  <footer><span>p5.penplotter · adapter for vanilla.penplotter</span><span>MIT · 2026</span></footer>
+  <footer><span>p5.penplotter · adapter for <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> · <a href="docs/about.html">About</a></span><span>MIT · 2026 · v0.2.0</span></footer>
   <script type="module" src="docs/app.js"></script>
 </body>
 </html>

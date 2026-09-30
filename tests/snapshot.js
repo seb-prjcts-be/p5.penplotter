@@ -66,10 +66,11 @@ const files = [
   "docs/setup.html",
   "docs/guide.html",
   "docs/examples.html",
-  "examples/first_plot/index.html",
-  "examples/wave_plot/index.html",
-  "examples/direct_plot/index.html",
-  "examples/molnar_grid/index.html"
+  "docs/about.html",
+  "docs/architecture.html",
+  ...fs.readdirSync(path.join(root, "examples"), { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => `examples/${entry.name}/index.html`)
 ];
 for (const relative of files) {
   const full = path.join(root, relative);
@@ -79,9 +80,23 @@ for (const relative of files) {
   for (const match of pageMarkup.matchAll(/(?:href|src)="([^"]+)"/g)) {
     const target = match[1];
     if (/^(?:https?:|#)/.test(target)) continue;
-    const resolved = path.resolve(path.dirname(full), target.split("#")[0]);
+    const resolved = path.resolve(path.dirname(full), target.split(/[#?]/)[0]);
     assert.equal(fs.existsSync(resolved), true, `Broken link ${target} in ${relative}`);
   }
 }
+
+// Every example must be listed in the gallery and the manifest.
+const gallery = fs.readFileSync(path.join(root, "docs", "examples.html"), "utf8");
+const manifest = JSON.parse(fs.readFileSync(path.join(root, "docs", "p5.penplotter.manifest.json"), "utf8"));
+for (const relative of files.filter((name) => name.startsWith("examples/"))) {
+  const slug = relative.split("/")[1];
+  assert.ok(gallery.includes(`../examples/${slug}/index.html`), `${slug} is listed in docs/examples.html`);
+  assert.ok(manifest.examples.includes(slug), `${slug} is in the manifest`);
+}
+
+// docs/architecture.html is rendered from Markdown; a stale page fails here,
+// not on GitHub Pages.
+const { buildDocs } = await import("../tools/build-docs.js");
+assert.deepEqual(buildDocs(false), [], "run `npm run docs` and commit the result");
 
 console.log("p5.penplotter snapshot: ok");

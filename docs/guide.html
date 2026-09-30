@@ -4,12 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Guide — p5.penplotter</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <nav class="nav">
     <a class="brand" href="../index.html"><span>p5</span>.penplotter</a>
-    <div class="nav-links"><a href="setup.html">Setup</a><a href="examples.html">Examples</a><a href="architecture.md">Architecture</a></div>
+    <div class="nav-links"><a href="setup.html">Setup</a><a href="guide.html">Guide</a><a href="examples.html">Examples</a><a href="architecture.html">Architecture</a><a href="about.html">About</a></div>
   </nav>
   <main class="page">
     <header class="page-header">
@@ -27,7 +28,7 @@
 import { installP5Penplotter } from "https://seb-prjcts-be.github.io/p5.penplotter/p5.penplotter.js";
 
 installP5Penplotter(p5, PlotterEngine);</code></pre>
-    <p class="note">The core URL becomes live after vanilla.penplotter is published to GitHub Pages.</p>
+    <p class="note">Both URLs serve the latest <code>main</code>. To pin a version, load both libraries from jsDelivr on a tag, for example <code>https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.2.0/vanilla.penplotter.js</code>.</p>
 
     <h2>3. Global mode</h2>
     <p>A module creates no globals, so <code>function setup()</code> inside a module <code>sketch.js</code> is never seen by p5. For global mode, keep the imports in <code>index.html</code> and make <code>sketch.js</code> a plain script:</p>
@@ -111,7 +112,56 @@ plot.crossHatch(square, 4);      // second direction at right angles
 plot.stipple(square, 150, 3);    // count, seed</code></pre>
 
     <h2>8. Continue in vanilla.penplotter</h2>
-    <p>The returned object is the complete core engine. Use its layers, tools, hatch fills, optimizer, planner, statistics and exports without adapter-specific alternatives.</p>
+    <p>The returned object is the complete core engine. Use its layers, tools, hatch fills, optimizer, planner, statistics and exports without adapter-specific alternatives. With <code>createPlot()</code>, that engine is <code>plot.engine</code>.</p>
+
+    <h2>9. Copy-paste starters</h2>
+    <p>Three plain global-mode sketches. Wire them up with the <code>index.html</code> from <a href="setup.html">Setup 1</a>; each one plots with P and stops with S.</p>
+    <h3>Rings</h3>
+    <pre><code>let plot;
+
+function setup() {
+  createCanvas(600, 600);
+  plot = createPlot({ x: 147, y: 66, width: 300 });   // 300 mm wide, centred on A2
+  noLoop();
+}
+
+function draw() {
+  background("#fffdf6");
+  noFill();
+  plot.clear();
+  for (let d = 40; d &lt;= 560; d += 20) plot.circle(300, 300, d);
+}
+
+function keyPressed() {
+  if (key === "p") plot.go();
+  if (key === "s") plot.stop();
+}</code></pre>
+    <h3>A wave, twenty times</h3>
+    <pre><code>function draw() {
+  background("#fffdf6");
+  noFill();
+  plot.clear();
+  for (let row = 0; row &lt; 20; row += 1) {
+    let points = [];
+    for (let x = 40; x &lt;= 560; x += 4) {
+      points.push([x, 60 + row * 25 + Waves.wave(x + row * 9, { wave: "triangle sine", t: 0, amplitude: 10, frequency: 0.03 })]);
+    }
+    plot.polyline(points);
+  }
+}</code></pre>
+    <h3>Tone from lines</h3>
+    <pre><code>function draw() {
+  background("#fffdf6");
+  noFill();
+  plot.clear();
+  for (let i = 0; i &lt; 8; i += 1) {
+    let x = 40 + i * 65;
+    let cell = [[x, 250], [x + 55, 250], [x + 55, 305], [x, 305]];
+    plot.hatch(cell, 6 - i * 0.65, QUARTER_PI);   // spacing in mm on the bed
+    plot.polygon(cell);
+  }
+}</code></pre>
+    <p>Finished versions of these, and more, are on <a href="examples.html">Examples</a>; what a plotter can do beyond them is on the engine's <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/possibilities.html">Possibilities</a> page.</p>
   </main>
 </body>
 </html>
