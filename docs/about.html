@@ -17,13 +17,13 @@
     <header class="page-header">
       <p class="eyebrow">About · v0.2.0</p>
       <h1>Sketch. Then plot.</h1>
-      <p class="lead">A p5 sketch runs sixty times a second and forgets every frame. A pen plotter draws once and keeps it. This adapter is the smallest possible bridge between those two habits.</p>
+      <p class="lead">A p5 sketch runs sixty times a second and forgets every frame. A pen plotter draws once and keeps it. I wanted the smallest possible bridge between those two habits, and this is it.</p>
     </header>
 
     <h2>Why</h2>
     <p>The usual way to plot a p5 sketch is to record it as an SVG, clean it up in vpype, open it in Inkscape and send it from there. Four programs for one drawing. <code>p5.penplotter</code> replaces them with one object: every <code>plot.line()</code>, <code>plot.circle()</code> or <code>plot.hatch()</code> draws on the canvas <em>and</em> is remembered in millimetres, and <code>plot.go()</code> hands the last frame to the machine. The sketch stays a sketch; <code>draw()</code> still runs, <code>random()</code> still rolls, and the plot is always the snapshot of what you last saw.</p>
 
-    <h2>Three methods and no engine</h2>
+    <h2>Three methods, no engine of its own</h2>
     <p>The adapter adds <code>createPlotterEngine()</code>, <code>drawPlotPlan()</code> and <code>createPlot()</code> to the p5 prototype, in global and instance mode, and that is all. Geometry, optimisation, route planning, exports, machine profiles and the driver live in <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a>, which knows nothing about p5. A bug in the pipeline is fixed there, once. The one job that <em>is</em> adapter work is the translation from canvas pixels to millimetres on the bed: <code>createPlot({ x, y, width })</code> says where the canvas lands and how wide.</p>
     <p>The dependency runs one way, and it is checked: when a driver is handed in, the adapter reads the engine's version and refuses one that predates the driver with a plain sentence. The <em>Requirements</em> table is identical in both READMEs because a test says so.</p>
 
@@ -31,7 +31,7 @@
     <p><a href="https://github.com/golanlevin/p5.plotSvg">p5.plotSvg</a> by Golan Levin records a p5 sketch between <code>beginRecordSvg()</code> and <code>endRecordSvg()</code> and writes an SVG. It covers far more of p5's drawing API than this adapter: curves, text, arcs in every mode. It deliberately stops at the file. <code>p5.penplotter</code> chose the other end of the road: fewer primitives, but no file. The two are not rivals; a p5.plotSvg file can be read and plotted by the engine's <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/examples/svg_to_pen/index.html">SVG to pen</a> example.</p>
 
     <h2>The machine</h2>
-    <p>Everything has been plotted on one machine: an iDraw HSE with an A2 bed and an EBB board, over Web Serial from Chrome. The machine facts, measured on paper on 2026-09-21, live in the engine. The sketch only needs to know that the home corner is 0,0, that the carriage is parked there by hand, and that <code>plot.go()</code> has to come from a key or a click, because a browser shows its port list only after a user gesture.</p>
+    <p>Everything so far has been plotted on one machine, mine: an iDraw HSE with an A2 bed and an EBB board, over Web Serial from Chrome. The machine facts, measured on paper on 2026-09-21, live in the engine. The sketch only needs to know that the home corner is 0,0, that the carriage is parked there by hand, and that <code>plot.go()</code> has to come from a key or a click, because a browser shows its port list only after a user gesture.</p>
 
     <h2>How this was made</h2>
     <p>Designed and directed by Sebastien Vanblaere, written with AI assistance, and held to one rule: nothing is claimed that a test or a plot on paper has not shown. The commit history is in his name only. The <a href="setup.html">Setup</a> page exists because getting a module-based adapter into a global-mode sketch is the one thing that went wrong more than once.</p>

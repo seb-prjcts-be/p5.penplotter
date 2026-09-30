@@ -35,7 +35,7 @@
       <div class="hero-copy">
         <p class="eyebrow">p5.js adapter · v0.2.0</p>
         <h1>Sketch.<br><em>Then plot.</em></h1>
-        <p class="lead">Turn p5.js and p5.waves geometry into a real vanilla.penplotter job—without capturing pixels or rebuilding the machine pipeline.</p>
+        <p class="lead">You sketch in p5.js the way you always do. Write <code>plot.line()</code> instead of <code>line()</code> and the same line is drawn on the canvas and remembered in millimetres. Press a key, and the last frame goes to the plotter. No SVG, no vpype, no Inkscape in between.</p>
         <div class="actions">
           <a class="button primary" href="docs/setup.html">Connect p5.js</a>
           <a class="button" href="docs/examples.html">Explore examples</a>
@@ -52,16 +52,27 @@
       </div>
     </section>
 
+    <section class="pipeline" id="which">
+      <div class="section-intro">
+        <p class="eyebrow">Two libraries, one direction</p>
+        <h2>The p5 face,<br>and the engine behind it.</h2>
+      </div>
+      <ol class="pipeline-list">
+        <li><span>this</span><strong>p5.penplotter</strong><p>Three methods on p5.js, and nothing else. You draw as you always do, with <code>plot.</code> in front, and <code>plot.go()</code> sends the frame to the pen. Take this if you sketch in p5.js.</p></li>
+        <li><span>engine</span><strong>vanilla.penplotter</strong><p>Where the work happens: geometry in millimetres, the optimizer, the route planner, the time estimate and the machine driver. Plain JavaScript, no p5.js. Take it on its own if you draw with your own code, or want to build your own layer on it. <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter →</a></p></li>
+      </ol>
+    </section>
+
     <section class="pipeline" id="bridge">
       <div class="section-intro">
         <p class="eyebrow">A deliberately small bridge</p>
         <h2>Three p5 methods.<br>One real engine.</h2>
       </div>
       <ol class="pipeline-list">
-        <li><span>01</span><strong>createPlotterEngine()</strong><p>Uses the current canvas size as a friendly default and returns the independent core engine.</p></li>
-        <li><span>02</span><strong>drawPlotPlan()</strong><p>Draws the actual ordered plan, including path reversals and relocated seams.</p></li>
-        <li><span>03</span><strong>createPlot()</strong><p>Every <code>plot.…</code> call draws on the canvas and is remembered for the plotter; <code>plot.go()</code> sends it straight to the pen, no SVG in between. <a href="examples/direct_plot/index.html">Direct plot →</a></p></li>
-        <li><span>Core</span><strong>vanilla.penplotter</strong><p>Owns geometry, optimization, planning, exports, statistics and hardware drivers.</p></li>
+        <li><span>01</span><strong>createPlot()</strong><p>The one you will use most. Every <code>plot.…</code> call draws on the canvas and is remembered for the plotter; <code>plot.go()</code> sends it, <code>plot.stop()</code> lifts the pen. <a href="examples/direct_plot/index.html">Direct plot →</a></p></li>
+        <li><span>02</span><strong>createPlotterEngine()</strong><p>The bare engine with the canvas size as its page, when you want to talk to it directly: layers, pens, exports.</p></li>
+        <li><span>03</span><strong>drawPlotPlan()</strong><p>Draws the plan as the machine will draw it: the real order, reversed paths, moved seams. Useful to see what the planner did with your sketch.</p></li>
+        <li><span>Core</span><strong>vanilla.penplotter</strong><p>Owns everything else. A bug in the pipeline is fixed there, once, for both libraries.</p></li>
       </ol>
     </section>
 
@@ -69,18 +80,29 @@
       <div>
         <p class="eyebrow">Explicit installation</p>
         <h2>No hidden<br>dependency.</h2>
-        <p class="lead small">The adapter receives the p5 constructor and core class explicitly. Versions and loading order stay visible.</p>
+        <p class="lead small">The adapter is handed the p5 constructor and the engine class by you, so versions and loading order stay in plain sight. It sounds fussy; it is the thing that keeps a sketch working next year.</p>
       </div>
       <pre><code>import { PlotterEngine } from "vanilla.penplotter";
+import * as Ebb from "vanilla.penplotter/driver/ebb";
 import { installP5Penplotter } from "p5.penplotter";
 
-installP5Penplotter(p5, PlotterEngine);
+installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
+
+let plot;
 
 function setup() {
-  createCanvas(800, 800);
-  const plot = createPlotterEngine();
-  plot.circle(400, 400, 180);
-  drawPlotPlan(plot.plan());
+  createCanvas(600, 600);
+  plot = createPlot({ x: 147, y: 66, width: 300 });  // 300 mm wide on the bed
+}
+
+function draw() {
+  background(255);
+  plot.clear();
+  plot.circle(300, 300, 400);
+}
+
+function keyPressed() {
+  if (key === "p") plot.go();   // to the pen
 }</code></pre>
     </section>
   </main>

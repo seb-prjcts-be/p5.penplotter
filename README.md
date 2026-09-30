@@ -1,12 +1,22 @@
 # p5.penplotter
 
-**[Open site](https://seb-prjcts-be.github.io/p5.penplotter/)** · **[Setup](https://seb-prjcts-be.github.io/p5.penplotter/docs/setup.html)** · **[Examples](https://seb-prjcts-be.github.io/p5.penplotter/docs/examples.html)** · **[Engine](https://github.com/seb-prjcts-be/vanilla.penplotter)**
+**[Open site](https://seb-prjcts-be.github.io/p5.penplotter/)** · **[Setup](https://seb-prjcts-be.github.io/p5.penplotter/docs/setup.html)** · **[Examples](https://seb-prjcts-be.github.io/p5.penplotter/docs/examples.html)** · **[vanilla.penplotter](https://github.com/seb-prjcts-be/vanilla.penplotter)**
 
-The p5.js adapter for [`vanilla.penplotter`](https://github.com/seb-prjcts-be/vanilla.penplotter). Every `plot.…` call draws on the canvas and is remembered for the plotter; `plot.go()` sends the last frame straight to the pen.
+You sketch in p5.js the way you always do. Write `plot.line()` instead of `line()` and the same line is drawn on the canvas and remembered in millimetres. Press a key, and the last frame goes to the plotter. No SVG, no vpype, no Inkscape in between.
 
-**Three methods, no engine of its own.** The adapter adds `createPlotterEngine()`, `drawPlotPlan()` and `createPlot()` to p5.js and deliberately contains no optimizer, planner, renderer or hardware code.
+**Which of the two do you need?**
 
-**Optimized for p5.js 2.x** (tested with 2.2.2), global and instance mode.
+| | p5.penplotter (this repository) | vanilla.penplotter |
+|---|---|---|
+| what it is | three methods on p5.js that call the engine | the engine: geometry in millimetres, optimizer, route planner, time estimate, machine driver |
+| needs | p5.js ≥ 2.2.2 and the engine | nothing; plain ES modules, no p5.js |
+| you draw with | p5 as you always do: `plot.line()` instead of `line()` | your own code, arrays of points, Paper.js, an SVG file |
+| to the pen | `plot.go()` | `driver.run(plot.plan())` |
+| take it if | you sketch in p5.js | you work without p5, or want to build your own layer on top |
+
+**Three methods, no engine of its own.** `createPlot()`, `createPlotterEngine()` and `drawPlotPlan()` land on the p5 prototype, in global and instance mode. Geometry, optimisation, planning, exports and the driver stay in `vanilla.penplotter`; a bug in the pipeline is fixed there, once.
+
+**Plots for real on one machine so far:** an iDraw HSE / A2 with an EBB board, from Chrome or Edge. For every other plotter the engine can still hand you the plan as SVG, HPGL or G-code; that is the side door, not the road.
 
 ```text
 p5.js / p5.waves
@@ -15,7 +25,7 @@ p5.js / p5.waves
         ↓
  vanilla.penplotter
         ↓
- PlotPlan → export / driver
+   the pen  (or SVG / HPGL / G-code for another machine)
 ```
 
 ## Install
@@ -31,7 +41,7 @@ p5.js / p5.waves
 <script src="sketch.js"></script>
 ```
 
-Pinned tags, so a sketch that works today works next year. The GitHub Pages URLs (`https://seb-prjcts-be.github.io/…`) always serve the latest `main`; the adapter checks the engine's version at install and refuses a mismatch in plain words. Leave out `{ driver: Ebb }` if you only preview and export. All four ways of wiring a sketch, with the load-order timeline behind them, are on the [Setup](https://seb-prjcts-be.github.io/p5.penplotter/docs/setup.html) page.
+Pinned tags, so a sketch that works today works next year. The GitHub Pages URLs (`https://seb-prjcts-be.github.io/…`) always serve the latest `main`; the adapter checks the engine's version at install and refuses a mismatch in plain words. Leave out `{ driver: Ebb }` if you only preview. All four ways of wiring a sketch, with the load-order timeline behind them, are on the [Setup](https://seb-prjcts-be.github.io/p5.penplotter/docs/setup.html) page; that page exists because getting a module into a global-mode sketch is the one thing that went wrong more than once.
 
 ## Quick start
 
@@ -60,7 +70,7 @@ function keyPressed() {
 }
 ```
 
-Use Chrome or Edge (Web Serial) and call `plot.go()` from a key or mouse handler: the browser shows its port list only after a user gesture. First put the carriage in the home corner by hand; the machine has no automatic home position. `draw()` runs 60 times per second, a plotter draws once: plotting is always the snapshot of the last frame.
+Call `plot.go()` from a key or mouse handler; a browser shows its port list only after a user gesture. Park the carriage in the home corner by hand first; the machine has no home position of its own. And remember that `draw()` runs sixty times a second while a plotter draws once: what gets plotted is always the last frame.
 
 Tested on one machine: iDraw HSE / A2 (EBB firmware 3.0.2) on 2026-09-21.
 
@@ -90,16 +100,21 @@ pinned one; the version check in the adapter catches a core that does not match.
 
 ```js
 import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.2.0/vanilla.penplotter.js";
+import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.2.0/src/driver/ebb.js";
 import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.0/p5.penplotter.js";
 
-installP5Penplotter(p5, PlotterEngine);
+installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
 
 new p5(function sketch(p) {
+  let plot;
   p.setup = function setup() {
-    p.createCanvas(800, 800);
-    const plot = p.createPlotterEngine();
-    plot.circle(400, 400, 180);
-    p.drawPlotPlan(plot.plan());
+    p.createCanvas(600, 600);
+    plot = p.createPlot({ x: 147, y: 66, width: 300 });
+    plot.circle(300, 300, 400);
+    p.noLoop();
+  };
+  p.keyPressed = function keyPressed() {
+    if (p.key === "p") plot.go();
   };
 });
 ```
@@ -120,13 +135,9 @@ plot.arc(330, 30, 40, 40, 0, HALF_PI, PIE);
 plot.polygon([[0, 0], [40, 0], [40, 40]]);
 ```
 
-A pen cannot make a dot: `point()` becomes a dash of a quarter of a
-millimetre, as `stipple` already did. An oval becomes a 96-gon, exactly the
-way the engine itself flattens a circle.
+A pen cannot make a dot, so `point()` becomes a dash of a quarter of a millimetre. An oval becomes a 96-gon, the way the engine itself flattens a circle.
 
-Fills come from `vanilla.penplotter` and are drawn back onto the canvas, so
-that screen and paper show the same hatching. The spacing is in millimetres on
-the bed, not in pixels:
+Fills come from the engine and are drawn back onto the canvas, so screen and paper show the same hatching. The spacing is in millimetres on the bed, not in pixels:
 
 ```js
 let square = [[20, 80], [120, 80], [120, 180], [20, 180]];
@@ -137,8 +148,7 @@ plot.stipple(square, 150, 3);    // count, seed: same seed, same dots
 
 ## p5.waves
 
-`Waves.wave()` returns a single number. Build ordinary points with it and pass
-them to the engine:
+`Waves.wave()` returns a single number. Build ordinary points with it and pass them on:
 
 ```js
 const points = [];
@@ -158,11 +168,11 @@ plot.polyline(points);
 
 ## Examples
 
-Each one is a standalone page under `examples/`; the [examples page](https://seb-prjcts-be.github.io/p5.penplotter/docs/examples.html) shows them live.
+Each one is a standalone page under `examples/`, plots with P and stops with S; the [examples page](https://seb-prjcts-be.github.io/p5.penplotter/docs/examples.html) shows them live.
 
-- `first_plot` - create the engine from a p5 canvas and draw its optimized plan
-- `wave_plot` - 24 rows sampled from one of p5.waves' 34 formulas; inspect the planned route
-- `direct_plot` - draw with `plot.…`, press P, and the sketch goes straight to the plotter
+- `direct_plot` - draw with `plot.…`, press P, and the sketch goes to the plotter
+- `first_plot` - create the engine from a p5 canvas and draw what the planner made of it
+- `wave_plot` - 24 rows sampled from one of p5.waves' 34 formulas
 - `molnar_grid` - nested squares that drift and turn a little more with every row; a plain global-mode sketch
 - `calibration_sheet` - ruler, tone scales, circles and line spacing: what your pen does on your paper
 - `wave_field` - streamlines through a direction field that p5.waves shapes; 34 fields in one sketch
@@ -170,26 +180,19 @@ Each one is a standalone page under `examples/`; the [examples page](https://seb
 
 ## Related work
 
-[p5.plotSvg](https://github.com/golanlevin/p5.plotSvg) by Golan Levin exports
-a plotter-friendly SVG from a p5 sketch, with `beginRecordSvg()` and
-`endRecordSvg()`, and covers many more p5 primitives than this adapter. It
-drives no machine. `p5.penplotter` takes the other path: no file, but
-`plot.go()`. A p5.plotSvg file can be plotted by the engine's `svg_to_pen` example.
+[p5.plotSvg](https://github.com/golanlevin/p5.plotSvg) by Golan Levin exports a plotter-friendly SVG from a p5 sketch, with `beginRecordSvg()` and `endRecordSvg()`, and covers many more p5 primitives than this adapter. It drives no machine. `p5.penplotter` takes the other path: no file, but `plot.go()`. A p5.plotSvg file can be plotted by the engine's `svg_to_pen` example.
 
-[p5.plotterControl](https://github.com/craigfahner/p5.plotterControl) (craigfahner)
-drives GRBL pen plotters live from p5.js. `p5.penplotter` targets
-EBB machines such as the iDraw HSE and plans the whole drawing before the pen moves.
+[p5.plotterControl](https://github.com/craigfahner/p5.plotterControl) (craigfahner) drives GRBL pen plotters live from p5.js. `p5.penplotter` targets EBB machines such as the iDraw HSE and plans the whole drawing before the pen moves.
 
 ## Public API
 
 - `installP5Penplotter(p5, PlotterEngine, { driver })` — installs the adapter explicitly; `driver` is optional and only needed for `plot.go()`.
-- `createPlotterEngine(options)` — creates a core engine with, by default, the current canvas size and `px` as unit.
 - `createPlot(options)` — creates a `P5Plot`: `point`, `line`, `circle`, `ellipse`, `arc`, `rect`, `square`, `triangle`, `quad`, `polyline` and `polygon` draw on the canvas and record in mm, with the same arguments as in p5; `hatch`, `crossHatch` and `stipple` fill a polygon; `clear()`, `plan()`, `connect()`, `go()` and `stop()` control the job; `engine` is the underlying `PlotterEngine`. Options: `x`, `y`, `width` (mm on the bed) or `mmPerPixel`, `profile`, `confirm`, `log`.
-- `drawPlotPlan(plan, options)` — draws the actual planned result via p5.js.
+- `createPlotterEngine(options)` — creates a bare engine with, by default, the current canvas size and `px` as unit.
+- `drawPlotPlan(plan, options)` — draws the plan as the machine will draw it, via p5.js.
 - `drawPlanWithP5(p, plan, options)` — the same renderer without the prototype helper.
 
-Version 0.2.0 targets p5.js 2.2.2. The core and hardware status are determined
-solely by `vanilla.penplotter`.
+Version 0.2.0 targets p5.js 2.2.2. The core and hardware status are determined solely by `vanilla.penplotter`.
 
 ## Test
 
