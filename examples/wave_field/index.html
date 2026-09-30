@@ -19,7 +19,19 @@
   <script src="sketch.js"></script>
 </head>
 <body>
-  <header><a href="../../index.html"><span>p5</span>.penplotter</a><a href="../../docs/examples.html">All examples</a></header>
+  <nav id="navbar">
+    <a class="nav-logo" href="../../index.html">p5.<span>penplotter</span></a>
+    <button class="nav-hamburger" aria-label="Toggle menu" onclick="this.closest('nav').classList.toggle('nav-open')"><span></span><span></span><span></span></button>
+    <ul class="nav-links">
+      <li><a href="../../index.html">Showcase</a></li>
+      <li><a href="../../docs/examples.html" class="active">Examples</a></li>
+      <li><a href="../../docs/setup.html">Setup</a></li>
+      <li><a href="../../docs/guide.html">Guide</a></li>
+      <li><a href="../../docs/architecture.html">Architecture</a></li>
+      <li><a href="../../docs/about.html">About</a></li>
+      <li><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">GitHub</a></li>
+    </ul>
+  </nav>
   <main>
     <div class="canvas-wrap" id="p5-preview"></div>
     <aside class="panel">

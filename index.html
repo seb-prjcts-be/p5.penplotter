@@ -17,17 +17,18 @@
   <script src="https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.waves@v3.4.0/p5.waves.min.js"></script>
 </head>
 <body>
-  <nav class="nav">
-    <a class="brand" href="#top"><span>p5</span>.penplotter</a>
-    <button class="menu" type="button" aria-label="Toggle navigation">Menu</button>
-    <div class="nav-links">
-      <a href="docs/setup.html">Setup</a>
-      <a href="docs/guide.html">Guide</a>
-      <a href="docs/examples.html">Examples</a>
-      <a href="docs/architecture.html">Architecture</a>
-      <a href="docs/about.html">About</a>
-      <a href="https://github.com/seb-prjcts-be/p5.penplotter">GitHub</a>
-    </div>
+  <nav id="navbar">
+    <a class="nav-logo" href="index.html">p5.<span>penplotter</span></a>
+    <button class="nav-hamburger" aria-label="Toggle menu" onclick="this.closest('nav').classList.toggle('nav-open')"><span></span><span></span><span></span></button>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Showcase</a></li>
+      <li><a href="docs/examples.html">Examples</a></li>
+      <li><a href="docs/setup.html">Setup</a></li>
+      <li><a href="docs/guide.html">Guide</a></li>
+      <li><a href="docs/architecture.html">Architecture</a></li>
+      <li><a href="docs/about.html">About</a></li>
+      <li><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">GitHub</a></li>
+    </ul>
   </nav>
 
   <main id="top">

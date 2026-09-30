@@ -11,8 +11,8 @@ function setup() {
 }
 
 function draw() {
-  background("#fffdf6");
-  stroke("#171815");
+  background("#ffffff");
+  stroke("#111111");
   noFill();
   plot.clear();
 

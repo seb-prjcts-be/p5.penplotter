@@ -34,8 +34,8 @@ new p5(function directPlotSketch(p) {
   };
 
   p.draw = function draw() {
-    p.background("#fffdf6"); // screen only: no plot. in front of it
-    p.stroke("#171815");
+    p.background("#ffffff"); // screen only: no plot. in front of it
+    p.stroke("#111111");
     p.noFill();
 
     plot.clear();

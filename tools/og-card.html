@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Social preview cards</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>
     body { margin: 0; padding: 24px; background: #ddd; font: 14px "DM Mono", Consolas, monospace; }
     canvas { display: block; margin: 0 0 24px; width: 600px; height: 315px; border: 1px solid #999; }
@@ -19,7 +19,7 @@
     function card(id, title, subtitle, build) {
       const canvas = document.getElementById(id);
       const context = canvas.getContext("2d");
-      context.fillStyle = "#f2efe6";
+      context.fillStyle = "#f5f5f5";
       context.fillRect(0, 0, 1200, 630);
       // The plan, drawn on the right two thirds.
       const plot = new PlotterEngine({ units: "mm", page: { width: 200, height: 160, margin: 0 } });
@@ -28,13 +28,13 @@
       const scale = 3.6;
       const offsetX = 1200 - 200 * scale - 40;
       const offsetY = (630 - 160 * scale) / 2;
-      context.fillStyle = "#fffdf6";
+      context.fillStyle = "#ffffff";
       context.fillRect(offsetX, offsetY, 200 * scale, 160 * scale);
-      context.strokeStyle = "#bdb8ab";
+      context.strokeStyle = "rgba(0,0,0,.2)";
       context.strokeRect(offsetX + 0.5, offsetY + 0.5, 200 * scale, 160 * scale);
       context.lineCap = "round";
       context.lineJoin = "round";
-      context.strokeStyle = "#171815";
+      context.strokeStyle = "#111111";
       context.lineWidth = 1.6;
       for (const move of plan.moves) {
         if (move.type !== "draw") continue;
@@ -43,23 +43,23 @@
         context.stroke();
       }
       // Text on the left.
-      context.fillStyle = "#171815";
-      context.font = "500 64px Manrope, Arial, sans-serif";
-      context.fillText(title, 60, 300);
-      context.fillStyle = "#ee573d";
-      context.fillRect(60, 322, 120, 6);
-      context.fillStyle = "#66665f";
-      context.font = "24px Manrope, Arial, sans-serif";
+      context.fillStyle = "#000000";
+      context.font = "500 56px Oswald, Arial Narrow, sans-serif";
+      context.fillText(title.toUpperCase(), 60, 300);
+      context.fillStyle = "#000000";
+      context.fillRect(60, 322, 160, 4);
+      context.fillStyle = "#666666";
+      context.font = "24px Inter, Arial, sans-serif";
       subtitle.forEach((line, index) => context.fillText(line, 60, 380 + index * 36));
-      context.fillStyle = "#171815";
-      context.font = "18px 'DM Mono', Consolas, monospace";
+      context.fillStyle = "#111111";
+      context.font = "18px 'Courier New', Courier, monospace";
       context.fillText("seb-prjcts-be.github.io", 60, 560);
     }
 
     await Promise.all([
-      document.fonts.load("500 64px Manrope"),
-      document.fonts.load("24px Manrope"),
-      document.fonts.load("18px 'DM Mono'")
+      document.fonts.load("500 56px Oswald"),
+      document.fonts.load("24px Inter"),
+      document.fonts.load("18px 'Courier New'")
     ]);
     window.cardsReady = true;
 

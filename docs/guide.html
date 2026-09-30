@@ -8,9 +8,18 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <nav class="nav">
-    <a class="brand" href="../index.html"><span>p5</span>.penplotter</a>
-    <div class="nav-links"><a href="setup.html">Setup</a><a href="guide.html">Guide</a><a href="examples.html">Examples</a><a href="architecture.html">Architecture</a><a href="about.html">About</a></div>
+  <nav id="navbar">
+    <a class="nav-logo" href="../index.html">p5.<span>penplotter</span></a>
+    <button class="nav-hamburger" aria-label="Toggle menu" onclick="this.closest('nav').classList.toggle('nav-open')"><span></span><span></span><span></span></button>
+    <ul class="nav-links">
+      <li><a href="../index.html">Showcase</a></li>
+      <li><a href="examples.html">Examples</a></li>
+      <li><a href="setup.html">Setup</a></li>
+      <li><a href="guide.html" class="active">Guide</a></li>
+      <li><a href="architecture.html">Architecture</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">GitHub</a></li>
+    </ul>
   </nav>
   <main class="page">
     <header class="page-header">
@@ -126,7 +135,7 @@ function setup() {
 }
 
 function draw() {
-  background("#fffdf6");
+  background("#ffffff");
   noFill();
   plot.clear();
   for (let d = 40; d &lt;= 560; d += 20) plot.circle(300, 300, d);
@@ -138,7 +147,7 @@ function keyPressed() {
 }</code></pre>
     <h3>A wave, twenty times</h3>
     <pre><code>function draw() {
-  background("#fffdf6");
+  background("#ffffff");
   noFill();
   plot.clear();
   for (let row = 0; row &lt; 20; row += 1) {
@@ -151,7 +160,7 @@ function keyPressed() {
 }</code></pre>
     <h3>Tone from lines</h3>
     <pre><code>function draw() {
-  background("#fffdf6");
+  background("#ffffff");
   noFill();
   plot.clear();
   for (let i = 0; i &lt; 8; i += 1) {

@@ -18,8 +18,8 @@ function angleAt(x, y, shape) {
 }
 
 function draw() {
-  background("#fffdf6");
-  stroke("#171815");
+  background("#ffffff");
+  stroke("#111111");
   noFill();
   randomSeed(seed);
   const shape = floor(random(34));

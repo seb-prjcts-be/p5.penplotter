@@ -51,13 +51,10 @@ new p5(function heroSketch(p) {
   };
 
   p.draw = function draw() {
-    p.background("#fffdf6");
+    p.background("#ffffff");
     p.drawPlotPlan(plotPlan, {
       strokeWeight: 1
     });
   };
 });
 
-document.querySelector(".menu").addEventListener("click", function toggleMenu() {
-  document.querySelector(".nav").classList.toggle("nav-open");
-});

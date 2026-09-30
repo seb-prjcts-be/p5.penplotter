@@ -56,7 +56,7 @@ new p5(function wavePlotSketch(p) {
   };
 
   p.draw = function draw() {
-    p.background("#fffdf6");
+    p.background("#ffffff");
     p.drawPlotPlan(plotPlan, {
       strokeWeight: 1
     });
