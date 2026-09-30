@@ -67,6 +67,7 @@ const files = [
   "docs/guide.html",
   "docs/examples.html",
   "docs/about.html",
+  "docs/handbook.html",
   "docs/architecture.html",
   ...fs.readdirSync(path.join(root, "examples"), { withFileTypes: true })
     .filter((entry) => entry.isDirectory())

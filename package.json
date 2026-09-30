@@ -15,7 +15,8 @@
   "scripts": {
     "test": "node tests/snapshot.js && node tests/plot.js && node tests/requirements.js",
     "docs": "node tools/build-docs.js",
-    "manifest": "node tools/gen-manifest.js"
+    "manifest": "node tools/gen-manifest.js",
+    "handbook": "node tools/build-handbook.js"
   },
   "peerDependencies": {
     "p5": ">=2.2.2",

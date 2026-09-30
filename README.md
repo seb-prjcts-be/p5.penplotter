@@ -1,6 +1,6 @@
 # p5.penplotter
 
-**[Open site](https://seb-prjcts-be.github.io/p5.penplotter/)** · **[Setup](https://seb-prjcts-be.github.io/p5.penplotter/docs/setup.html)** · **[Examples](https://seb-prjcts-be.github.io/p5.penplotter/docs/examples.html)** · **[vanilla.penplotter](https://github.com/seb-prjcts-be/vanilla.penplotter)**
+**[Open site](https://seb-prjcts-be.github.io/p5.penplotter/)** · **[Setup](https://seb-prjcts-be.github.io/p5.penplotter/docs/setup.html)** · **[Examples](https://seb-prjcts-be.github.io/p5.penplotter/docs/examples.html)** · **[Handbook (PDF)](https://seb-prjcts-be.github.io/p5.penplotter/docs/p5.penplotter-handbook.pdf)** · **[vanilla.penplotter](https://github.com/seb-prjcts-be/vanilla.penplotter)**
 
 You sketch in p5.js the way you always do. Write `plot.line()` instead of `line()` and the same line is drawn on the canvas and remembered in millimetres. Press a key, and the last frame goes to the plotter. No SVG, no vpype, no Inkscape in between.
 
@@ -200,9 +200,10 @@ Version 0.2.0 targets p5.js 2.2.2. The core and hardware status are determined s
 npm test
 npm run docs
 npm run manifest
+npm run handbook
 ```
 
-`npm test` checks the adapter against a fake p5 and against the real engine in the sibling folder `../vanilla.penplotter` (or `VANILLA_PLOTTER_ROOT`), every local link on the site, that every example is in the gallery and the manifest, and that the generated architecture page is current.
+`npm test` checks the adapter against a fake p5 and against the real engine in the sibling folder `../vanilla.penplotter` (or `VANILLA_PLOTTER_ROOT`), every local link on the site, that every example is in the gallery and the manifest, and that the generated architecture page is current. `npm run handbook` prints `docs/handbook.html`, the in-depth handbook, to `docs/p5.penplotter-handbook.pdf` with a headless Chrome or Edge.
 
 ## How this was made
 
