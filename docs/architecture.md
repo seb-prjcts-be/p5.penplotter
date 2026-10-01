@@ -56,7 +56,7 @@ identical in the README of `vanilla.penplotter`.
 When a driver is supplied, the adapter reads `PlotterEngine.version` and
 refuses a core older than `REQUIRES.core` with a plain sentence instead of
 an incomprehensible error later on. Without a driver, `createPlotterEngine()` and
-`drawPlotPlan()` keep working with any core.
+`drawRoute()` keep working with any core.
 
 The examples on this site deliberately load the core as a sibling folder, so that site and core
 move together; they therefore get the latest version, not a pinned one. The
@@ -67,6 +67,6 @@ version in their own project loads both libraries via jsDelivr on a tag, for exa
 
 ## Rendering contract
 
-`drawPlotPlan()` draws `plan.routes`, not the original artwork. Preview,
+`drawRoute()` draws `plan.routes`, not the original artwork. Preview,
 SVG and hardware thereby show the same planned geometry and path reversal.
 Pen-up travel remains a core preview feature and is not implemented twice.

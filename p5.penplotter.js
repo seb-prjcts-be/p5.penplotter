@@ -389,6 +389,8 @@ export function installP5Penplotter(p5Constructor, EngineClass, installOptions =
   p5Constructor.prototype.drawPlotPlan = function drawPlotPlan(plan, options = {}) {
     return drawPlanWithP5(this, plan, options);
   };
+  // The route is what you see: the plan, drawn the way the pen will run it.
+  p5Constructor.prototype.drawRoute = p5Constructor.prototype.drawPlotPlan;
 
   return p5Constructor;
 }

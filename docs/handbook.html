@@ -75,7 +75,7 @@
         <li><a href="#c6">Fills</a></li>
         <li><a href="#c7">The frame model: sixty frames, one plot</a></li>
         <li><a href="#c8">plot.go(): connect, confirm, plot, stop</a></li>
-        <li><a href="#c9">createPlotterEngine() and drawPlotPlan()</a></li>
+        <li><a href="#c9">createPlotterEngine() and drawRoute()</a></li>
         <li><a href="#c10">What is not recorded</a></li>
         <li><a href="#c11">p5.waves in a sketch</a></li>
         <li><a href="#c12">The examples, one by one</a></li>
@@ -94,7 +94,7 @@
       <tbody>
         <tr><td><code>createPlot(options)</code></td><td>the one you will use: an object whose shape methods draw on the canvas <em>and</em> record the same shape in millimetres; <code>go()</code> sends it to the pen.</td></tr>
         <tr><td><code>createPlotterEngine(options)</code></td><td>the bare engine with the canvas size as its page, when you want to talk to it directly.</td></tr>
-        <tr><td><code>drawPlotPlan(plan, options)</code></td><td>draws a plan the way the machine will draw it: the real order, reversed paths, moved seams.</td></tr>
+        <tr><td><code>drawRoute(plan, options)</code></td><td>draws a plan the way the machine will draw it: the real order, reversed paths, moved seams.</td></tr>
       </tbody>
     </table>
     <p>Everything else, geometry, optimisation, route planning, exports, machine profiles and the driver, lives in <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a>, which knows nothing about p5. The adapter contains no copy of any of it; a bug in the pipeline is fixed there, once, for both libraries. The one piece of real work the adapter does own is the translation from canvas pixels to millimetres on the bed.</p>
@@ -108,7 +108,7 @@ import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p
 
 installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
     <p>Why not auto-detect a global? Because load order and versions would become invisible, and the first thing that goes wrong with two libraries loaded from two places is a version mismatch nobody can see. So the contract is written down once, in code, as <code>REQUIRES = { core: "0.2.0", p5: "2.2.2" }</code>, and everything else is tested against it: <code>package.json</code>'s peer dependencies, the manifest, and the <em>Requirements</em> table in the README, which is byte for byte the same table as in the engine's README.</p>
-    <p>At install time the adapter checks three things. <code>p5</code> must be a constructor with a prototype. <code>PlotterEngine</code> must be a class. And when a driver is passed, it must expose <code>EbbDriver</code>, <code>createWebSerialTransport</code> and <code>EBB_PROFILES</code>, and the engine's static <code>version</code> must be 0.2.0 or newer, because an older engine has no driver at all. The refusal is a plain sentence: "p5.penplotter needs vanilla.penplotter 0.2.0 or newer for direct plotting; this one is 0.1.9. Update vanilla.penplotter first." Without a driver, nothing is checked and <code>createPlotterEngine()</code> and <code>drawPlotPlan()</code> work with any engine; only <code>go()</code> will throw.</p>
+    <p>At install time the adapter checks three things. <code>p5</code> must be a constructor with a prototype. <code>PlotterEngine</code> must be a class. And when a driver is passed, it must expose <code>EbbDriver</code>, <code>createWebSerialTransport</code> and <code>EBB_PROFILES</code>, and the engine's static <code>version</code> must be 0.2.0 or newer, because an older engine has no driver at all. The refusal is a plain sentence: "p5.penplotter needs vanilla.penplotter 0.2.0 or newer for direct plotting; this one is 0.1.9. Update vanilla.penplotter first." Without a driver, nothing is checked and <code>createPlotterEngine()</code> and <code>drawRoute()</code> work with any engine; only <code>go()</code> will throw.</p>
     <div class="fact"><strong>Pinned or latest</strong>The jsDelivr URLs above are pinned to a tag: a sketch that works today works next year. The GitHub Pages URLs (<code>https://seb-prjcts-be.github.io/…/</code>) always serve the latest <code>main</code> of both libraries, which is what the site's own examples use, with the version check as their guardrail. After an update, a browser can hold the old engine in its cache and the adapter will refuse it, correctly; reload with Ctrl+F5.</div>
 
     <h2 id="c3"><span class="num">3</span>Wiring a sketch: four ways and one timeline</h2>
@@ -196,9 +196,9 @@ plot.stipple(square, 150, 3);    // 150 dots, seed 3: same seed, same dots</code
     <p>While the pen runs, a click on the drawing calls <code>stop()</code>; so does <code>plot.stop()</code> from your own code. It calls the driver's <code>abort()</code>, which ends in the engine's safe stop: motion cleared, pen up, motors off. Every status change goes through <code>say()</code>: to the <code>log</code> function when you gave one, otherwise to the console. The examples pass a function that writes into a status line on the page.</p>
     <p>The confirmation is the adapter's own, on top of the engine's <code>confirmed: true</code> requirement; the bounds check, the speeds, the flow control and the safe stop are the engine's and are not duplicated here. The engine's handbook, chapter 9, describes what happens on the wire.</p>
 
-    <h2 id="c9"><span class="num">9</span>createPlotterEngine() and drawPlotPlan()</h2>
+    <h2 id="c9"><span class="num">9</span>createPlotterEngine() and drawRoute()</h2>
     <p><code>createPlotterEngine(options)</code> returns a bare <code>PlotterEngine</code> whose page is the current canvas: <code>width</code> and <code>height</code> from the sketch, <code>margin</code> 0, and the unit <code>px</code> unless you say otherwise. It is for sketches that want the engine's full surface, layers, pens, the optimizer's options, the exports, without the draw-and-record object. Because its unit is pixels, such an engine can preview and export (the exports convert pixels to physical sizes at 96 per inch) but cannot plot directly; give it <code>units: "mm"</code> and millimetre coordinates for that, or use <code>createPlot()</code>.</p>
-    <p><code>drawPlotPlan(plan, options)</code> draws a plan's routes with p5: <code>push</code>, <code>noFill</code>, then for every route a <code>stroke</code> in its tool's colour (or <code>options.stroke</code>), <code>strokeWeight(options.strokeWeight ?? 1)</code>, and a <code>beginShape</code>/<code>vertex</code>/<code>endShape</code>; <code>pop</code> at the end. It draws <code>plan.routes</code>, the paths in the order the machine will draw them, never the original artwork, so what you see is the planner's result including reversed paths and moved seams. It refuses anything that is not a <code>vanilla.penplotter/plan@1</code> with a routes array. <code>drawPlanWithP5(p, plan, options)</code> is the same function without the prototype helper, for code that has a p5 instance in hand.</p>
+    <p><code>drawRoute(plan, options)</code> draws a plan's routes with p5: <code>push</code>, <code>noFill</code>, then for every route a <code>stroke</code> in its tool's colour (or <code>options.stroke</code>), <code>strokeWeight(options.strokeWeight ?? 1)</code>, and a <code>beginShape</code>/<code>vertex</code>/<code>endShape</code>; <code>pop</code> at the end. It draws <code>plan.routes</code>, the paths in the order the machine will draw them, never the original artwork, so what you see is the planner's result including reversed paths and moved seams. It refuses anything that is not a <code>vanilla.penplotter/plan@1</code> with a routes array. <code>drawPlanWithP5(p, plan, options)</code> is the same function without the prototype helper, for code that has a p5 instance in hand.</p>
 
     <h2 id="c10"><span class="num">10</span>What is not recorded</h2>
     <p>The adapter records the arguments you pass to its shape methods. It does not look at p5's state, and that is the rule to remember when the paper differs from the screen:</p>
@@ -224,13 +224,13 @@ plot.polyline(points);</code></pre>
       <thead><tr><th>example</th><th>what it shows</th><th>wiring</th></tr></thead>
       <tbody>
         <tr><td>direct_plot</td><td>five wave lines in a frame; a click on the drawing plots, a second click stops; the status line is the adapter's log</td><td>instance mode, sibling imports</td></tr>
-        <tr><td>first_plot</td><td><code>createPlotterEngine()</code> and <code>drawPlotPlan()</code>: a hatched polygon and a circle, drawn as the planner ordered them</td><td>instance mode</td></tr>
+        <tr><td>first_plot</td><td><code>createPlotterEngine()</code> and <code>drawRoute()</code>: a hatched polygon and a circle, drawn as the planner ordered them</td><td>instance mode</td></tr>
         <tr><td>wave_plot</td><td>24 rows sampled from one of p5.waves' 34 formulas; a button rerolls the wave</td><td>instance mode</td></tr>
         <tr><td>molnar_grid</td><td>ten rows of nested squares that drift and turn a little more each row; one seed, R rerolls; a plain global-mode sketch with no imports</td><td>global mode, wiring in index.html</td></tr>
         <tr><td>calibration_sheet</td><td>a 100 mm ruler, hatch and cross-hatch scales down to 0.8 mm, stipple densities, circles from 2 to 40 mm, line pairs from 0.3 mm apart: only physical variables; plot it once per pen</td><td>global mode</td></tr>
         <tr><td>wave_field</td><td>streamlines through a direction field shaped by p5.waves; thirty-four fields in one sketch</td><td>global mode</td></tr>
         <tr><td>spirograph</td><td>three hypotrochoids around one centre, each a single unbroken polyline, wheels chosen so every curve closes within eleven turns</td><td>global mode</td></tr>
-        <tr><td>chaos_game</td><td>one point jumps halfway to a random corner and leaves a dot, 1 500 times; <code>plan({ strategy: "input" })</code> keeps the order of the game, so the Sierpinski triangle appears on paper dot by dot, half an hour long</td><td>global mode</td></tr>
+        <tr><td>chaos_game</td><td>one point jumps halfway to a random corner and leaves a dot, 1 500 times; <code>plan({ strategy: "drawn" })</code> keeps the order of the game, so the Sierpinski triangle appears on paper dot by dot, half an hour long</td><td>global mode</td></tr>
       </tbody>
     </table>
     <p>The global-mode examples are the test of the root: a <code>sketch.js</code> with no imports, no instance mode, only <code>createPlot</code>, <code>polygon</code> with <code>[x, y]</code> pairs, <code>random</code> and a for-loop, with the wiring in <code>index.html</code> as Setup 1 describes it. Every example page accepts <code>?embed</code>, which hides the navigation and the panel so the gallery can show the live canvas in a frame.</p>
@@ -309,7 +309,7 @@ plot.polygon(corners);</code></pre>
         <tr><td><code>installP5Penplotter(p5, PlotterEngine, { driver })</code></td><td>installs the three methods on <code>p5.prototype</code>; returns the constructor</td></tr>
         <tr><td><code>REQUIRES</code></td><td><code>{ core: "0.2.0", p5: "2.2.2" }</code>, the contract every other statement is tested against</td></tr>
         <tr><td><code>P5Plot</code></td><td>the class behind <code>createPlot()</code>: <code>clear</code>, <code>toMm</code>, <code>toPx</code>, the shape and fill methods, <code>plan</code>, <code>connect</code>, <code>go</code>, <code>stop</code>, <code>say</code>; fields <code>engine</code>, <code>scale</code>, <code>offset</code>, <code>status</code>, <code>busy</code></td></tr>
-        <tr><td><code>drawPlanWithP5(p, plan, options)</code></td><td>the renderer behind <code>drawPlotPlan()</code></td></tr>
+        <tr><td><code>drawPlanWithP5(p, plan, options)</code></td><td>the renderer behind <code>drawRoute()</code></td></tr>
         <tr><td><code>P5Penplotter</code> (default export)</td><td><code>{ version, requires, install, draw }</code></td></tr>
       </tbody>
     </table>

@@ -74,7 +74,7 @@
     <ol class="pipeline-list">
       <li><span>01</span><strong>createPlot()</strong><p>The one you will use. It gives you <code>plot</code>. Every <code>plot.line()</code>, <code>plot.circle()</code> and so on draws on your canvas as always, and remembers the shape for the plotter. <code>plot.go()</code> sends the drawing to the pen; <code>plot.stop()</code> lifts the pen and stops.</p></li>
       <li><span>02</span><strong>createPlotterEngine()</strong><p>For when you want to talk to the engine yourself: several pens, layers, or a file for another machine. Your canvas becomes the sheet. Most sketches never need this.</p></li>
-      <li><span>03</span><strong>drawPlotPlan()</strong><p>Shows you what the machine will actually do: the order it will draw in, the lines it will draw backwards, where it will start a circle. Good for seeing why the plot takes less time than your sketch would suggest.</p></li>
+      <li><span>03</span><strong>drawRoute()</strong><p>Shows you what the machine will actually do: the order it will draw in, the lines it will draw backwards, where it will start a circle. Good for seeing why the plot takes less time than your sketch would suggest.</p></li>
     </ol>
   </section>
 

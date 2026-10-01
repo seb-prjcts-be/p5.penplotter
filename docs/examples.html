@@ -32,7 +32,7 @@
   </div>
   <section id="first_plot" class="section section-dark">
     <div class="section-header">
-      <div class="section-tag">createPlotterEngine() · drawPlotPlan()</div>
+      <div class="section-tag">createPlotterEngine() · drawRoute()</div>
       <h2>First <span class="accent">plot</span></h2>
       <p class="section-desc">Create the core engine from a p5 canvas, build a hatched polygon and a circle, and draw the optimized plan back with p5: the same order and seams the machine would get.</p>
     </div>
@@ -41,7 +41,7 @@
 <pre class="ex-code-block"><code class="language-javascript">const plot = p.createPlotterEngine();
 plot.hatch(boundary, { spacing: 14, angle: Math.PI / 6 });
 plot.circle(324, 374, 126);
-p.drawPlotPlan(plot.plan());</code></pre>
+p.drawRoute(plot.plan());</code></pre>
 <a class="ex-full-link" href="../examples/first_plot/index.html">-&gt; full example</a>
     </div>
   </section>
@@ -141,7 +141,7 @@ plot.polyline(points);</code></pre>
 
   <section id="chaos_game" class="section">
     <div class="section-header">
-      <div class="section-tag">plot.point() · plan({ strategy: "input" }) · time is the order</div>
+      <div class="section-tag">plot.point() · plan({ strategy: "drawn" }) · time is the order</div>
       <h2>Chaos <span class="accent">game</span></h2>
       <p class="section-desc">One point jumps halfway to a random corner and leaves a dot; after a few hundred dots the Sierpinski triangle is there. The plan keeps the order of the game, so on paper it appears the way it appeared on screen: dot by dot, out of nothing, half an hour long.</p>
     </div>
@@ -151,7 +151,7 @@ plot.polyline(points);</code></pre>
 p.x = (p.x + c[0]) / 2;
 p.y = (p.y + c[1]) / 2;
 plot.point(p.x, p.y);
-plot.go({ plan: { strategy: "input" } });   // in the order of the game</code></pre>
+plot.go({ plan: { strategy: "drawn" } });   // in the order of the game</code></pre>
 <a class="ex-full-link" href="../examples/chaos_game/index.html">-&gt; full example</a>
     </div>
   </section>

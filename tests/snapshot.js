@@ -47,6 +47,7 @@ const plan = {
 };
 
 drawPlanWithP5(instance, plan, { strokeWeight: 2 });
+assert.equal(Object.getPrototypeOf(instance).drawRoute, Object.getPrototypeOf(instance).drawPlotPlan, "drawRoute is the word people use for drawPlotPlan");
 assert.deepEqual(instance.calls, [
   ["push"],
   ["noFill"],

@@ -46,7 +46,7 @@ new p5(function firstPlotSketch(p) {
 
   p.draw = function draw() {
     p.background("#ffffff");
-    p.drawPlotPlan(plotPlan, {
+    p.drawRoute(plotPlan, {
       strokeWeight: 1
     });
   };
