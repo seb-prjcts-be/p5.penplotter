@@ -58,7 +58,7 @@ assert.deepEqual(instance.calls, [
   ["endShape"],
   ["pop"]
 ]);
-assert.equal(P5Penplotter.version, "0.2.0");
+assert.equal(P5Penplotter.version, "0.2.1");
 assert.throws(() => drawPlanWithP5(instance, { routes: [] }), /vanilla.penplotter plan/);
 
 const files = [

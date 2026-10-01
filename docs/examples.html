@@ -26,7 +26,7 @@
   </nav>
     <main>
   <div class="ex-page-header">
-    <div class="section-tag">p5.js addon library · v0.2.0</div>
+    <div class="section-tag">p5.js addon library · v0.2.1</div>
     <h1>p5.<span class="accent">penplotter</span> Examples</h1>
     <p>Every preview is the example's own page, running live. Each one plots with P and stops with S; open it for the full sketch and its source. The wave examples load p5.waves, and plotting needs Chrome or Edge. Without a plotter you can still watch what the planner does with a sketch.</p>
   </div>
@@ -65,14 +65,14 @@ plot.polyline(points);</code></pre>
     <div class="section-header">
       <div class="section-tag">createPlot() · plot.go() · plot.stop()</div>
       <h2>Direct <span class="accent">plot</span></h2>
-      <p class="section-desc">Every <code>plot.…</code> call draws on the canvas and is remembered for the plotter. Press P and the last frame goes to an iDraw HSE / A2, no SVG in between.</p>
+      <p class="section-desc">Every <code>plot.…</code> call draws on the canvas and is remembered for the plotter. Click the drawing and the last frame goes to an iDraw HSE / A2, no SVG in between.</p>
     </div>
     <div class="ex-preview">
       <div class="ex-canvas"><iframe src="../examples/direct_plot/index.html?embed" title="Direct plot" loading="lazy"></iframe></div>
 <pre class="ex-code-block"><code class="language-javascript">plot = p.createPlot({ x: 80, y: 150, width: 80 });   // mm on the bed
 plot.rect(10, 10, 380, 230);
 plot.polyline(points);
-if (p.key === "p") plot.go();</code></pre>
+plot.go();   // click the drawing to plot</code></pre>
 <a class="ex-full-link" href="../examples/direct_plot/index.html">-&gt; full example</a>
     </div>
   </section>

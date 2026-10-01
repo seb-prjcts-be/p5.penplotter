@@ -30,12 +30,10 @@ function draw() {
   document.querySelector("#dots").textContent = String(dots);
   const minutes = plot.plan({ strategy: "input" }).stats.estimatedSeconds / 60;
   document.querySelector("#time").textContent = Math.round(minutes) + " min";
-  if (dots >= DOTS) noLoop();
-}
-
-function keyPressed() {
-  if (key === "p" || key === "P") plot.go({ plan: { strategy: "input" } }).catch((e) => say(e.message));
-  if (key === "s" || key === "S") plot.stop();
+  if (dots >= DOTS) {
+    noLoop();
+    plot.go({ plan: { strategy: "input" } });   // in the order of the game; click the drawing to start
+  }
 }
 
 function say(text) {

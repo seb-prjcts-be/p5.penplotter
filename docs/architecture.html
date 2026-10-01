@@ -25,7 +25,7 @@
   </nav>
   <main class="page">
     <header class="page-header">
-      <div class="section-tag">p5.js addon library · v0.2.0</div>
+      <div class="section-tag">p5.js addon library · v0.2.1</div>
       <h1>p5.<span class="accent">penplotter</span> Architecture of p5.penplotter</h1>
       <p class="guide-intro">Architecture · an adapter, not a second engine. Generated from <a href="architecture.md">architecture.md</a>; edit the Markdown and run <code>npm run docs</code>.</p>
     </header>
@@ -45,13 +45,13 @@
 <h2>Version contract</h2>
 <p>The dependency runs in one direction: <code>p5.penplotter</code> uses <code>vanilla.penplotter</code>, never the other way round. What the adapter needs is stated once in the code, as <code>REQUIRES</code> in <code>p5.penplotter.js</code>. <code>package.json</code>, the manifest and the <em>Requirements</em> table in the README are tested against it, and that table is literally identical in the README of <code>vanilla.penplotter</code>.</p>
 <p>When a driver is supplied, the adapter reads <code>PlotterEngine.version</code> and refuses a core older than <code>REQUIRES.core</code> with a plain sentence instead of an incomprehensible error later on. Without a driver, <code>createPlotterEngine()</code> and <code>drawPlotPlan()</code> keep working with any core.</p>
-<p>The examples on this site deliberately load the core as a sibling folder, so that site and core move together; they therefore get the latest version, not a pinned one. The version check is the guardrail there, and when publishing the rule is: first <code>vanilla.penplotter</code>, then <code>p5.penplotter</code>. Anyone who wants a fixed version in their own project loads both libraries via jsDelivr on a tag, for example <code>https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.2.0/vanilla.penplotter.js</code>.</p>
+<p>The examples on this site deliberately load the core as a sibling folder, so that site and core move together; they therefore get the latest version, not a pinned one. The version check is the guardrail there, and when publishing the rule is: first <code>vanilla.penplotter</code>, then <code>p5.penplotter</code>. Anyone who wants a fixed version in their own project loads both libraries via jsDelivr on a tag, for example <code>https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.3.1/vanilla.penplotter.js</code>.</p>
 <h2>Rendering contract</h2>
 <p><code>drawPlotPlan()</code> draws <code>plan.routes</code>, not the original artwork. Preview, SVG and hardware thereby show the same planned geometry and path reversal. Pen-up travel remains a core preview feature and is not implemented twice.</p>
   </main>
   <footer>
     <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; <a href="handbook.html">Handbook</a> &middot; <a href="about.html">About</a> &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine</p>
-    <p class="footer-sub">MIT License &middot; v0.2.0</p>
+    <p class="footer-sub">MIT License &middot; v0.2.1</p>
   </footer>
 </body>
 </html>

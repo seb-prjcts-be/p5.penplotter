@@ -25,7 +25,7 @@
   </nav>
   <main class="page">
     <header class="page-header">
-      <div class="section-tag">p5.js addon library · v0.2.0</div>
+      <div class="section-tag">p5.js addon library · v0.2.1</div>
       <h1>p5.<span class="accent">penplotter</span> Setup</h1>
       <p class="guide-intro">From a plain p5 sketch with <code>function setup()</code> to import maps. Same adapter, same engine — only the wiring changes. Start at 1 and stop where you are comfortable.</p>
     </header>
@@ -88,11 +88,7 @@ function draw() {
   plot.clear();
   plot.polygon(points);
   plot.circle(200, 150, 80);
-}
-
-function keyPressed() {
-  if (key === "p" || key === "P") plot.go().catch(function (e) { console.log(e.message); });
-  if (key === "s" || key === "S") plot.stop();
+  plot.go();   // ready: click the drawing to plot, click again to stop
 }</code></pre>
     <h3>Why it works</h3>
     <p><code>sketch.js</code> runs as a classic script at step 2 of the timeline. It only <em>defines</em> <code>setup</code> and <code>draw</code>; nothing is called yet. The inline module runs at step 4 and installs <code>createPlot</code> on <code>p5.prototype</code>. At step 6 p5 calls <code>setup()</code>, and by then the adapter has been there for two steps.</p>
@@ -141,11 +137,7 @@ new p5(function sketch(p) {
     plot.clear();
     plot.rect(10, 10, 380, 230);
     plot.circle(200, 125, 120);
-  };
-
-  p.keyPressed = function () {
-    if (p.key === "p" || p.key === "P") plot.go().catch(function (e) { console.log(e.message); });
-    if (p.key === "s" || p.key === "S") plot.stop();
+    plot.go();   // ready: click the drawing to plot, click again to stop
   };
 });</code></pre>
     <h3>Why choose it</h3>
@@ -186,20 +178,15 @@ function draw() {
   plot.clear();
   plot.rect(10, 10, 380, 230);
   plot.circle(200, 125, 120);
-}
-
-function keyPressed() {
-  if (key === "p" || key === "P") plot.go().catch(function (e) { console.log(e.message); });
-  if (key === "s" || key === "S") plot.stop();
+  plot.go();   // ready: click the drawing to plot, click again to stop
 }
 
 window.setup = setup;
-window.draw = draw;
-window.keyPressed = keyPressed;</code></pre>
+window.draw = draw;</code></pre>
     <h3>Why it works</h3>
-    <p>The module runs at step 4, installs the adapter, and puts <code>setup</code>, <code>draw</code> and <code>keyPressed</code> on <code>window</code>. At step 6 p5 finds them there, exactly as it would find a classic script's functions. Inside the functions, <code>createCanvas</code> and <code>key</code> resolve because p5 in global mode copies its API onto <code>window</code> before calling <code>setup()</code>.</p>
+    <p>The module runs at step 4, installs the adapter, and puts <code>setup</code> and <code>draw</code> on <code>window</code>. At step 6 p5 finds them there, exactly as it would find a classic script's functions. Inside the functions, <code>createCanvas</code> and <code>key</code> resolve because p5 in global mode copies its API onto <code>window</code> before calling <code>setup()</code>.</p>
     <h3>When to use it</h3>
-    <p>When you want one file and no <code>p.</code> prefix, and you are fine with the three <code>window.</code> lines at the bottom. Every p5 callback you use — <code>mousePressed</code>, <code>windowResized</code> — needs its own line. Forget one and p5 silently never calls it.</p>
+    <p>When you want one file and no <code>p.</code> prefix, and you are fine with the <code>window.</code> lines at the bottom. Every p5 callback you use — <code>mousePressed</code>, <code>windowResized</code> — needs its own line. Forget one and p5 silently never calls it.</p>
 
     <h2>4. Import maps and local neighbours</h2>
     <p>Two refinements for development. Both change only where the modules come from, not how the sketch is written; they combine with setup 1, 2 or 3.</p>
@@ -235,7 +222,7 @@ installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
     <ul>
       <li>The driver handed in at install: <code>installP5Penplotter(p5, PlotterEngine, { driver: Ebb })</code>. Without it, <code>plot.go()</code> throws and everything else still works.</li>
       <li>Chrome or Edge, on <code>localhost</code> or <code>https</code>. Web Serial exists nowhere else. A folder under XAMPP's <code>htdocs</code> opened as <code>http://localhost/…</code> qualifies; a file opened as <code>file://</code> does not, and neither does the p5.js Web Editor.</li>
-      <li><code>plot.go()</code> called from a key or mouse handler. The browser shows its port list only after a user gesture.</li>
+      <li>A click on the drawing. <code>plot.go()</code> is written at the end of the drawing; the browser shows its port list only after a click, so the status line asks you to check the machine and click. That click is the confirmation. A second click stops.</li>
     </ul>
     <p>Park the carriage in the home corner by hand before the first plot; the machine has no homing. The driver refuses any point outside the profile's travel with an explicit error instead of moving.</p>
 

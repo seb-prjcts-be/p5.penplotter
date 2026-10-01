@@ -105,6 +105,31 @@ async function testGo() {
   installP5Penplotter(FakeP5, FakeEngine);
   const noDriver = new FakeP5().createPlot({ confirm: () => true, log: () => {} });
   await assert.rejects(() => noDriver.go(), /driver/);
+
+  // go() written at the end of the sketch, no key: it waits for one click on
+  // the drawing, that click is the confirmation, and a second go() while
+  // waiting does not queue a second plot.
+  installP5Penplotter(FakeP5, FakeEngine, { driver: fakeKit(log) });
+  const said = [];
+  let click = null;
+  const fromSetup = new FakeP5().createPlot({
+    gesture: () => false,
+    click: () => new Promise((resolve) => { click = resolve; }),
+    confirm: () => { throw new Error("no dialog after a click"); },
+    log: (message) => said.push(message)
+  });
+  fromSetup.line(0, 0, 10, 10);
+  const first = fromSetup.go();
+  const second = fromSetup.go();
+  assert.match(said[0], /Click the drawing to start/);
+  assert.equal(said.length, 1, "the second go() while waiting says nothing new");
+  const runs = log.filter((entry) => entry[0] === "run").length;
+  click();
+  const [a, b] = await Promise.all([first, second]);
+  assert.equal(a.status, "complete");
+  assert.equal(b.status, "complete");
+  assert.equal(log.filter((entry) => entry[0] === "run").length, runs + 1, "one click, one plot, however often go() was written");
+  assert.match(said[said.length - 1], /plot complete/);
 }
 
 // Real consumer: the actual core and its EBB driver, when a checkout is at hand.

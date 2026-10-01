@@ -62,16 +62,13 @@ function draw() {
   plot.rect(10 * mm, 10 * mm, 180 * mm, 260 * mm);
 
   document.querySelector("#paths").textContent = String(plot.plan().stats.paths);
+
+  plot.go();   // the sheet is ready: click the drawing to plot, click again to stop
 }
 
 function cellAt(x, y, size) {
   const mm = width / 200;
   return [[x * mm, y * mm], [(x + size) * mm, y * mm], [(x + size) * mm, (y + size) * mm], [x * mm, (y + size) * mm]];
-}
-
-function keyPressed() {
-  if (key === "p" || key === "P") plot.go().catch(function (e) { say(e.message); });
-  if (key === "s" || key === "S") plot.stop();
 }
 
 function say(text) {

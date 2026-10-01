@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+  "version": "0.2.1",
   "generated": "2026-09-30",
   "p5js_target": "2.2.2",
   "core": "vanilla.penplotter@>=0.2.0",

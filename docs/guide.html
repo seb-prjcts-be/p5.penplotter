@@ -25,7 +25,7 @@
   </nav>
   <main class="page">
     <header class="page-header">
-      <div class="section-tag">p5.js addon library · v0.2.0</div>
+      <div class="section-tag">p5.js addon library · v0.2.1</div>
       <h1>p5.<span class="accent">penplotter</span> Guide</h1>
       <p class="guide-intro">p5.penplotter stays small: install it, build paths, then draw the actual plan.</p>
     </header>
@@ -39,7 +39,7 @@
 import { installP5Penplotter } from "https://seb-prjcts-be.github.io/p5.penplotter/p5.penplotter.js";
 
 installP5Penplotter(p5, PlotterEngine);</code></pre>
-    <p class="callout">Both URLs serve the latest <code>main</code>. To pin a version, load both libraries from jsDelivr on a tag, for example <code>https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.2.0/vanilla.penplotter.js</code>.</p>
+    <p class="callout">Both URLs serve the latest <code>main</code>. To pin a version, load both libraries from jsDelivr on a tag, for example <code>https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.3.1/vanilla.penplotter.js</code>.</p>
 
     <h2>3. Global mode</h2>
     <p>A module creates no globals, so <code>function setup()</code> inside a module <code>sketch.js</code> is never seen by p5. For global mode, keep the imports in <code>index.html</code> and make <code>sketch.js</code> a plain script:</p>
@@ -86,7 +86,7 @@ for (let x = 40; x <= 760; x += 4) {
 plot.polyline(points);</code></pre>
 
     <h2>6. Straight to the pen</h2>
-    <p>Hand the core's driver to the adapter. Every <code>plot.…</code> call then draws on the canvas and is remembered for the plotter; <code>plot.go()</code> sends it — no SVG in between. Use Chrome or Edge, call <code>go()</code> from a key or mouse handler, and park the carriage in the home corner first.</p>
+    <p>Hand the core's driver to the adapter. Every <code>plot.…</code> call then draws on the canvas and is remembered for the plotter; <code>plot.go()</code> sends it, no SVG in between. Write it where the drawing is finished; the status line then asks you to check the machine and click the drawing, and that click starts the pen. A second click stops it. Use Chrome or Edge, and park the carriage in the home corner first.</p>
     <pre><code>import * as Ebb from "../vanilla.penplotter/src/driver/ebb.js";
 installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
 
@@ -102,11 +102,7 @@ function draw() {
   background(255);   // screen only
   plot.clear();
   plot.rect(10, 10, 380, 230);
-}
-
-function keyPressed() {
-  if (key === "p") plot.go();
-  if (key === "s") plot.stop();
+  plot.go();         // ready: click the drawing to plot, click again to stop
 }</code></pre>
     <p class="callout">Tested on one machine so far: an iDraw HSE / A2 with EBB firmware 3.0.2.</p>
 
@@ -141,11 +137,7 @@ function draw() {
   noFill();
   plot.clear();
   for (let d = 40; d &lt;= 560; d += 20) plot.circle(300, 300, d);
-}
-
-function keyPressed() {
-  if (key === "p") plot.go();
-  if (key === "s") plot.stop();
+  plot.go();   // click the drawing to plot
 }</code></pre>
     <h3>A wave, twenty times</h3>
     <pre><code>function draw() {

@@ -1,6 +1,6 @@
 // Wave field — streamlines through a direction field that p5.waves shapes.
 // Two waves, one per axis, give every point an angle; sixty lines follow it.
-// One seed per sheet: R for another, P to plot, S to stop.
+// One seed per sheet: R for another; click the drawing to plot, click again to stop.
 let plot;
 let seed = 1;
 
@@ -54,6 +54,8 @@ function draw() {
   document.querySelector("#seed").textContent = String(seed);
   document.querySelector("#wave").textContent = String(shape);
   document.querySelector("#paths").textContent = String(plot.plan().stats.paths);
+
+  plot.go();   // ready: click the drawing to plot, click again to stop
 }
 
 function keyPressed() {
@@ -61,8 +63,6 @@ function keyPressed() {
     seed += 1;
     redraw();
   }
-  if (key === "p" || key === "P") plot.go().catch(function (e) { say(e.message); });
-  if (key === "s" || key === "S") plot.stop();
 }
 
 function say(text) {

@@ -35,6 +35,8 @@ function draw() {
 
   document.querySelector("#seed").textContent = String(seed);
   document.querySelector("#paths").textContent = String(plot.plan().stats.paths);
+
+  plot.go();   // ready: click the drawing to plot, click again to stop
 }
 
 function vierkant(cx, cy, straal, hoek) {
@@ -51,8 +53,6 @@ function keyPressed() {
     seed = seed + 1;
     redraw();
   }
-  if (key === "p" || key === "P") plot.go().catch(function (e) { melding(e.message); });
-  if (key === "s" || key === "S") plot.stop();
 }
 
 function melding(tekst) {

@@ -104,6 +104,7 @@ export class P5Plot {
     this.transport = null;
     this.driver = null;
     this.busy = false;
+    this.pending = null; // a go() waiting for the click that starts it
     this.status = "idle";
     this.clear();
   }
@@ -281,25 +282,68 @@ export class P5Plot {
     return this;
   }
 
+  // go() is written at the end of the drawing, like any other line of the
+  // sketch. A browser shows its port list only after a click or a key, so
+  // when go() runs from setup() or draw() it waits for one click on the
+  // drawing; that click is also the "yes" to the safety checklist in the
+  // status line. Called from a key or mouse handler, go() goes straight on
+  // and asks once with a dialog. While plotting, a click on the drawing stops.
+  hasGesture() {
+    if (this.options.gesture) return this.options.gesture();
+    const activation = globalThis.navigator?.userActivation;
+    return activation ? activation.isActive : true;
+  }
+
+  clickTarget() {
+    return this.p._renderer?.canvas || this.p.canvas || globalThis.document || null;
+  }
+
+  nextClick() {
+    if (this.options.click) return this.options.click();
+    const target = this.clickTarget();
+    return new Promise((resolve) => target.addEventListener("click", resolve, { once: true }));
+  }
+
   async go(options = {}) {
     this.requireKit();
     if (this.busy) return { status: "busy" };
+    if (this.pending) return this.pending;
+    if (this.hasGesture()) return this.start(options, false);
+    this.say("Ready to plot. Carriage in the home corner, paper in place, hands clear? Click the drawing to start.");
+    this.pending = this.nextClick().then(async () => {
+      this.pending = null;
+      try {
+        return await this.start(options, true);
+      } catch (error) {
+        this.say(error.message);
+        return { status: "failed", error };
+      }
+    });
+    return this.pending;
+  }
+
+  async start(options, clicked) {
     const confirm = this.options.confirm || ((text) => globalThis.confirm(text));
     const plan = this.plan(options.plan);
     await this.connect();
-    const ok = confirm([
-      "Plot now?",
-      "",
-      "• The carriage is parked in the home corner.",
-      "• Paper is in place, no magnet on the drawing or on the way to it.",
-      "• Hands are clear of the arm."
-    ].join("\n"));
-    if (!ok) {
-      this.say("cancelled");
-      return { status: "cancelled" };
+    if (!clicked) {
+      const ok = confirm([
+        "Plot now?",
+        "",
+        "• The carriage is parked in the home corner.",
+        "• Paper is in place, no magnet on the drawing or on the way to it.",
+        "• Hands are clear of the arm."
+      ].join("\n"));
+      if (!ok) {
+        this.say("cancelled");
+        return { status: "cancelled" };
+      }
     }
     this.busy = true;
-    this.say("plotting…");
+    this.say("plotting… click the drawing to stop.");
+    const target = this.clickTarget();
+    const stopOnClick = () => this.stop();
+    if (target) target.addEventListener("click", stopOnClick);
     try {
       const result = await this.driver.run(plan, { ...options, confirmed: true });
       this.say(`plot ${result.status}`);
@@ -308,6 +352,7 @@ export class P5Plot {
       this.say(`stopped safely: ${error.message}`);
       throw error;
     } finally {
+      if (target) target.removeEventListener("click", stopOnClick);
       this.busy = false;
     }
   }
@@ -349,7 +394,7 @@ export function installP5Penplotter(p5Constructor, EngineClass, installOptions =
 }
 
 export const P5Penplotter = Object.freeze({
-  version: "0.2.0",
+  version: "0.2.1",
   requires: REQUIRES,
   install: installP5Penplotter,
   draw: drawPlanWithP5

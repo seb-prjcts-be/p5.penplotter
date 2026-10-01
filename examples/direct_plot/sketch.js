@@ -54,23 +54,9 @@ new p5(function directPlotSketch(p) {
       plot.polyline(points);
     }
     document.querySelector("#paths").textContent = String(plot.plan().stats.paths);
+    plot.go();   // ready: click the drawing to plot, click again to stop
   };
 
-  async function go() {
-    try {
-      await plot.go();
-    } catch (error) {
-      document.querySelector("#status").textContent = error.message;
-    }
-  }
-
-  p.keyPressed = function keyPressed() {
-    if (p.key === "p" || p.key === "P") go();
-    if (p.key === "s" || p.key === "S") plot.stop();
-  };
-
-  document.querySelector("#go").addEventListener("click", go);
-  document.querySelector("#stop").addEventListener("click", () => plot.stop());
   document.querySelector("#reroll").addEventListener("click", () => {
     waveSeed = Math.floor(Math.random() * 34);
     p.redraw();

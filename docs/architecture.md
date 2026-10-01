@@ -63,7 +63,7 @@ move together; they therefore get the latest version, not a pinned one. The
 version check is the guardrail there, and when publishing the rule is: first
 `vanilla.penplotter`, then `p5.penplotter`. Anyone who wants a fixed
 version in their own project loads both libraries via jsDelivr on a tag, for example
-`https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.2.0/vanilla.penplotter.js`.
+`https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.3.1/vanilla.penplotter.js`.
 
 ## Rendering contract
 

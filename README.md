@@ -2,7 +2,7 @@
 
 **[Open site](https://seb-prjcts-be.github.io/p5.penplotter/)** · **[Setup](https://seb-prjcts-be.github.io/p5.penplotter/docs/setup.html)** · **[Examples](https://seb-prjcts-be.github.io/p5.penplotter/docs/examples.html)** · **[Handbook (PDF)](https://seb-prjcts-be.github.io/p5.penplotter/docs/p5.penplotter-handbook.pdf)** · **[vanilla.penplotter](https://github.com/seb-prjcts-be/vanilla.penplotter)**
 
-You sketch in p5.js the way you always do. Write `plot.line()` instead of `line()` and the same line is drawn on the canvas and remembered in millimetres. Press a key, and the last frame goes to the plotter. No SVG, no vpype, no Inkscape in between.
+You sketch in p5.js the way you always do. Write `plot.line()` instead of `line()` and the same line is drawn on the canvas and remembered in millimetres. Write `plot.go()` when the drawing is done, click it, and it goes to the plotter. No SVG, no vpype, no Inkscape in between.
 
 **Which of the two do you need?**
 
@@ -14,7 +14,7 @@ You sketch in p5.js the way you always do. Write `plot.line()` instead of `line(
 | to the pen | `plot.go()` | `driver.run(plot.plan())` |
 | take it if | you sketch in p5.js | you work without p5, or want to build your own layer on top |
 
-**Two ways to draw, two modes.** *Sheet mode*: draw everything, then plot. Your sketch makes the whole drawing, you press P, the plotter draws it start to finish. That is what 0.2.0 does. *Live mode*: draw something, plot it. Your sketch makes one thing, the plotter draws it, your sketch makes the next; the drawing grows on paper while you watch, in the order you made it. That is for things that happen over time: an animation appearing dot by dot, a hand drawing in the air, a drawing nobody looks at on a screen. Live mode is designed, not built; [Two modes](https://seb-prjcts-be.github.io/vanilla.penplotter/docs/live.html) explains both in plain words first, then the design.
+**Two ways to draw, two modes.** *Sheet mode*: draw everything, then plot. Your sketch makes the whole drawing, you click it, the plotter draws it start to finish. That is what 0.2.0 does. *Live mode*: draw something, plot it. Your sketch makes one thing, the plotter draws it, your sketch makes the next; the drawing grows on paper while you watch, in the order you made it. That is for things that happen over time: an animation appearing dot by dot, a hand drawing in the air, a drawing nobody looks at on a screen. Live mode is designed, not built; [Two modes](https://seb-prjcts-be.github.io/vanilla.penplotter/docs/live.html) explains both in plain words first, then the design.
 
 **Three commands, no thinking of its own.** `createPlot()`, `createPlotterEngine()` and `drawPlotPlan()` become part of p5, in global and instance mode. Everything that takes thought, the shapes in millimetres, the tidying, the route for the pen, the files for other machines and the talking to the plotter, stays in `vanilla.penplotter`. When something is fixed there, it is fixed for everyone at once.
 
@@ -35,9 +35,9 @@ p5.js / p5.waves
 ```html
 <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
 <script type="module">
-  import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.2.0/vanilla.penplotter.js";
-  import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.2.0/src/driver/ebb.js";
-  import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.0/p5.penplotter.js";
+  import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.3.1/vanilla.penplotter.js";
+  import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.3.1/src/driver/ebb.js";
+  import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.1/p5.penplotter.js";
   installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
 </script>
 <script src="sketch.js"></script>
@@ -64,15 +64,11 @@ function draw() {
   plot.clear();             // new frame, new job
   plot.rect(10, 10, 380, 230);
   plot.line(30, 125, 370, 125);
-}
-
-function keyPressed() {
-  if (key === "p") plot.go();   // connect, confirm, plot
-  if (key === "s") plot.stop(); // pen up, motors off
+  plot.go();                // the drawing is ready: click it to plot, click again to stop
 }
 ```
 
-Call `plot.go()` from a key or mouse handler; a browser shows its port list only after a user gesture. Park the carriage in the home corner by hand first; the machine has no home position of its own. And remember that `draw()` runs sixty times a second while a plotter draws once: what gets plotted is always the last frame.
+`plot.go()` is written where the drawing is finished, like any other line. It does not plot by itself: the browser only opens its list of ports after a click, so the status line asks you to check the machine and click the drawing. That click is the confirmation. While the pen runs, a click on the drawing stops it, pen up. Park the carriage in the home corner by hand first; the machine has no home position of its own. And remember that `draw()` runs sixty times a second while a plotter draws once: what gets plotted is always the last frame.
 
 Tested on one machine: iDraw HSE / A2 (EBB firmware 3.0.2) on 2026-09-21.
 
@@ -90,7 +86,7 @@ This table is literally identical in the README of `vanilla.penplotter`; a test 
 | direct plotting | iDraw HSE / A2 with EBB firmware 3.0.2 | the only physically tested profile (`idraw-hse-a2`) |
 | examples | p5.waves 3.4.0, vanilla.waves (pinned commit) | examples only; neither library depends on them |
 
-Tested together: `vanilla.penplotter` 0.3.1 with `p5.penplotter` 0.2.0.
+Tested together: `vanilla.penplotter` 0.3.1 with `p5.penplotter` 0.2.1.
 
 Publishing: always `vanilla.penplotter` first, then `p5.penplotter`. The examples of
 `p5.penplotter` load the core as a sibling folder (`../vanilla.penplotter/`), locally under
@@ -101,9 +97,9 @@ pinned one; the version check in the adapter catches a core that does not match.
 ## Instance mode
 
 ```js
-import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.2.0/vanilla.penplotter.js";
-import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.2.0/src/driver/ebb.js";
-import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.0/p5.penplotter.js";
+import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.3.1/vanilla.penplotter.js";
+import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.3.1/src/driver/ebb.js";
+import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.1/p5.penplotter.js";
 
 installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
 
@@ -113,10 +109,8 @@ new p5(function sketch(p) {
     p.createCanvas(600, 600);
     plot = p.createPlot({ x: 147, y: 66, width: 300 });
     plot.circle(300, 300, 400);
+    plot.go();   // click the drawing to plot
     p.noLoop();
-  };
-  p.keyPressed = function keyPressed() {
-    if (p.key === "p") plot.go();
   };
 });
 ```
@@ -170,9 +164,9 @@ plot.polyline(points);
 
 ## Examples
 
-Each one is a standalone page under `examples/`, plots with P and stops with S; the [examples page](https://seb-prjcts-be.github.io/p5.penplotter/docs/examples.html) shows them live.
+Each one is a standalone page under `examples/`; a click on the drawing plots, a second click stops; the [examples page](https://seb-prjcts-be.github.io/p5.penplotter/docs/examples.html) shows them live.
 
-- `direct_plot` - draw with `plot.…`, press P, and the sketch goes to the plotter
+- `direct_plot` - draw with `plot.…`, click the drawing, and the sketch goes to the plotter
 - `first_plot` - create the engine from a p5 canvas and draw what the planner made of it
 - `wave_plot` - 24 rows sampled from one of p5.waves' 34 formulas
 - `molnar_grid` - nested squares that drift and turn a little more with every row; a plain global-mode sketch
@@ -195,7 +189,7 @@ Each one is a standalone page under `examples/`, plots with P and stops with S; 
 - `drawPlotPlan(plan, options)` — draws the plan as the machine will draw it, via p5.js.
 - `drawPlanWithP5(p, plan, options)` — the same renderer without the prototype helper.
 
-Version 0.2.0 targets p5.js 2.2.2. The core and hardware status are determined solely by `vanilla.penplotter`.
+Version 0.2.1 targets p5.js 2.2.2. The core and hardware status are determined solely by `vanilla.penplotter`.
 
 ## Test
 
