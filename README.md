@@ -88,7 +88,7 @@ This table is literally identical in the README of `vanilla.penplotter`; a test 
 | direct plotting | iDraw HSE / A2 with EBB firmware 3.0.2 | the only physically tested profile (`idraw-hse-a2`) |
 | examples | p5.waves 3.4.0, vanilla.waves (pinned commit) | examples only; neither library depends on them |
 
-Tested together: `vanilla.penplotter` 0.2.0 with `p5.penplotter` 0.2.0.
+Tested together: `vanilla.penplotter` 0.3.0 with `p5.penplotter` 0.2.0.
 
 Publishing: always `vanilla.penplotter` first, then `p5.penplotter`. The examples of
 `p5.penplotter` load the core as a sibling folder (`../vanilla.penplotter/`), locally under
