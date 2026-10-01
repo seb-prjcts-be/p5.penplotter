@@ -126,7 +126,7 @@ installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
       <li><strong>Global mode from a module.</strong> The sketch is a module and publishes its functions itself: <code>window.setup = setup;</code> and so on, one line per p5 callback you use. Forget one and p5 silently never calls it.</li>
       <li><strong>Import maps and local neighbours.</strong> Not a fifth form but a refinement of any of the above: bare names like <code>"p5.penplotter"</code> resolved by an import map in <code>index.html</code>, or relative paths to sibling folders while working on the libraries themselves.</li>
     </ol>
-    <p>The <a href="setup.html">Setup</a> page shows all four in full, with what breaks and how the error reads. Whichever you pick, plotting for real needs the same three things: the driver handed in at install, Chrome or Edge on <code>localhost</code> or https (Web Serial exists nowhere else; not in Firefox, not in Safari, not in the Web Editor's iframe, not from a <code>file://</code> URL), and one click on the drawing, because a browser shows its port list only after a click; <code>plot.go()</code> itself is written at the end of the drawing and waits for that click.</p>
+    <p>The <a href="setup.html">Setup</a> page shows all four in full, with what breaks and how the error reads. Whichever you pick, plotting for real needs the same three things: the driver handed in at install, Chrome or Edge on <code>localhost</code> or https (Web Serial exists nowhere else; not in Firefox, not in Safari, not from a <code>file://</code> URL; the p5.js Web Editor runs on https and passes it through, confirmed on paper on 2026-10-01), and one click on the drawing, because a browser shows its port list only after a click; <code>plot.go()</code> itself is written at the end of the drawing and waits for that click.</p>
 
     <h2 id="c4"><span class="num">4</span>createPlot(): one object for screen and paper</h2>
     <p><code>createPlot(options)</code> returns a <code>P5Plot</code>. Its constructor decides one thing that everything else depends on: the scale between canvas pixels and millimetres on the bed.</p>
@@ -217,7 +217,7 @@ for (let x = 40; x &lt;= 760; x += 4) {
   points.push({ x, y: 400 + Waves.wave(x, { wave: "triangle sine", t: 0, amplitude: 80, frequency: 0.04 }) });
 }
 plot.polyline(points);</code></pre>
-    <p>The Wave field example goes one step further: two waves, one per axis, give every point of the sheet a direction, and sixty lines follow that direction until they leave the frame. The seed picks the wave shape, so one sketch is thirty-four different fields.</p>
+    <p>The Wave field example goes one step further: two waves, one per axis, give every point of the sheet a direction, and sixty lines follow that direction until they leave the frame. The seed picks the wave shape, so one sketch is thirty-five different fields.</p>
 
     <h2 id="c12"><span class="num">12</span>The examples, one by one</h2>
     <table>
@@ -225,7 +225,7 @@ plot.polyline(points);</code></pre>
       <tbody>
         <tr><td>direct_plot</td><td>five wave lines in a frame; a click on the drawing plots, a second click stops; the status line is the adapter's log</td><td>instance mode, sibling imports</td></tr>
         <tr><td>first_plot</td><td><code>createPlotterEngine()</code> and <code>drawRoute()</code>: a hatched polygon and a circle, drawn as the planner ordered them</td><td>instance mode</td></tr>
-        <tr><td>wave_plot</td><td>24 rows sampled from one of p5.waves' 34 formulas; a button rerolls the wave</td><td>instance mode</td></tr>
+        <tr><td>wave_plot</td><td>24 rows sampled from one of p5.waves' 35 formulas; a button rerolls the wave</td><td>instance mode</td></tr>
         <tr><td>molnar_grid</td><td>ten rows of nested squares that drift and turn a little more each row; one seed, R rerolls; a plain global-mode sketch with no imports</td><td>global mode, wiring in index.html</td></tr>
         <tr><td>calibration_sheet</td><td>a 100 mm ruler, hatch and cross-hatch scales down to 0.8 mm, stipple densities, circles from 2 to 40 mm, line pairs from 0.3 mm apart: only physical variables; plot it once per pen</td><td>global mode</td></tr>
         <tr><td>wave_field</td><td>streamlines through a direction field shaped by p5.waves; thirty-four fields in one sketch</td><td>global mode</td></tr>
@@ -281,7 +281,7 @@ plot.polygon(corners);</code></pre>
         <tr><td><code>p5 is not defined</code> in the module</td><td>the p5 script tag comes after the module, or failed to load</td><td>load p5 first</td></tr>
         <tr><td>"needs vanilla.penplotter 0.2.0 or newer"</td><td>an old engine, often the browser's cached copy after an update</td><td>reload with Ctrl+F5, or update the pinned tag</td></tr>
         <tr><td>"plot.go() needs the driver"</td><td>installed without <code>{ driver: Ebb }</code></td><td>pass the engine's <code>src/driver/ebb.js</code> module</td></tr>
-        <tr><td>"No plotter was chosen. If no list appeared at all …"</td><td>no port picker: not Chrome or Edge, not localhost or https, or an iframe (the Web Editor's preview)</td><td>open the page in Chrome or Edge itself, from a local server, and plot from a key</td></tr>
+        <tr><td>"No plotter was chosen. If no list appeared at all …"</td><td>no port picker: not Chrome or Edge, not localhost or https, or an iframe that does not pass Web Serial through (the p5.js Web Editor's does)</td><td>open the page in Chrome or Edge itself, from a local server or the Web Editor, and plot from a click</td></tr>
         <tr><td>"Point (…) mm is outside the machine travel"</td><td>the canvas at its offset and width does not fit the 594 × 432 mm bed</td><td>smaller <code>width</code> or a smaller offset</td></tr>
         <tr><td><code>Cannot redefine property: square</code></td><td>the sketch defines a function with the name of a p5 global (<code>square</code>, <code>circle</code>, <code>point</code>, …)</td><td>rename it; p5 2.x protects its globals</td></tr>
         <tr><td>the paper differs from the screen</td><td>a transform, <code>rectMode</code>, <code>ellipseMode</code> or a fill that the canvas honoured and the recording did not</td><td>chapter 10</td></tr>

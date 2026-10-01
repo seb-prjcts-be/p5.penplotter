@@ -22,7 +22,7 @@ function draw() {
   stroke("#111111");
   noFill();
   randomSeed(seed);
-  const shape = floor(random(34));
+  const shape = floor(random(35));
   plot.clear();
 
   // ── 1 · seeds on a jittered grid ──

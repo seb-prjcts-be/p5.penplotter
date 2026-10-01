@@ -70,7 +70,7 @@ function draw() {
 
 `plot.go()` is written where the drawing is finished, like any other line. It does not plot by itself: the browser only opens its list of ports after a click, so the status line asks you to check the machine and click the drawing. That click is the confirmation. While the pen runs, a click on the drawing stops it, pen up. Park the carriage in the home corner by hand first; the machine has no home position of its own. And remember that `draw()` runs sixty times a second while a plotter draws once: what gets plotted is always the last frame.
 
-Tested on one machine: iDraw HSE / A2 (EBB firmware 3.0.2) on 2026-09-21.
+Tested on one machine: iDraw HSE / A2 (EBB firmware 3.0.2) on 2026-09-21. Plots from the p5.js Web Editor as well, confirmed on paper on 2026-10-01.
 
 ## Requirements
 
@@ -168,10 +168,10 @@ Each one is a standalone page under `examples/`; a click on the drawing plots, a
 
 - `direct_plot` - draw with `plot.…`, click the drawing, and the sketch goes to the plotter
 - `first_plot` - create the engine from a p5 canvas and draw what the planner made of it
-- `wave_plot` - 24 rows sampled from one of p5.waves' 34 formulas
+- `wave_plot` - 24 rows sampled from one of p5.waves' 35 formulas
 - `molnar_grid` - nested squares that drift and turn a little more with every row; a plain global-mode sketch
 - `calibration_sheet` - ruler, tone scales, circles and line spacing: what your pen does on your paper
-- `wave_field` - streamlines through a direction field that p5.waves shapes; 34 fields in one sketch
+- `wave_field` - streamlines through a direction field that p5.waves shapes; 35 fields in one sketch
 - `spirograph` - three hypotrochoids, each one unbroken polyline: the drawing a plotter was made for
 - `chaos_game` - 1 500 dots that jump halfway to a random corner; plotted in the order of the game, the Sierpinski triangle appears on paper dot by dot
 
