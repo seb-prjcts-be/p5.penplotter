@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Direct plot — p5.penplotter + p5.waves</title>
+  <title>Direct plot - p5.penplotter + p5.waves</title>
   <link rel="icon" href="../../docs/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../showcase.css">
   <script>if (location.search.includes("embed")) document.documentElement.classList.add("embed");</script>
   <style>
@@ -24,29 +26,45 @@
       <li><a href="../../index.html">Showcase</a></li>
       <li><a href="../../docs/examples.html" class="active">Examples</a></li>
       <li><a href="../../docs/setup.html">Setup</a></li>
-      <li><a href="../../docs/guide.html">Guide</a></li>
       <li><a href="../../docs/architecture.html">Architecture</a></li>
+      <li><a href="../../docs/guide.html">Guide</a></li>
       <li><a href="../../docs/about.html">About</a></li>
       <li><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">GitHub</a></li>
     </ul>
   </nav>
-  <main>
-    <div class="canvas-wrap" id="p5-preview"></div>
-    <aside class="panel">
-      <p class="tag">03 · Sketch to pen</p>
+    <main class="demo-page">
+    <div class="demo-header">
+      <div class="demo-number">03 · Sketch to pen</div>
       <h1>Direct plot</h1>
       <p>Every <code>plot.…</code> call draws on the canvas and is remembered for the plotter. <code>plot.go()</code> sends it to an iDraw HSE / A2 — no SVG in between. Use Chrome or Edge, and park the carriage in the home corner first.</p>
+    </div>
+    <div class="demo-layout">
+      <div class="demo-code">
+        <div class="code-label">Core snippet</div>
+        <pre><code class="language-javascript">plot = p.createPlot({ x: 80, y: 150, width: 80 });   // mm on the bed
+plot.rect(10, 10, 380, 230);
+plot.polyline(points);
+if (p.key === "p") plot.go();</code></pre>
+      </div>
+      <div class="demo-right">
+        <div class="demo-canvas" id="p5-preview"></div>
       <dl>
-        <div><dt>On the bed</dt><dd id="size">—</dd></div>
-        <div><dt>From home</dt><dd id="place">—</dd></div>
-        <div><dt>Paths</dt><dd id="paths">—</dd></div>
+      <div><dt>On the bed</dt><dd id="size">—</dd></div>
+      <div><dt>From home</dt><dd id="place">—</dd></div>
+      <div><dt>Paths</dt><dd id="paths">—</dd></div>
       </dl>
       <p id="status" role="status">Press P or the button to plot.</p>
       <button id="go" type="button">plot.go()</button>
       <button id="stop" class="stop" type="button">plot.stop() — pen up</button>
       <button id="reroll" class="secondary" type="button">Choose another wave</button>
-    </aside>
+      </div>
+    </div>
   </main>
+  <footer>
+    <p><a href="../../docs/examples.html">&larr; All examples</a> &nbsp;&middot;&nbsp; <a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter on GitHub</a></p>
+    <p class="footer-sub">p5.penplotter v0.2.0 &nbsp;&middot;&nbsp; p5.js v2.2.2 &nbsp;&middot;&nbsp; iDraw HSE / A2</p>
+  </footer>
   <script type="module" src="sketch.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
 </body>
 </html>

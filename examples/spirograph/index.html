@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Spirograph — p5.penplotter</title>
+  <title>Spirograph - p5.penplotter</title>
   <link rel="icon" href="../../docs/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../showcase.css">
   <script>if (location.search.includes("embed")) document.documentElement.classList.add("embed");</script>
   <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
@@ -25,26 +27,42 @@
       <li><a href="../../index.html">Showcase</a></li>
       <li><a href="../../docs/examples.html" class="active">Examples</a></li>
       <li><a href="../../docs/setup.html">Setup</a></li>
-      <li><a href="../../docs/guide.html">Guide</a></li>
       <li><a href="../../docs/architecture.html">Architecture</a></li>
+      <li><a href="../../docs/guide.html">Guide</a></li>
       <li><a href="../../docs/about.html">About</a></li>
       <li><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">GitHub</a></li>
     </ul>
   </nav>
-  <main>
-    <div class="canvas-wrap" id="p5-preview"></div>
-    <aside class="panel">
-      <p class="tag">Hypotrochoids · one polyline each</p>
+    <main class="demo-page">
+    <div class="demo-header">
+      <div class="demo-number">Hypotrochoids · one polyline each</div>
       <h1>Spirograph</h1>
       <p>Three hypotrochoids around one centre; the seed picks the gear ratios. Each curve is a single unbroken polyline, so the pen never lifts until it closes: the drawing a plotter was made for.</p>
+    </div>
+    <div class="demo-layout">
+      <div class="demo-code">
+        <div class="code-label">Core snippet</div>
+        <pre><code class="language-javascript">const t = (i / steps) * TWO_PI * turns;
+points.push([cx + (R - r) * cos(t) + d * cos(((R - r) / r) * t),
+             cy + (R - r) * sin(t) - d * sin(((R - r) / r) * t)]);
+plot.polyline(points);</code></pre>
+      </div>
+      <div class="demo-right">
+        <div class="demo-canvas" id="p5-preview"></div>
       <dl>
-        <div><dt>Seed</dt><dd id="seed">—</dd></div>
-        <div><dt>Curves</dt><dd id="paths">—</dd></div>
-        <div><dt>Ink</dt><dd id="length">—</dd></div>
-        <div><dt>On the bed</dt><dd>300 × 300 mm</dd></div>
+      <div><dt>Seed</dt><dd id="seed">—</dd></div>
+      <div><dt>Curves</dt><dd id="paths">—</dd></div>
+      <div><dt>Ink</dt><dd id="length">—</dd></div>
+      <div><dt>On the bed</dt><dd>300 × 300 mm</dd></div>
       </dl>
       <p id="status" role="status">R for another seed, P to plot, S to stop.</p>
-    </aside>
+      </div>
+    </div>
   </main>
+  <footer>
+    <p><a href="../../docs/examples.html">&larr; All examples</a> &nbsp;&middot;&nbsp; <a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter on GitHub</a></p>
+    <p class="footer-sub">p5.penplotter v0.2.0 &nbsp;&middot;&nbsp; p5.js v2.2.2 &nbsp;&middot;&nbsp; iDraw HSE / A2</p>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
 </body>
 </html>

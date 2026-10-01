@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Guide — p5.penplotter</title>
+  <title>Guide - p5.penplotter</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,17 +17,17 @@
       <li><a href="../index.html">Showcase</a></li>
       <li><a href="examples.html">Examples</a></li>
       <li><a href="setup.html">Setup</a></li>
-      <li><a href="guide.html" class="active">Guide</a></li>
       <li><a href="architecture.html">Architecture</a></li>
+      <li><a href="guide.html" class="active">Guide</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">GitHub</a></li>
     </ul>
   </nav>
   <main class="page">
     <header class="page-header">
-      <p class="eyebrow">Guide · p5.js 2.2.2</p>
-      <h1>Connect a sketch to the engine.</h1>
-      <p class="lead">p5.penplotter stays small: install it, build paths, then draw the actual plan.</p>
+      <div class="section-tag">p5.js addon library · v0.2.0</div>
+      <h1>p5.<span class="accent">penplotter</span> Guide</h1>
+      <p class="guide-intro">p5.penplotter stays small: install it, build paths, then draw the actual plan.</p>
     </header>
 
     <h2>1. Load p5.js</h2>
@@ -37,7 +39,7 @@
 import { installP5Penplotter } from "https://seb-prjcts-be.github.io/p5.penplotter/p5.penplotter.js";
 
 installP5Penplotter(p5, PlotterEngine);</code></pre>
-    <p class="note">Both URLs serve the latest <code>main</code>. To pin a version, load both libraries from jsDelivr on a tag, for example <code>https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.2.0/vanilla.penplotter.js</code>.</p>
+    <p class="callout">Both URLs serve the latest <code>main</code>. To pin a version, load both libraries from jsDelivr on a tag, for example <code>https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.2.0/vanilla.penplotter.js</code>.</p>
 
     <h2>3. Global mode</h2>
     <p>A module creates no globals, so <code>function setup()</code> inside a module <code>sketch.js</code> is never seen by p5. For global mode, keep the imports in <code>index.html</code> and make <code>sketch.js</code> a plain script:</p>
@@ -56,7 +58,7 @@ function setup() {
   plot.line(40, 40, 760, 760);
   drawPlotPlan(plot.plan());
 }</code></pre>
-    <p class="note">The module runs after the page is read and before <code>load</code>, when p5 starts the sketch. All four wirings, with the timeline behind them, are in <a href="setup.html">Setup</a>.</p>
+    <p class="callout">The module runs after the page is read and before <code>load</code>, when p5 starts the sketch. All four wirings, with the timeline behind them, are in <a href="setup.html">Setup</a>.</p>
 
     <h2>4. Instance mode</h2>
     <pre><code>new p5(function sketch(p) {
@@ -106,7 +108,7 @@ function keyPressed() {
   if (key === "p") plot.go();
   if (key === "s") plot.stop();
 }</code></pre>
-    <p class="note">Tested on one machine so far: an iDraw HSE / A2 with EBB firmware 3.0.2.</p>
+    <p class="callout">Tested on one machine so far: an iDraw HSE / A2 with EBB firmware 3.0.2.</p>
 
     <h2>7. Shapes and fills</h2>
     <p><code>plot.…</code> has the same 2D primitives as p5, with the same arguments: <code>point</code>, <code>line</code>, <code>circle</code>, <code>ellipse</code>, <code>arc</code>, <code>rect</code>, <code>square</code>, <code>triangle</code>, <code>quad</code>, plus <code>polyline</code> and <code>polygon</code>, which take <code>[x, y]</code> pairs or <code>{ x, y }</code> objects. Angles follow <code>angleMode()</code>. A point becomes a quarter-millimetre dash, because a pen cannot dot.</p>
@@ -172,5 +174,10 @@ function keyPressed() {
 }</code></pre>
     <p>Finished versions of these, and more, are on <a href="examples.html">Examples</a>; what a plotter can do beyond them is on the engine's <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/possibilities.html">Possibilities</a> page.</p>
   </main>
+  <footer>
+    <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; <a href="handbook.html">Handbook</a> &middot; <a href="about.html">About</a> &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine</p>
+    <p class="footer-sub">MIT License &middot; v0.2.0</p>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
 </body>
 </html>

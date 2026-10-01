@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Examples — p5.penplotter</title>
+  <title>Examples - p5.penplotter</title>
   <meta name="description" content="Seven p5.js sketches that plan for a pen plotter: from a first plot to a calibration sheet, a wave field and a spirograph.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -16,115 +18,136 @@
       <li><a href="../index.html">Showcase</a></li>
       <li><a href="examples.html" class="active">Examples</a></li>
       <li><a href="setup.html">Setup</a></li>
-      <li><a href="guide.html">Guide</a></li>
       <li><a href="architecture.html">Architecture</a></li>
+      <li><a href="guide.html">Guide</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">GitHub</a></li>
     </ul>
   </nav>
-  <main class="page wide">
-    <header class="page-header">
-      <p class="eyebrow">Standalone examples · v0.2.0</p>
-      <h1>p5 geometry. Physical planning.</h1>
-      <p class="lead">Every preview is the example's own page, running live. Each one plots with P and stops with S; open it for the full sketch and its source. The wave examples load p5.waves, and plotting needs Chrome or Edge. Without a plotter you can still watch what the planner does with a sketch.</p>
-    </header>
-
-    <section class="ex" id="first_plot">
-      <div class="ex-preview"><iframe src="../examples/first_plot/index.html?embed" title="First plot" loading="lazy"></iframe></div>
-      <div class="ex-copy">
-        <p class="eyebrow">createPlotterEngine() · drawPlotPlan()</p>
-        <h2>First plot</h2>
-        <p>Create the core engine from a p5 canvas, build a hatched polygon and a circle, and draw the optimized plan back with p5: the same order and seams the machine would get.</p>
-        <pre><code>const plot = p.createPlotterEngine();
+    <main>
+  <div class="ex-page-header">
+    <div class="section-tag">p5.js addon library · v0.2.0</div>
+    <h1>p5.<span class="accent">penplotter</span> Examples</h1>
+    <p>Every preview is the example's own page, running live. Each one plots with P and stops with S; open it for the full sketch and its source. The wave examples load p5.waves, and plotting needs Chrome or Edge. Without a plotter you can still watch what the planner does with a sketch.</p>
+  </div>
+  <section id="first_plot" class="section section-dark">
+    <div class="section-header">
+      <div class="section-tag">createPlotterEngine() · drawPlotPlan()</div>
+      <h2>First <span class="accent">plot</span></h2>
+      <p class="section-desc">Create the core engine from a p5 canvas, build a hatched polygon and a circle, and draw the optimized plan back with p5: the same order and seams the machine would get.</p>
+    </div>
+    <div class="ex-preview">
+      <div class="ex-canvas"><iframe src="../examples/first_plot/index.html?embed" title="First plot" loading="lazy"></iframe></div>
+<pre class="ex-code-block"><code class="language-javascript">const plot = p.createPlotterEngine();
 plot.hatch(boundary, { spacing: 14, angle: Math.PI / 6 });
 plot.circle(324, 374, 126);
 p.drawPlotPlan(plot.plan());</code></pre>
-        <a class="ex-link" href="../examples/first_plot/index.html">Open example →</a>
-      </div>
-    </section>
+<a class="ex-full-link" href="../examples/first_plot/index.html">-&gt; full example</a>
+    </div>
+  </section>
 
-    <section class="ex" id="wave_plot">
-      <div class="ex-preview"><iframe src="../examples/wave_plot/index.html?embed" title="Wave plot" loading="lazy"></iframe></div>
-      <div class="ex-copy">
-        <p class="eyebrow">p5.waves · Waves.wave() · plot.polyline()</p>
-        <h2>Wave plot</h2>
-        <p>Sample one of 34 wave formulas into 24 rows of points and inspect the planned route. p5.waves returns numbers; the adapter passes their points to the engine.</p>
-        <pre><code>const waveY = Waves.wave(x + row * 7, { wave: waveSeed, t: 0, amplitude: 22, frequency: 0.045 });
+  <section id="wave_plot" class="section">
+    <div class="section-header">
+      <div class="section-tag">p5.waves · Waves.wave() · plot.polyline()</div>
+      <h2>Wave <span class="accent">plot</span></h2>
+      <p class="section-desc">Sample one of 34 wave formulas into 24 rows of points and inspect the planned route. p5.waves returns numbers; the adapter passes their points to the engine.</p>
+    </div>
+    <div class="ex-preview">
+      <div class="ex-canvas"><iframe src="../examples/wave_plot/index.html?embed" title="Wave plot" loading="lazy"></iframe></div>
+<pre class="ex-code-block"><code class="language-javascript">const waveY = Waves.wave(x + row * 7, { wave: waveSeed, t: 0, amplitude: 22, frequency: 0.045 });
 points.push({ x, y: 86 + row * 24 + waveY });
 plot.polyline(points);</code></pre>
-        <a class="ex-link" href="../examples/wave_plot/index.html">Open example →</a>
-      </div>
-    </section>
+<a class="ex-full-link" href="../examples/wave_plot/index.html">-&gt; full example</a>
+    </div>
+  </section>
 
-    <section class="ex" id="direct_plot">
-      <div class="ex-preview"><iframe src="../examples/direct_plot/index.html?embed" title="Direct plot" loading="lazy"></iframe></div>
-      <div class="ex-copy">
-        <p class="eyebrow">createPlot() · plot.go() · plot.stop()</p>
-        <h2>Direct plot</h2>
-        <p>Every <code>plot.…</code> call draws on the canvas and is remembered for the plotter. Press P and the last frame goes to an iDraw HSE / A2, no SVG in between.</p>
-        <pre><code>plot = p.createPlot({ x: 80, y: 150, width: 80 });   // mm on the bed
+  <section id="direct_plot" class="section section-dark">
+    <div class="section-header">
+      <div class="section-tag">createPlot() · plot.go() · plot.stop()</div>
+      <h2>Direct <span class="accent">plot</span></h2>
+      <p class="section-desc">Every <code>plot.…</code> call draws on the canvas and is remembered for the plotter. Press P and the last frame goes to an iDraw HSE / A2, no SVG in between.</p>
+    </div>
+    <div class="ex-preview">
+      <div class="ex-canvas"><iframe src="../examples/direct_plot/index.html?embed" title="Direct plot" loading="lazy"></iframe></div>
+<pre class="ex-code-block"><code class="language-javascript">plot = p.createPlot({ x: 80, y: 150, width: 80 });   // mm on the bed
 plot.rect(10, 10, 380, 230);
 plot.polyline(points);
 if (p.key === "p") plot.go();</code></pre>
-        <a class="ex-link" href="../examples/direct_plot/index.html">Open example →</a>
-      </div>
-    </section>
+<a class="ex-full-link" href="../examples/direct_plot/index.html">-&gt; full example</a>
+    </div>
+  </section>
 
-    <section class="ex" id="molnar_grid">
-      <div class="ex-preview"><iframe src="../examples/molnar_grid/index.html?embed" title="Molnár grid" loading="lazy"></iframe></div>
-      <div class="ex-copy">
-        <p class="eyebrow">global mode · random() · plot.polygon()</p>
-        <h2>Molnár grid</h2>
-        <p>Ten rows of nested squares. The top row is exact; each row down, the squares drift and turn a little more, until the bottom row has come apart. One seed, one rule, a plain global-mode sketch with no imports.</p>
-        <pre><code>let disorder = row / (n - 1);
+  <section id="molnar_grid" class="section">
+    <div class="section-header">
+      <div class="section-tag">global mode · random() · plot.polygon()</div>
+      <h2>Molnár <span class="accent">grid</span></h2>
+      <p class="section-desc">Ten rows of nested squares. The top row is exact; each row down, the squares drift and turn a little more, until the bottom row has come apart. One seed, one rule, a plain global-mode sketch with no imports.</p>
+    </div>
+    <div class="ex-preview">
+      <div class="ex-canvas"><iframe src="../examples/molnar_grid/index.html?embed" title="Molnár grid" loading="lazy"></iframe></div>
+<pre class="ex-code-block"><code class="language-javascript">let disorder = row / (n - 1);
 let angle = random(-1, 1) * disorder * QUARTER_PI;
 plot.polygon(corners(cx + dx, cy + dy, radius, angle));</code></pre>
-        <a class="ex-link" href="../examples/molnar_grid/index.html">Open example →</a>
-      </div>
-    </section>
+<a class="ex-full-link" href="../examples/molnar_grid/index.html">-&gt; full example</a>
+    </div>
+  </section>
 
-    <section class="ex" id="calibration_sheet">
-      <div class="ex-preview"><iframe src="../examples/calibration_sheet/index.html?embed" title="Calibration sheet" loading="lazy"></iframe></div>
-      <div class="ex-copy">
-        <p class="eyebrow">plot.hatch() · plot.crossHatch() · plot.stipple() · plot.circle()</p>
-        <h2>Calibration sheet</h2>
-        <p>What your pen does on your paper: a 100 mm ruler, hatch and cross-hatch scales down to 0.8 mm, stipple densities, circles from 2 to 40 mm and line pairs from 0.3 mm apart. Only physical variables. Plot it once per pen and keep the sheet.</p>
-        <pre><code>[6, 4, 3, 2, 1.5, 1.2, 1, 0.8].forEach((spacing, i) => {
-  plot.hatch(cellAt(20 + i * 22, 45, 18), spacing, QUARTER_PI);
+  <section id="calibration_sheet" class="section section-dark">
+    <div class="section-header">
+      <div class="section-tag">plot.hatch() · plot.crossHatch() · plot.stipple() · plot.circle()</div>
+      <h2>Calibration <span class="accent">sheet</span></h2>
+      <p class="section-desc">What your pen does on your paper: a 100 mm ruler, hatch and cross-hatch scales down to 0.8 mm, stipple densities, circles from 2 to 40 mm and line pairs from 0.3 mm apart. Only physical variables. Plot it once per pen and keep the sheet.</p>
+    </div>
+    <div class="ex-preview">
+      <div class="ex-canvas"><iframe src="../examples/calibration_sheet/index.html?embed" title="Calibration sheet" loading="lazy"></iframe></div>
+<pre class="ex-code-block"><code class="language-javascript">[6, 4, 3, 2, 1.5, 1.2, 1, 0.8].forEach((spacing, i) => {
+plot.hatch(cellAt(20 + i * 22, 45, 18), spacing, QUARTER_PI);
 });</code></pre>
-        <a class="ex-link" href="../examples/calibration_sheet/index.html">Open example →</a>
-      </div>
-    </section>
+<a class="ex-full-link" href="../examples/calibration_sheet/index.html">-&gt; full example</a>
+    </div>
+  </section>
 
-    <section class="ex" id="wave_field">
-      <div class="ex-preview"><iframe src="../examples/wave_field/index.html?embed" title="Wave field" loading="lazy"></iframe></div>
-      <div class="ex-copy">
-        <p class="eyebrow">p5.waves · streamlines · plot.polyline()</p>
-        <h2>Wave field</h2>
-        <p>Two waves, one per axis, give every point a direction; sixty lines follow it until they leave the frame. The seed picks the wave shape: thirty-four fields in one sketch.</p>
-        <pre><code>const angle = (Waves.wave(x * 0.012, { wave: shape, t: 0 })
-             + Waves.wave(y * 0.012 + 3, { wave: shape, t: 0 })) * PI;
+  <section id="wave_field" class="section">
+    <div class="section-header">
+      <div class="section-tag">p5.waves · streamlines · plot.polyline()</div>
+      <h2>Wave <span class="accent">field</span></h2>
+      <p class="section-desc">Two waves, one per axis, give every point a direction; sixty lines follow it until they leave the frame. The seed picks the wave shape: thirty-four fields in one sketch.</p>
+    </div>
+    <div class="ex-preview">
+      <div class="ex-canvas"><iframe src="../examples/wave_field/index.html?embed" title="Wave field" loading="lazy"></iframe></div>
+<pre class="ex-code-block"><code class="language-javascript">const angle = (Waves.wave(x * 0.012, { wave: shape, t: 0 })
++ Waves.wave(y * 0.012 + 3, { wave: shape, t: 0 })) * PI;
 x += cos(angle) * 2.4;
 y += sin(angle) * 2.4;</code></pre>
-        <a class="ex-link" href="../examples/wave_field/index.html">Open example →</a>
-      </div>
-    </section>
+<a class="ex-full-link" href="../examples/wave_field/index.html">-&gt; full example</a>
+    </div>
+  </section>
 
-    <section class="ex" id="spirograph">
-      <div class="ex-preview"><iframe src="../examples/spirograph/index.html?embed" title="Spirograph" loading="lazy"></iframe></div>
-      <div class="ex-copy">
-        <p class="eyebrow">hypotrochoids · one polyline each</p>
-        <h2>Spirograph</h2>
-        <p>Three hypotrochoids around one centre; the seed picks the gear ratios. Each curve is one unbroken polyline, so the pen never lifts until it closes.</p>
-        <pre><code>const t = (i / steps) * TWO_PI * turns;
+  <section id="spirograph" class="section section-dark">
+    <div class="section-header">
+      <div class="section-tag">hypotrochoids · one polyline each</div>
+      <h2>Spirograph</h2>
+      <p class="section-desc">Three hypotrochoids around one centre; the seed picks the gear ratios. Each curve is one unbroken polyline, so the pen never lifts until it closes.</p>
+    </div>
+    <div class="ex-preview">
+      <div class="ex-canvas"><iframe src="../examples/spirograph/index.html?embed" title="Spirograph" loading="lazy"></iframe></div>
+<pre class="ex-code-block"><code class="language-javascript">const t = (i / steps) * TWO_PI * turns;
 points.push([cx + (R - r) * cos(t) + d * cos(((R - r) / r) * t),
-             cy + (R - r) * sin(t) - d * sin(((R - r) / r) * t)]);
+cy + (R - r) * sin(t) - d * sin(((R - r) / r) * t)]);
 plot.polyline(points);</code></pre>
-        <a class="ex-link" href="../examples/spirograph/index.html">Open example →</a>
-      </div>
-    </section>
-
-    <p class="note">The engine's own examples, without p5.js, are on the sister site: <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/examples.html">vanilla.penplotter examples</a>, and its <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/possibilities.html">Possibilities</a> page shows what a pen can do.</p>
+<a class="ex-full-link" href="../examples/spirograph/index.html">-&gt; full example</a>
+    </div>
+  </section>
+  <section class="section" style="padding:3rem 2rem;">
+    <div style="max-width:760px; margin:0 auto;">
+      <p class="callout">The engine's own examples, without p5.js, are on the sister site: <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/examples.html">vanilla.penplotter examples</a>, and its <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/possibilities.html">Possibilities</a> page shows what a pen can do.</p>
+    </div>
+  </section>
   </main>
+  <footer>
+    <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; <a href="handbook.html">Handbook</a> &middot; <a href="about.html">About</a> &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine</p>
+    <p class="footer-sub">MIT License &middot; v0.2.0</p>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
 </body>
 </html>

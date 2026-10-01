@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Setup — p5.penplotter</title>
+  <title>Setup - p5.penplotter</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,17 +17,17 @@
       <li><a href="../index.html">Showcase</a></li>
       <li><a href="examples.html">Examples</a></li>
       <li><a href="setup.html" class="active">Setup</a></li>
-      <li><a href="guide.html">Guide</a></li>
       <li><a href="architecture.html">Architecture</a></li>
+      <li><a href="guide.html">Guide</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">GitHub</a></li>
     </ul>
   </nav>
   <main class="page">
     <header class="page-header">
-      <p class="eyebrow">Setup · p5.js 2.2.2</p>
-      <h1>Four ways to connect a sketch.</h1>
-      <p class="lead">From a plain p5 sketch with <code>function setup()</code> to import maps. Same adapter, same engine — only the wiring changes. Start at 1 and stop where you are comfortable.</p>
+      <div class="section-tag">p5.js addon library · v0.2.0</div>
+      <h1>p5.<span class="accent">penplotter</span> Setup</h1>
+      <p class="guide-intro">From a plain p5 sketch with <code>function setup()</code> to import maps. Same adapter, same engine — only the wiring changes. Start at 1 and stop where you are comfortable.</p>
     </header>
 
     <h2>The one fact everything hinges on</h2>
@@ -44,7 +46,7 @@
     <p>Everything that follows is a way of placing the three <code>import</code> lines somewhere on that timeline.</p>
 
     <h2>1. Global mode, wiring in index.html</h2>
-    <p class="note">Start here. This is the setup for a classroom, for the p5.js Web Editor, and for anyone who wants <code>sketch.js</code> to look like every other p5 sketch.</p>
+    <p class="callout">Start here. This is the setup for a classroom, for the p5.js Web Editor, and for anyone who wants <code>sketch.js</code> to look like every other p5 sketch.</p>
     <p>The imports live in <code>index.html</code>, inside one inline module. <code>sketch.js</code> is a plain script with no imports at all.</p>
     <h3>index.html</h3>
     <pre><code>&lt;!DOCTYPE html&gt;
@@ -226,7 +228,7 @@ import { installP5Penplotter } from "p5.penplotter";
 
 installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
     <p>The import map must appear before the first module script. Bare names like <code>"p5.penplotter"</code> are what a package manager would resolve; the import map does the same job in the browser, without one.</p>
-    <p class="note">The GitHub Pages URLs always serve the latest <code>main</code>. The adapter checks the core's version at install and refuses a mismatch with a clear message, so a silent drift between the two is not possible — but a sketch that worked yesterday can stop today. For anything you want to keep, copy both repositories next to it and use the local-neighbour form.</p>
+    <p class="callout">The GitHub Pages URLs always serve the latest <code>main</code>. The adapter checks the core's version at install and refuses a mismatch with a clear message, so a silent drift between the two is not possible — but a sketch that worked yesterday can stop today. For anything you want to keep, copy both repositories next to it and use the local-neighbour form.</p>
 
     <h2>5. Plotting for real, in every setup</h2>
     <p>Whichever wiring you pick, direct plotting needs the same three things:</p>
@@ -246,5 +248,10 @@ installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
     </ul>
     <p>None of these is a compromise. The install is explicit in all four — a design decision, see <a href="architecture.html">Architecture</a> — and the adapter has no idea which one you picked.</p>
   </main>
+  <footer>
+    <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; <a href="handbook.html">Handbook</a> &middot; <a href="about.html">About</a> &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine</p>
+    <p class="footer-sub">MIT License &middot; v0.2.0</p>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
 </body>
 </html>

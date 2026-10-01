@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Architecture of p5.penplotter — p5.penplotter</title>
+  <title>Architecture of p5.penplotter - p5.penplotter</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,17 +17,17 @@
       <li><a href="../index.html">Showcase</a></li>
       <li><a href="examples.html">Examples</a></li>
       <li><a href="setup.html">Setup</a></li>
-      <li><a href="guide.html">Guide</a></li>
       <li><a href="architecture.html" class="active">Architecture</a></li>
+      <li><a href="guide.html">Guide</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">GitHub</a></li>
     </ul>
   </nav>
   <main class="page">
     <header class="page-header">
-      <p class="eyebrow">Architecture · an adapter, not a second engine</p>
-      <h1>Architecture of p5.penplotter</h1>
-      <p class="lead">Generated from <a href="architecture.md">architecture.md</a>; edit the Markdown and run <code>npm run docs</code>.</p>
+      <div class="section-tag">p5.js addon library · v0.2.0</div>
+      <h1>p5.<span class="accent">penplotter</span> Architecture of p5.penplotter</h1>
+      <p class="guide-intro">Architecture · an adapter, not a second engine. Generated from <a href="architecture.md">architecture.md</a>; edit the Markdown and run <code>npm run docs</code>.</p>
     </header>
 <p><code>p5.penplotter</code> is an adapter, not a second engine.</p>
 <h2>Responsibilities</h2>
@@ -47,5 +49,9 @@
 <h2>Rendering contract</h2>
 <p><code>drawPlotPlan()</code> draws <code>plan.routes</code>, not the original artwork. Preview, SVG and hardware thereby show the same planned geometry and path reversal. Pen-up travel remains a core preview feature and is not implemented twice.</p>
   </main>
+  <footer>
+    <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; <a href="handbook.html">Handbook</a> &middot; <a href="about.html">About</a> &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine</p>
+    <p class="footer-sub">MIT License &middot; v0.2.0</p>
+  </footer>
 </body>
 </html>

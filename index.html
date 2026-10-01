@@ -3,87 +3,90 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>p5.penplotter — p5.js into a physical plot plan</title>
-  <meta name="description" content="The p5.js adapter for vanilla.penplotter: build generative paths, inspect the planned route, and export for pen plotters.">
-  <meta property="og:title" content="p5.penplotter — p5.js into a physical plot plan">
+  <title>p5.penplotter - from a p5.js sketch to the pen</title>
+  <meta name="description" content="The p5.js adapter for vanilla.penplotter: draw as you always do, with plot. in front, and plot.go() sends the frame straight to a pen plotter.">
+  <meta property="og:title" content="p5.penplotter - from a p5.js sketch to the pen">
   <meta property="og:description" content="Every plot.… call draws on the canvas and is remembered for the plotter; plot.go() sends it straight to the pen.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://seb-prjcts-be.github.io/p5.penplotter/">
   <meta property="og:image" content="https://seb-prjcts-be.github.io/p5.penplotter/docs/images/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="p5.penplotter - from a p5.js sketch to the pen">
+  <meta name="twitter:description" content="Every plot.… call draws on the canvas and is remembered for the plotter; plot.go() sends it straight to the pen.">
+  <meta name="twitter:image" content="https://seb-prjcts-be.github.io/p5.penplotter/docs/images/og-image.png">
   <link rel="icon" href="docs/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="docs/style.css">
   <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.waves@v3.4.0/p5.waves.min.js"></script>
 </head>
 <body>
+
+  <!-- NAV -->
   <nav id="navbar">
     <a class="nav-logo" href="index.html">p5.<span>penplotter</span></a>
     <button class="nav-hamburger" aria-label="Toggle menu" onclick="this.closest('nav').classList.toggle('nav-open')"><span></span><span></span><span></span></button>
     <ul class="nav-links">
-      <li><a href="index.html" class="active">Showcase</a></li>
+      <li><a href="#hero" class="active">Showcase</a></li>
       <li><a href="docs/examples.html">Examples</a></li>
       <li><a href="docs/setup.html">Setup</a></li>
-      <li><a href="docs/guide.html">Guide</a></li>
       <li><a href="docs/architecture.html">Architecture</a></li>
+      <li><a href="docs/guide.html">Guide</a></li>
       <li><a href="docs/about.html">About</a></li>
       <li><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">GitHub</a></li>
     </ul>
   </nav>
 
-  <main id="top">
-    <section class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow">p5.js adapter · v0.2.0</p>
-        <h1>Sketch.<br><em>Then plot.</em></h1>
-        <p class="lead">You sketch in p5.js the way you always do. Write <code>plot.line()</code> instead of <code>line()</code> and the same line is drawn on the canvas and remembered in millimetres. Press a key, and the last frame goes to the plotter. No SVG, no vpype, no Inkscape in between.</p>
-        <div class="actions">
-          <a class="button primary" href="docs/setup.html">Connect p5.js</a>
-          <a class="button" href="docs/examples.html">Explore examples</a>
-        </div>
+  <!-- HERO - one sketch being drawn the way the machine would, one sentence -->
+  <section id="hero">
+    <div id="hero-canvas"></div>
+    <div class="hero-overlay">
+      <div class="hero-text">
+        <div class="hero-badge">p5.js addon library · v0.2.0</div>
+        <h1>p5.<span class="accent">penplotter</span></h1>
+        <p class="hero-sub">You sketch in p5.js the way you always do. Write <code>plot.line()</code> instead of <code>line()</code>,<br>press a key, and the last frame goes to the pen. No SVG in between.</p>
+        <a href="#which" class="cta-btn">See how it works &#8595;</a>
       </div>
-      <div class="plot-card">
-        <div class="plot-toolbar"><span>p5.waves → PlotPlan</span><span>p5.js 2.2.2</span></div>
-        <div id="hero-plot" aria-label="p5.js preview of a planned wave plot"></div>
-        <div class="plot-stats" aria-live="polite">
-          <span><strong id="stat-paths">—</strong> paths</span>
-          <span><strong id="stat-lifts">—</strong> lifts</span>
-          <span><strong id="stat-travel">—</strong> px travel</span>
-        </div>
-      </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="pipeline" id="which">
-      <div class="section-intro">
-        <p class="eyebrow">Two libraries, one direction</p>
-        <h2>The p5 face,<br>and the engine behind it.</h2>
-      </div>
-      <ol class="pipeline-list">
-        <li><span>this</span><strong>p5.penplotter</strong><p>Three methods on p5.js, and nothing else. You draw as you always do, with <code>plot.</code> in front, and <code>plot.go()</code> sends the frame to the pen. Take this if you sketch in p5.js.</p></li>
-        <li><span>engine</span><strong>vanilla.penplotter</strong><p>Where the work happens: geometry in millimetres, the optimizer, the route planner, the time estimate and the machine driver. Plain JavaScript, no p5.js. Take it on its own if you draw with your own code, or want to build your own layer on it. <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter →</a></p></li>
-      </ol>
-    </section>
+  <!-- TWO LIBRARIES -->
+  <section id="which" class="section section-dark">
+    <div class="section-header">
+      <div class="section-tag">one direction, two doors</div>
+      <h2>Two <span class="accent">Libraries</span></h2>
+      <p class="section-desc">The p5 face, and the engine behind it. This one is the face; the engine does the work.</p>
+    </div>
+    <ol class="pipeline-list">
+      <li><span>this</span><strong>p5.penplotter</strong><p>Three methods on p5.js, and nothing else. You draw as you always do, with <code>plot.</code> in front, and <code>plot.go()</code> sends the frame to the pen. Take it if you sketch in p5.js.</p></li>
+      <li><span>engine</span><strong>vanilla.penplotter</strong><p>Where the work happens: geometry in millimetres, the optimizer, the route planner, the time estimate and the machine driver. Plain JavaScript, no p5.js. Take it on its own if you draw with other code. <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter →</a></p></li>
+    </ol>
+  </section>
 
-    <section class="pipeline" id="bridge">
-      <div class="section-intro">
-        <p class="eyebrow">A deliberately small bridge</p>
-        <h2>Three p5 methods.<br>One real engine.</h2>
-      </div>
-      <ol class="pipeline-list">
-        <li><span>01</span><strong>createPlot()</strong><p>The one you will use most. Every <code>plot.…</code> call draws on the canvas and is remembered for the plotter; <code>plot.go()</code> sends it, <code>plot.stop()</code> lifts the pen. <a href="examples/direct_plot/index.html">Direct plot →</a></p></li>
-        <li><span>02</span><strong>createPlotterEngine()</strong><p>The bare engine with the canvas size as its page, when you want to talk to it directly: layers, pens, exports.</p></li>
-        <li><span>03</span><strong>drawPlotPlan()</strong><p>Draws the plan as the machine will draw it: the real order, reversed paths, moved seams. Useful to see what the planner did with your sketch.</p></li>
-        <li><span>Core</span><strong>vanilla.penplotter</strong><p>Owns everything else. A bug in the pipeline is fixed there, once, for both libraries.</p></li>
-      </ol>
-    </section>
+  <!-- THREE METHODS -->
+  <section id="bridge" class="section">
+    <div class="section-header">
+      <div class="section-tag">a deliberately small bridge</div>
+      <h2>Three <span class="accent">Methods</span></h2>
+      <p class="section-desc">The adapter adds three methods to the p5 prototype. Everything else lives in the engine, and a bug in the pipeline is fixed there, once, for both libraries.</p>
+    </div>
+    <ol class="pipeline-list">
+      <li><span>01</span><strong>createPlot()</strong><p>The one you will use most. Every <code>plot.…</code> call draws on the canvas and is remembered for the plotter; <code>plot.go()</code> sends it, <code>plot.stop()</code> lifts the pen.</p></li>
+      <li><span>02</span><strong>createPlotterEngine()</strong><p>The bare engine with the canvas size as its page, when you want to talk to it directly: layers, pens, exports.</p></li>
+      <li><span>03</span><strong>drawPlotPlan()</strong><p>Draws the plan as the machine will draw it: the real order, reversed paths, moved seams. Useful to see what the planner did with your sketch.</p></li>
+    </ol>
+  </section>
 
-    <section class="code-section">
-      <div>
-        <p class="eyebrow">Explicit installation</p>
-        <h2>No hidden<br>dependency.</h2>
-        <p class="lead small">The adapter is handed the p5 constructor and the engine class by you, so versions and loading order stay in plain sight. It sounds fussy; it is the thing that keeps a sketch working next year.</p>
-      </div>
-      <pre><code>import { PlotterEngine } from "vanilla.penplotter";
+  <!-- EXPLICIT INSTALL -->
+  <section id="install" class="section section-dark">
+    <div class="section-header">
+      <div class="section-tag">no hidden dependency</div>
+      <h2>Explicit <span class="accent">Install</span></h2>
+      <p class="section-desc">You hand the adapter the p5 constructor and the engine class, so versions and loading order stay in plain sight. It sounds fussy; it is what keeps a sketch working next year.</p>
+    </div>
+    <div style="max-width:760px; margin:0 auto;">
+      <pre class="code-block"><code class="language-javascript">import { PlotterEngine } from "vanilla.penplotter";
 import * as Ebb from "vanilla.penplotter/driver/ebb";
 import { installP5Penplotter } from "p5.penplotter";
 
@@ -105,10 +108,47 @@ function draw() {
 function keyPressed() {
   if (key === "p") plot.go();   // to the pen
 }</code></pre>
-    </section>
-  </main>
+    </div>
+  </section>
 
-  <footer><span>p5.penplotter · adapter for <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> · <a href="docs/about.html">About</a></span><span>MIT · 2026 · v0.2.0</span></footer>
+  <!-- GET STARTED -->
+  <section id="start" class="section" style="text-align:center; padding:4rem 2rem;">
+    <div class="section-header">
+      <div class="section-tag">plot. in front, p to plot</div>
+      <h2>Get <span class="accent">Started</span></h2>
+      <p class="section-desc">Install the adapter in your sketch. Put <code>plot.</code> in front of the shapes that should reach paper. Press P.</p>
+    </div>
+    <div style="max-width:520px; margin:0 auto; text-align:left;">
+      <div class="code-preview" style="margin-bottom:1.5rem;">
+        <code class="language-javascript">function setup() {
+  createCanvas(600, 600);
+  plot = createPlot({ width: 200 });   // 200 mm wide on the bed
+}
+
+function draw() {
+  plot.clear();
+  plot.line(40, 300, 560, 300);
+  plot.circle(300, 300, 240);
+}
+
+function keyPressed() {
+  if (key === "p") plot.go();
+}</code>
+      </div>
+    </div>
+    <div class="cta-row">
+      <a href="docs/setup.html" class="cta-btn">Setup &#8594;</a>
+      <a href="docs/examples.html" class="cta-btn secondary">Examples &#8594;</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; <a href="docs/handbook.html">Handbook</a> &middot; <a href="docs/about.html">About</a> &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine &middot; <a href="https://p5js.org" target="_blank">p5.js</a></p>
+    <p class="footer-sub">MIT License &middot; v0.2.0</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
   <script type="module" src="docs/app.js"></script>
 </body>
 </html>

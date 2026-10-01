@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wave plot — p5.penplotter + p5.waves</title>
+  <title>Wave plot - p5.penplotter + p5.waves</title>
   <link rel="icon" href="../../docs/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../showcase.css">
   <script>if (location.search.includes("embed")) document.documentElement.classList.add("embed");</script>
   <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
@@ -18,26 +20,41 @@
       <li><a href="../../index.html">Showcase</a></li>
       <li><a href="../../docs/examples.html" class="active">Examples</a></li>
       <li><a href="../../docs/setup.html">Setup</a></li>
-      <li><a href="../../docs/guide.html">Guide</a></li>
       <li><a href="../../docs/architecture.html">Architecture</a></li>
+      <li><a href="../../docs/guide.html">Guide</a></li>
       <li><a href="../../docs/about.html">About</a></li>
       <li><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">GitHub</a></li>
     </ul>
   </nav>
-  <main>
-    <div class="canvas-wrap" id="p5-preview"></div>
-    <aside class="panel">
-      <p class="tag">02 · p5.waves 3.4.0</p>
+    <main class="demo-page">
+    <div class="demo-header">
+      <div class="demo-number">02 · p5.waves 3.4.0</div>
       <h1>Wave plot</h1>
       <p>p5.waves returns numbers. p5.penplotter sends their point paths into the independent engine.</p>
+    </div>
+    <div class="demo-layout">
+      <div class="demo-code">
+        <div class="code-label">Core snippet</div>
+        <pre><code class="language-javascript">const waveY = Waves.wave(x + row * 7, { wave: waveSeed, t: 0, amplitude: 22, frequency: 0.045 });
+points.push({ x, y: 86 + row * 24 + waveY });
+plot.polyline(points);</code></pre>
+      </div>
+      <div class="demo-right">
+        <div class="demo-canvas" id="p5-preview"></div>
       <dl>
-        <div><dt>Paths</dt><dd id="paths">—</dd></div>
-        <div><dt>Pen lifts</dt><dd id="lifts">—</dd></div>
-        <div><dt>Travel</dt><dd id="travel">—</dd></div>
+      <div><dt>Paths</dt><dd id="paths">—</dd></div>
+      <div><dt>Pen lifts</dt><dd id="lifts">—</dd></div>
+      <div><dt>Travel</dt><dd id="travel">—</dd></div>
       </dl>
       <button id="reroll" type="button">Choose another wave</button>
-    </aside>
+      </div>
+    </div>
   </main>
+  <footer>
+    <p><a href="../../docs/examples.html">&larr; All examples</a> &nbsp;&middot;&nbsp; <a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter on GitHub</a></p>
+    <p class="footer-sub">p5.penplotter v0.2.0 &nbsp;&middot;&nbsp; p5.js v2.2.2 &nbsp;&middot;&nbsp; iDraw HSE / A2</p>
+  </footer>
   <script type="module" src="sketch.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
 </body>
 </html>

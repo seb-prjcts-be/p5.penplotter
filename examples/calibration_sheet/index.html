@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calibration sheet — p5.penplotter</title>
+  <title>Calibration sheet - p5.penplotter</title>
   <link rel="icon" href="../../docs/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../showcase.css">
   <script>if (location.search.includes("embed")) document.documentElement.classList.add("embed");</script>
   <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
@@ -25,24 +27,39 @@
       <li><a href="../../index.html">Showcase</a></li>
       <li><a href="../../docs/examples.html" class="active">Examples</a></li>
       <li><a href="../../docs/setup.html">Setup</a></li>
-      <li><a href="../../docs/guide.html">Guide</a></li>
       <li><a href="../../docs/architecture.html">Architecture</a></li>
+      <li><a href="../../docs/guide.html">Guide</a></li>
       <li><a href="../../docs/about.html">About</a></li>
       <li><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">GitHub</a></li>
     </ul>
   </nav>
-  <main>
-    <div class="canvas-wrap" id="p5-preview"></div>
-    <aside class="panel">
-      <p class="tag">Ruler · tone · circles · spacing</p>
+    <main class="demo-page">
+    <div class="demo-header">
+      <div class="demo-number">Ruler · tone · circles · spacing</div>
       <h1>Calibration sheet</h1>
       <p>What your pen does on your paper, in millimetres. A 100 mm ruler to check the scale, hatch and cross-hatch scales from 6 to 0.8 mm, stipple densities, circles from 2 to 40 mm, and line pairs from 0.3 to 2 mm apart. Only physical variables: nothing a screen could fake. Plot it once per pen and keep the sheet.</p>
+    </div>
+    <div class="demo-layout">
+      <div class="demo-code">
+        <div class="code-label">Core snippet</div>
+        <pre><code class="language-javascript">[6, 4, 3, 2, 1.5, 1.2, 1, 0.8].forEach((spacing, i) => {
+  plot.hatch(cellAt(20 + i * 22, 45, 18), spacing, QUARTER_PI);
+});</code></pre>
+      </div>
+      <div class="demo-right">
+        <div class="demo-canvas" id="p5-preview"></div>
       <dl>
-        <div><dt>On the bed</dt><dd>200 × 280 mm</dd></div>
-        <div><dt>Paths</dt><dd id="paths">—</dd></div>
+      <div><dt>On the bed</dt><dd>200 × 280 mm</dd></div>
+      <div><dt>Paths</dt><dd id="paths">—</dd></div>
       </dl>
       <p id="status" role="status">P to plot, S to stop.</p>
-    </aside>
+      </div>
+    </div>
   </main>
+  <footer>
+    <p><a href="../../docs/examples.html">&larr; All examples</a> &nbsp;&middot;&nbsp; <a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter on GitHub</a></p>
+    <p class="footer-sub">p5.penplotter v0.2.0 &nbsp;&middot;&nbsp; p5.js v2.2.2 &nbsp;&middot;&nbsp; iDraw HSE / A2</p>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
 </body>
 </html>
