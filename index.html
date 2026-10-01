@@ -4,15 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>p5.penplotter - from a p5.js sketch to the pen</title>
-  <meta name="description" content="The p5.js adapter for vanilla.penplotter: draw as you always do, with plot. in front, and plot.go() sends the frame straight to a pen plotter.">
+  <meta name="description" content="Draw in p5.js as you always do, with plot. in front, and send your sketch straight to a pen plotter.">
   <meta property="og:title" content="p5.penplotter - from a p5.js sketch to the pen">
-  <meta property="og:description" content="Every plot.… call draws on the canvas and is remembered for the plotter; plot.go() sends it straight to the pen.">
+  <meta property="og:description" content="plot.line() draws on the canvas and on paper. Press a key and your sketch goes to the pen.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://seb-prjcts-be.github.io/p5.penplotter/">
   <meta property="og:image" content="https://seb-prjcts-be.github.io/p5.penplotter/docs/images/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="p5.penplotter - from a p5.js sketch to the pen">
-  <meta name="twitter:description" content="Every plot.… call draws on the canvas and is remembered for the plotter; plot.go() sends it straight to the pen.">
+  <meta name="twitter:description" content="plot.line() draws on the canvas and on paper. Press a key and your sketch goes to the pen.">
   <meta name="twitter:image" content="https://seb-prjcts-be.github.io/p5.penplotter/docs/images/og-image.png">
   <link rel="icon" href="docs/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -45,7 +45,7 @@
       <div class="hero-text">
         <div class="hero-badge">p5.js addon library · v0.2.0</div>
         <h1>p5.<span class="accent">penplotter</span></h1>
-        <p class="hero-sub">You sketch in p5.js the way you always do. Write <code>plot.line()</code> instead of <code>line()</code>,<br>press a key, and the last frame goes to the pen. No SVG in between.</p>
+        <p class="hero-sub">You sketch in p5.js the way you always do. Write <code>plot.line()</code> instead of <code>line()</code>,<br>press a key, and your drawing goes to the pen. No files in between.</p>
         <a href="#which" class="cta-btn">See how it works &#8595;</a>
       </div>
     </div>
@@ -56,34 +56,34 @@
     <div class="section-header">
       <div class="section-tag">one direction, two doors</div>
       <h2>Two <span class="accent">Libraries</span></h2>
-      <p class="section-desc">The p5 face, and the engine behind it. This one is the face; the engine does the work.</p>
+      <p class="section-desc">This is the small one, the one you use in your sketch. Behind it sits the engine, which does the thinking. You only ever see this one.</p>
     </div>
     <ol class="pipeline-list">
-      <li><span>this</span><strong>p5.penplotter</strong><p>Three methods on p5.js, and nothing else. You draw as you always do, with <code>plot.</code> in front, and <code>plot.go()</code> sends the frame to the pen. Take it if you sketch in p5.js.</p></li>
-      <li><span>engine</span><strong>vanilla.penplotter</strong><p>Where the work happens: geometry in millimetres, the optimizer, the route planner, the time estimate and the machine driver. Plain JavaScript, no p5.js. Take it on its own if you draw with other code. <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter →</a></p></li>
+      <li><span>this</span><strong>p5.penplotter</strong><p>What you use. Three commands in p5.js, nothing more. You draw as you always do, with <code>plot.</code> in front, and <code>plot.go()</code> sends your drawing to the pen. Take this if you sketch in p5.js.</p></li>
+      <li><span>engine</span><strong>vanilla.penplotter</strong><p>What does the thinking. It knows how big your sheet is, in millimetres. It tidies the drawing up, works out the shortest route for the pen, tells you how long the plot will take, and talks to the machine. Plain JavaScript, no p5.js. You only need it on its own if you draw without p5. <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter →</a></p></li>
     </ol>
   </section>
 
   <!-- THREE METHODS -->
   <section id="bridge" class="section">
     <div class="section-header">
-      <div class="section-tag">a deliberately small bridge</div>
-      <h2>Three <span class="accent">Methods</span></h2>
-      <p class="section-desc">The adapter adds three methods to the p5 prototype. Everything else lives in the engine, and a bug in the pipeline is fixed there, once, for both libraries.</p>
+      <div class="section-tag">three commands, that is all</div>
+      <h2>Three <span class="accent">Commands</span></h2>
+      <p class="section-desc">p5.penplotter gives your sketch three new commands. All the thinking happens in the engine, so when something is fixed there, it is fixed for everyone at once.</p>
     </div>
     <ol class="pipeline-list">
-      <li><span>01</span><strong>createPlot()</strong><p>The one you will use most. Every <code>plot.…</code> call draws on the canvas and is remembered for the plotter; <code>plot.go()</code> sends it, <code>plot.stop()</code> lifts the pen.</p></li>
-      <li><span>02</span><strong>createPlotterEngine()</strong><p>The bare engine with the canvas size as its page, when you want to talk to it directly: layers, pens, exports.</p></li>
-      <li><span>03</span><strong>drawPlotPlan()</strong><p>Draws the plan as the machine will draw it: the real order, reversed paths, moved seams. Useful to see what the planner did with your sketch.</p></li>
+      <li><span>01</span><strong>createPlot()</strong><p>The one you will use. It gives you <code>plot</code>. Every <code>plot.line()</code>, <code>plot.circle()</code> and so on draws on your canvas as always, and remembers the shape for the plotter. <code>plot.go()</code> sends the drawing to the pen; <code>plot.stop()</code> lifts the pen and stops.</p></li>
+      <li><span>02</span><strong>createPlotterEngine()</strong><p>For when you want to talk to the engine yourself: several pens, layers, or a file for another machine. Your canvas becomes the sheet. Most sketches never need this.</p></li>
+      <li><span>03</span><strong>drawPlotPlan()</strong><p>Shows you what the machine will actually do: the order it will draw in, the lines it will draw backwards, where it will start a circle. Good for seeing why the plot takes less time than your sketch would suggest.</p></li>
     </ol>
   </section>
 
   <!-- EXPLICIT INSTALL -->
   <section id="install" class="section section-dark">
     <div class="section-header">
-      <div class="section-tag">no hidden dependency</div>
-      <h2>Explicit <span class="accent">Install</span></h2>
-      <p class="section-desc">You hand the adapter the p5 constructor and the engine class, so versions and loading order stay in plain sight. It sounds fussy; it is what keeps a sketch working next year.</p>
+      <div class="section-tag">nothing hidden</div>
+      <h2>No <span class="accent">Surprises</span></h2>
+      <p class="section-desc">You tell p5.penplotter which p5 and which engine to use, in your own code, where you can see it. That is three lines more than most libraries ask. It is also why a sketch you make this year still works next year, when versions have moved on.</p>
     </div>
     <div style="max-width:760px; margin:0 auto;">
       <pre class="code-block"><code class="language-javascript">import { PlotterEngine } from "vanilla.penplotter";
@@ -116,7 +116,7 @@ function keyPressed() {
     <div class="section-header">
       <div class="section-tag">plot. in front, p to plot</div>
       <h2>Get <span class="accent">Started</span></h2>
-      <p class="section-desc">Install the adapter in your sketch. Put <code>plot.</code> in front of the shapes that should reach paper. Press P.</p>
+      <p class="section-desc">Put the three lines in your sketch. Write <code>plot.</code> in front of the shapes that should go on paper. Press P.</p>
     </div>
     <div style="max-width:520px; margin:0 auto; text-align:left;">
       <div class="code-preview" style="margin-bottom:1.5rem;">

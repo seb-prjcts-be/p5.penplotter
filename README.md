@@ -16,7 +16,7 @@ You sketch in p5.js the way you always do. Write `plot.line()` instead of `line(
 
 **Two ways to draw, two modes.** *Sheet mode*: draw everything, then plot. Your sketch makes the whole drawing, you press P, the plotter draws it start to finish. That is what 0.2.0 does. *Live mode*: draw something, plot it. Your sketch makes one thing, the plotter draws it, your sketch makes the next; the drawing grows on paper while you watch, in the order you made it. That is for things that happen over time: an animation appearing dot by dot, a hand drawing in the air, a drawing nobody looks at on a screen. Live mode is designed, not built; [Two modes](https://seb-prjcts-be.github.io/vanilla.penplotter/docs/live.html) explains both in plain words first, then the design.
 
-**Three methods, no engine of its own.** `createPlot()`, `createPlotterEngine()` and `drawPlotPlan()` land on the p5 prototype, in global and instance mode. Geometry, optimisation, planning, exports and the driver stay in `vanilla.penplotter`; a bug in the pipeline is fixed there, once.
+**Three commands, no thinking of its own.** `createPlot()`, `createPlotterEngine()` and `drawPlotPlan()` become part of p5, in global and instance mode. Everything that takes thought, the shapes in millimetres, the tidying, the route for the pen, the files for other machines and the talking to the plotter, stays in `vanilla.penplotter`. When something is fixed there, it is fixed for everyone at once.
 
 **Plots for real on one machine so far:** an iDraw HSE / A2 with an EBB board, from Chrome or Edge. For every other plotter the engine can still hand you the plan as SVG, HPGL or G-code; that is the side door, not the road.
 
