@@ -115,7 +115,7 @@ function draw() {
       <li>Call <code>createPlot()</code> inside <code>setup()</code>, never at the top of the file. At the top of <code>sketch.js</code> the adapter is not installed yet.</li>
       <li>The position of the module in the document does not matter. Deferred is deferred.</li>
     </ul>
-    <h3>In the p5.js Web Editor</h3>
+    <h3 id="editor">In the p5.js Web Editor</h3>
     <p>Replace the editor's <code>index.html</code> with the one above and keep <code>sketch.js</code> as a normal file. Drawing, <code>plan()</code> and the on-screen preview work. <code>plot.go()</code> does not: the editor runs sketches in an iframe that has no Web Serial permission. Plot from a local folder instead — see section 5.</p>
     <h3>If it breaks</h3>
     <ul>
@@ -253,7 +253,7 @@ installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
   </main>
   <footer>
     <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; <a href="handbook.html">Handbook</a> &middot; <a href="about.html">About</a> &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine</p>
-    <p class="footer-sub">MIT License &middot; v0.2.0</p>
+    <p class="footer-sub">MIT License &middot; v0.2.1</p>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
 </body>

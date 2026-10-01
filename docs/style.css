@@ -389,3 +389,11 @@ footer a:hover { color: #000; }
   .section { padding: 4rem 1.25rem; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ── Landing: four drawings you can make ── */
+.make-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1.25rem; max-width: 1100px; margin: 0 auto; }
+.make-card { display: block; text-decoration: none; color: inherit; }
+.make-card .ex-canvas { margin-bottom: 0.6rem; }
+.make-card p { margin: 0; font-family: 'Oswald', sans-serif; font-size: 1.1rem; font-weight: 400; letter-spacing: 0.02em; color: #000; }
+.section-dark .make-card p { color: #fff; }
+.make-card:hover p { text-decoration: underline; }

@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>p5.penplotter - from a p5.js sketch to the pen</title>
+  <title>p5.penplotter - from your sketch to paper</title>
   <meta name="description" content="Draw in p5.js as you always do, with plot. in front, and send your sketch straight to a pen plotter.">
-  <meta property="og:title" content="p5.penplotter - from a p5.js sketch to the pen">
+  <meta property="og:title" content="p5.penplotter - from your sketch to paper">
   <meta property="og:description" content="plot.line() draws on the canvas and on paper. Click the drawing and your sketch goes to the pen.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://seb-prjcts-be.github.io/p5.penplotter/">
   <meta property="og:image" content="https://seb-prjcts-be.github.io/p5.penplotter/docs/images/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="p5.penplotter - from a p5.js sketch to the pen">
+  <meta name="twitter:title" content="p5.penplotter - from your sketch to paper">
   <meta name="twitter:description" content="plot.line() draws on the canvas and on paper. Click the drawing and your sketch goes to the pen.">
   <meta name="twitter:image" content="https://seb-prjcts-be.github.io/p5.penplotter/docs/images/og-image.png">
   <link rel="icon" href="docs/favicon.svg" type="image/svg+xml">
@@ -38,108 +38,130 @@
     </ul>
   </nav>
 
-  <!-- HERO - one sketch being drawn the way the machine would, one sentence -->
+  <!-- HERO: the pen's route, drawn behind one sentence -->
   <section id="hero">
     <div id="hero-canvas"></div>
     <div class="hero-overlay">
       <div class="hero-text">
-        <div class="hero-badge">p5.js addon library · v0.2.1</div>
-        <h1>p5.<span class="accent">penplotter</span></h1>
-        <p class="hero-sub">You sketch in p5.js the way you always do. Write <code>plot.line()</code> instead of <code>line()</code>,<br>write <code>plot.go()</code> at the end, click the drawing, and it goes to the pen. No files in between.</p>
-        <a href="#which" class="cta-btn">See how it works &#8595;</a>
+        <div class="hero-badge">p5.penplotter &middot; a real pen on real paper &middot; v0.2.1</div>
+        <h1>From your sketch <span class="accent">to paper</span></h1>
+        <p class="hero-sub">Draw in the p5.js editor. Click your drawing, and a pen draws it on paper.<br>Change a number, try another shape, make one more.</p>
+        <div class="cta-row">
+          <a href="docs/setup.html#editor" class="cta-btn">Try it in the editor &#8594;</a>
+          <a href="#make" class="cta-btn secondary">See what it draws &#8595;</a>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- TWO LIBRARIES -->
-  <section id="which" class="section section-dark">
+  <!-- 1. WHAT YOU CAN MAKE -->
+  <section id="make" class="section section-dark">
     <div class="section-header">
-      <div class="section-tag">one direction, two doors</div>
-      <h2>Two <span class="accent">Libraries</span></h2>
-      <p class="section-desc">This is the small one, the one you use in your sketch. Behind it sits the engine, which does the thinking. You only ever see this one.</p>
+      <div class="section-tag">what you can make</div>
+      <h2>Four <span class="accent">Drawings</span></h2>
+      <p class="section-desc">Each one is a sketch of forty lines or so, drawn on screen the way the pen will draw it. Click one to open it.</p>
     </div>
-    <ol class="pipeline-list">
-      <li><span>this</span><strong>p5.penplotter</strong><p>What you use. Three commands in p5.js, nothing more. You draw as you always do, with <code>plot.</code> in front, and <code>plot.go()</code> sends your drawing to the pen. Take this if you sketch in p5.js.</p></li>
-      <li><span>engine</span><strong>vanilla.penplotter</strong><p>What does the thinking. It knows how big your sheet is, in millimetres. It tidies the drawing up, works out the shortest route for the pen, tells you how long the plot will take, and talks to the machine. Plain JavaScript, no p5.js. You only need it on its own if you draw without p5. <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter →</a></p></li>
-    </ol>
+    <div class="make-grid">
+      <a class="make-card" href="examples/molnar_grid/index.html"><div class="ex-canvas"><iframe src="examples/molnar_grid/index.html?embed" title="Moln&aacute;r grid" loading="lazy"></iframe></div><p>Let the grid come apart.</p></a>
+      <a class="make-card" href="examples/spirograph/index.html"><div class="ex-canvas"><iframe src="examples/spirograph/index.html?embed" title="Spirograph" loading="lazy"></iframe></div><p>Three wheels, one unbroken line.</p></a>
+      <a class="make-card" href="examples/wave_field/index.html"><div class="ex-canvas"><iframe src="examples/wave_field/index.html?embed" title="Wave field" loading="lazy"></iframe></div><p>Thirty-four fields, one seed each.</p></a>
+      <a class="make-card" href="examples/chaos_game/index.html"><div class="ex-canvas"><iframe src="examples/chaos_game/index.html?embed" title="Chaos game" loading="lazy"></iframe></div><p>A triangle nobody drew, dot by dot.</p></a>
+    </div>
   </section>
 
-  <!-- THREE METHODS -->
-  <section id="bridge" class="section">
+  <!-- 2. TRY IT -->
+  <section id="try" class="section">
     <div class="section-header">
-      <div class="section-tag">three commands, that is all</div>
-      <h2>Three <span class="accent">Commands</span></h2>
-      <p class="section-desc">p5.penplotter gives your sketch three new commands. All the thinking happens in the engine, so when something is fixed there, it is fixed for everyone at once.</p>
-    </div>
-    <ol class="pipeline-list">
-      <li><span>01</span><strong>createPlot()</strong><p>The one you will use. It gives you <code>plot</code>. Every <code>plot.line()</code>, <code>plot.circle()</code> and so on draws on your canvas as always, and remembers the shape for the plotter. <code>plot.go()</code> sends the drawing to the pen; <code>plot.stop()</code> lifts the pen and stops.</p></li>
-      <li><span>02</span><strong>createPlotterEngine()</strong><p>For when you want to talk to the engine yourself: several pens, layers, or a file for another machine. Your canvas becomes the sheet. Most sketches never need this.</p></li>
-      <li><span>03</span><strong>drawRoute()</strong><p>Shows you what the machine will actually do: the order it will draw in, the lines it will draw backwards, where it will start a circle. Good for seeing why the plot takes less time than your sketch would suggest.</p></li>
-    </ol>
-  </section>
-
-  <!-- EXPLICIT INSTALL -->
-  <section id="install" class="section section-dark">
-    <div class="section-header">
-      <div class="section-tag">nothing hidden</div>
-      <h2>No <span class="accent">Surprises</span></h2>
-      <p class="section-desc">You tell p5.penplotter which p5 and which engine to use, in your own code, where you can see it. That is three lines more than most libraries ask. It is also why a sketch you make this year still works next year, when versions have moved on.</p>
+      <div class="section-tag">try it</div>
+      <h2>Eight <span class="accent">Lines</span></h2>
+      <p class="section-desc">This is a complete sketch. Paste it in the editor, or in any p5 project, and you have a drawing that can go to paper.</p>
     </div>
     <div style="max-width:760px; margin:0 auto;">
-      <pre class="code-block"><code class="language-javascript">import { PlotterEngine } from "vanilla.penplotter";
-import * as Ebb from "vanilla.penplotter/driver/ebb";
-import { installP5Penplotter } from "p5.penplotter";
-
-installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
-
-let plot;
+      <pre class="code-block"><code class="language-javascript">let plot;
 
 function setup() {
-  createCanvas(600, 600);
-  plot = createPlot({ x: 147, y: 66, width: 300 });  // 300 mm wide on the bed
-}
-
-function draw() {
-  background(255);
-  plot.clear();
-  plot.circle(300, 300, 400);
-  plot.go();   // ready: click the drawing to plot
+  createCanvas(400, 250);
+  plot = createPlot({ x: 60, y: 60, width: 120 });   // 120 mm wide, 60 mm from the corner
+  plot.rect(10, 10, 380, 230);
+  plot.circle(200, 125, 120);
+  plot.go();                                          // ready: click the drawing
 }</code></pre>
+      <p class="section-desc" style="margin-top:1.25rem;">The editor needs three lines in <code>index.html</code>, once. Copy them from the start page.</p>
+    </div>
+    <div class="cta-row">
+      <a href="docs/setup.html#editor" class="cta-btn">Copy the start (index.html + sketch.js) &#8594;</a>
     </div>
   </section>
 
-  <!-- GET STARTED -->
-  <section id="start" class="section" style="text-align:center; padding:4rem 2rem;">
+  <!-- 3. CHANGE ONE THING -->
+  <section id="change" class="section section-dark">
     <div class="section-header">
-      <div class="section-tag">plot. in front, click to plot</div>
-      <h2>Get <span class="accent">Started</span></h2>
-      <p class="section-desc">Put the three lines in your sketch. Write <code>plot.</code> in front of the shapes that should go on paper. Write <code>plot.go()</code> after the last one, and click the drawing.</p>
+      <div class="section-tag">change one thing and look</div>
+      <h2>One <span class="accent">Change</span></h2>
+      <p class="section-desc">A number, a shape, a line. Each one shows you something the screen alone cannot.</p>
     </div>
-    <div style="max-width:520px; margin:0 auto; text-align:left;">
-      <div class="code-preview" style="margin-bottom:1.5rem;">
-        <code class="language-javascript">function setup() {
-  createCanvas(600, 600);
-  plot = createPlot({ width: 200 });   // 200 mm wide on the bed
-}
+    <ol class="pipeline-list">
+      <li><span>01</span><strong>120 &rarr; 200</strong><p>The same drawing, 200 mm wide on paper. The screen does not change; the pen does.</p></li>
+      <li><span>02</span><strong>a circle &rarr; a hatch</strong><p>Replace the circle with <code>plot.hatch([[40, 40], [360, 40], [360, 210], [40, 210]], 6)</code>: a filled shape, made of lines, because a pen has no fill.</p></li>
+      <li><span>03</span><strong>order &rarr; disorder</strong><p>Open the <a href="examples/molnar_grid/index.html">Moln&aacute;r grid</a> and change <code>wanorde</code> from <code>rij / (n - 1)</code> to <code>1</code>: every row comes apart.</p></li>
+    </ol>
+    <p class="section-desc" style="max-width:760px; margin:2rem auto 0;">Everything with <code>plot.</code> in front goes to paper: shapes, lines, dots. <code>translate()</code>, <code>rotate()</code>, <code>fill()</code> and colours stay on the screen; the pen is the pen.</p>
+  </section>
 
-function draw() {
-  plot.clear();
-  plot.line(40, 300, 560, 300);
-  plot.circle(300, 300, 240);
-  plot.go();   // click the drawing to plot
-}</code>
-      </div>
+  <!-- 4. ON PAPER -->
+  <section id="paper" class="section">
+    <div class="section-header">
+      <div class="section-tag">put it on paper</div>
+      <h2>On <span class="accent">Paper</span></h2>
+      <p class="section-desc">Four steps, the first time and every time.</p>
+    </div>
+    <ol class="pipeline-list">
+      <li><span>01</span><strong>Chrome or Edge</strong><p>With the plotter on USB. Web Serial lives nowhere else.</p></li>
+      <li><span>02</span><strong>Home corner</strong><p>Slide the carriage to the home corner by hand, and put the paper down.</p></li>
+      <li><span>03</span><strong>Click your drawing</strong><p>Choose the plotter in the list that opens. It draws.</p></li>
+      <li><span>04</span><strong>Click again to stop</strong><p>The pen comes up, the motors let go.</p></li>
+    </ol>
+    <p class="section-desc" style="max-width:760px; margin:2rem auto 0;">Tested on one machine: an iDraw HSE / A2 with EBB firmware 3.0.2. No plotter? Everything above works without one: you see the pen's route on screen, and <code>plot.engine.exportSVG()</code> gives you a file for any other machine.</p>
+    <div class="cta-row">
+      <a href="examples/calibration_sheet/index.html" class="cta-btn secondary">No plotter yet? Start with the calibration sheet &#8594;</a>
+    </div>
+  </section>
+
+  <!-- 5. GO FURTHER -->
+  <section id="further" class="section section-dark">
+    <div class="section-header">
+      <div class="section-tag">go further</div>
+      <h2>Go <span class="accent">Further</span></h2>
+      <p class="section-desc">When one drawing is not enough.</p>
+    </div>
+    <ol class="pipeline-list">
+      <li><span>fill</span><strong>Hatching and dots</strong><p><code>plot.hatch()</code>, <code>plot.crossHatch()</code> and <code>plot.stipple()</code> fill a shape with lines or dots, the only fills a pen knows. <a href="docs/guide.html">Guide &rarr;</a></p></li>
+      <li><span>pens</span><strong>Two pens, one sheet</strong><p>Black first, then red; the machine stops once and waits for you. Through <code>plot.engine</code>. <a href="docs/handbook.html#c10">Handbook &rarr;</a></p></li>
+      <li><span>waves</span><strong>Waves</strong><p>A number in, a line out: p5.waves draws rows, fields and tones. <a href="examples/wave_field/index.html">Wave field &rarr;</a></p></li>
+      <li><span>time</span><strong>Watch it appear</strong><p>The chaos game draws in the order of the game, so the triangle appears on paper the way it appeared on screen. Live mode, where the pen follows you while you draw, is designed and not built yet. <a href="examples/chaos_game/index.html">Chaos game &rarr;</a> &middot; <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/live.html">Two modes &rarr;</a></p></li>
+    </ol>
+  </section>
+
+  <!-- 6. UNDER THE HOOD -->
+  <section id="hood" class="section" style="text-align:center; padding:4rem 2rem;">
+    <div class="section-header">
+      <div class="section-tag">under the hood</div>
+      <h2>Under the <span class="accent">Hood</span></h2>
+      <p class="section-desc">p5.penplotter is three commands on p5.js. The thinking, millimetres, the route, the minutes, the machine, is <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a>, a separate library you can use without p5.</p>
     </div>
     <div class="cta-row">
-      <a href="docs/setup.html" class="cta-btn">Setup &#8594;</a>
-      <a href="docs/examples.html" class="cta-btn secondary">Examples &#8594;</a>
+      <a href="docs/setup.html" class="cta-btn secondary">Setup &#8594;</a>
+      <a href="docs/guide.html" class="cta-btn secondary">Guide &#8594;</a>
+      <a href="docs/handbook.html" class="cta-btn secondary">Handbook &#8594;</a>
+      <a href="docs/architecture.html" class="cta-btn secondary">Architecture &#8594;</a>
+      <a href="https://github.com/seb-prjcts-be/p5.penplotter" class="cta-btn secondary" target="_blank">GitHub &#8594;</a>
     </div>
   </section>
 
   <!-- FOOTER -->
   <footer>
     <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; <a href="docs/handbook.html">Handbook</a> &middot; <a href="docs/about.html">About</a> &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine &middot; <a href="https://p5js.org" target="_blank">p5.js</a></p>
-    <p class="footer-sub">MIT License &middot; v0.2.0</p>
+    <p class="footer-sub">MIT License &middot; v0.2.1</p>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>

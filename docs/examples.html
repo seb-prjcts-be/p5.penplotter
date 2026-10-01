@@ -32,7 +32,7 @@
   </div>
   <section id="first_plot" class="section section-dark">
     <div class="section-header">
-      <div class="section-tag">createPlotterEngine() · drawRoute()</div>
+      <div class="section-tag">what the planner made of your sketch</div>
       <h2>First <span class="accent">plot</span></h2>
       <p class="section-desc">Create the core engine from a p5 canvas, build a hatched polygon and a circle, and draw the optimized plan back with p5: the same order and seams the machine would get.</p>
     </div>
@@ -48,7 +48,7 @@ p.drawRoute(plot.plan());</code></pre>
 
   <section id="wave_plot" class="section">
     <div class="section-header">
-      <div class="section-tag">p5.waves · Waves.wave() · plot.polyline()</div>
+      <div class="section-tag">twenty-four rows of one wave</div>
       <h2>Wave <span class="accent">plot</span></h2>
       <p class="section-desc">Sample one of 34 wave formulas into 24 rows of points and inspect the planned route. p5.waves returns numbers; the adapter passes their points to the engine.</p>
     </div>
@@ -63,7 +63,7 @@ plot.polyline(points);</code></pre>
 
   <section id="direct_plot" class="section section-dark">
     <div class="section-header">
-      <div class="section-tag">createPlot() · plot.go() · plot.stop()</div>
+      <div class="section-tag">five lines, a frame, and the pen</div>
       <h2>Direct <span class="accent">plot</span></h2>
       <p class="section-desc">Every <code>plot.…</code> call draws on the canvas and is remembered for the plotter. Click the drawing and the last frame goes to an iDraw HSE / A2, no SVG in between.</p>
     </div>
@@ -79,7 +79,7 @@ plot.go();   // click the drawing to plot</code></pre>
 
   <section id="molnar_grid" class="section">
     <div class="section-header">
-      <div class="section-tag">global mode · random() · plot.polygon()</div>
+      <div class="section-tag">let the grid come apart</div>
       <h2>Molnár <span class="accent">grid</span></h2>
       <p class="section-desc">Ten rows of nested squares. The top row is exact; each row down, the squares drift and turn a little more, until the bottom row has come apart. One seed, one rule, a plain global-mode sketch with no imports.</p>
     </div>
@@ -94,7 +94,7 @@ plot.polygon(corners(cx + dx, cy + dy, radius, angle));</code></pre>
 
   <section id="calibration_sheet" class="section section-dark">
     <div class="section-header">
-      <div class="section-tag">plot.hatch() · plot.crossHatch() · plot.stipple() · plot.circle()</div>
+      <div class="section-tag">what your pen does on your paper</div>
       <h2>Calibration <span class="accent">sheet</span></h2>
       <p class="section-desc">What your pen does on your paper: a 100 mm ruler, hatch and cross-hatch scales down to 0.8 mm, stipple densities, circles from 2 to 40 mm and line pairs from 0.3 mm apart. Only physical variables. Plot it once per pen and keep the sheet.</p>
     </div>
@@ -109,7 +109,7 @@ plot.hatch(cellAt(20 + i * 22, 45, 18), spacing, QUARTER_PI);
 
   <section id="wave_field" class="section">
     <div class="section-header">
-      <div class="section-tag">p5.waves · streamlines · plot.polyline()</div>
+      <div class="section-tag">thirty-four fields, one seed each</div>
       <h2>Wave <span class="accent">field</span></h2>
       <p class="section-desc">Two waves, one per axis, give every point a direction; sixty lines follow it until they leave the frame. The seed picks the wave shape: thirty-four fields in one sketch.</p>
     </div>
@@ -125,7 +125,7 @@ y += sin(angle) * 2.4;</code></pre>
 
   <section id="spirograph" class="section section-dark">
     <div class="section-header">
-      <div class="section-tag">hypotrochoids · one polyline each</div>
+      <div class="section-tag">three wheels, one unbroken line</div>
       <h2>Spirograph</h2>
       <p class="section-desc">Three hypotrochoids around one centre; the seed picks the gear ratios. Each curve is one unbroken polyline, so the pen never lifts until it closes.</p>
     </div>
@@ -141,7 +141,7 @@ plot.polyline(points);</code></pre>
 
   <section id="chaos_game" class="section">
     <div class="section-header">
-      <div class="section-tag">plot.point() · plan({ strategy: "drawn" }) · time is the order</div>
+      <div class="section-tag">a triangle nobody drew, dot by dot</div>
       <h2>Chaos <span class="accent">game</span></h2>
       <p class="section-desc">One point jumps halfway to a random corner and leaves a dot; after a few hundred dots the Sierpinski triangle is there. The plan keeps the order of the game, so on paper it appears the way it appeared on screen: dot by dot, out of nothing, half an hour long.</p>
     </div>
@@ -163,7 +163,7 @@ plot.go({ plan: { strategy: "drawn" } });   // in the order of the game</code></
   </main>
   <footer>
     <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; <a href="handbook.html">Handbook</a> &middot; <a href="about.html">About</a> &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine</p>
-    <p class="footer-sub">MIT License &middot; v0.2.0</p>
+    <p class="footer-sub">MIT License &middot; v0.2.1</p>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
 </body>
