@@ -11,6 +11,7 @@
   ],
   "examples": [
     "calibration_sheet",
+    "chaos_game",
     "direct_plot",
     "first_plot",
     "molnar_grid",

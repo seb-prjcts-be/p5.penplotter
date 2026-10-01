@@ -179,6 +179,7 @@ Each one is a standalone page under `examples/`, plots with P and stops with S; 
 - `calibration_sheet` - ruler, tone scales, circles and line spacing: what your pen does on your paper
 - `wave_field` - streamlines through a direction field that p5.waves shapes; 34 fields in one sketch
 - `spirograph` - three hypotrochoids, each one unbroken polyline: the drawing a plotter was made for
+- `chaos_game` - 1 500 dots that jump halfway to a random corner; plotted in the order of the game, the Sierpinski triangle appears on paper dot by dot
 
 ## Related work
 

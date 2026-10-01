@@ -138,6 +138,23 @@ plot.polyline(points);</code></pre>
 <a class="ex-full-link" href="../examples/spirograph/index.html">-&gt; full example</a>
     </div>
   </section>
+
+  <section id="chaos_game" class="section">
+    <div class="section-header">
+      <div class="section-tag">plot.point() · plan({ strategy: "input" }) · time is the order</div>
+      <h2>Chaos <span class="accent">game</span></h2>
+      <p class="section-desc">One point jumps halfway to a random corner and leaves a dot; after a few hundred dots the Sierpinski triangle is there. The plan keeps the order of the game, so on paper it appears the way it appeared on screen: dot by dot, out of nothing, half an hour long.</p>
+    </div>
+    <div class="ex-preview">
+      <div class="ex-canvas"><iframe src="../examples/chaos_game/index.html?embed" title="Chaos game" loading="lazy"></iframe></div>
+<pre class="ex-code-block"><code class="language-javascript">const c = random(corners);
+p.x = (p.x + c[0]) / 2;
+p.y = (p.y + c[1]) / 2;
+plot.point(p.x, p.y);
+plot.go({ plan: { strategy: "input" } });   // in the order of the game</code></pre>
+<a class="ex-full-link" href="../examples/chaos_game/index.html">-&gt; full example</a>
+    </div>
+  </section>
   <section class="section" style="padding:3rem 2rem;">
     <div style="max-width:760px; margin:0 auto;">
       <p class="callout">The engine's own examples, without p5.js, are on the sister site: <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/examples.html">vanilla.penplotter examples</a>, and its <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/possibilities.html">Possibilities</a> page shows what a pen can do.</p>

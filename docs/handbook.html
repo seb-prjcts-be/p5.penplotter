@@ -229,6 +229,7 @@ plot.polyline(points);</code></pre>
         <tr><td>calibration_sheet</td><td>a 100 mm ruler, hatch and cross-hatch scales down to 0.8 mm, stipple densities, circles from 2 to 40 mm, line pairs from 0.3 mm apart: only physical variables; plot it once per pen</td><td>global mode</td></tr>
         <tr><td>wave_field</td><td>streamlines through a direction field shaped by p5.waves; thirty-four fields in one sketch</td><td>global mode</td></tr>
         <tr><td>spirograph</td><td>three hypotrochoids around one centre, each a single unbroken polyline, wheels chosen so every curve closes within eleven turns</td><td>global mode</td></tr>
+        <tr><td>chaos_game</td><td>one point jumps halfway to a random corner and leaves a dot, 1 500 times; <code>plan({ strategy: "input" })</code> keeps the order of the game, so the Sierpinski triangle appears on paper dot by dot, half an hour long</td><td>global mode</td></tr>
       </tbody>
     </table>
     <p>The global-mode examples are the test of the root: a <code>sketch.js</code> with no imports, no instance mode, only <code>createPlot</code>, <code>polygon</code> with <code>[x, y]</code> pairs, <code>random</code> and a for-loop, with the wiring in <code>index.html</code> as Setup 1 describes it. Every example page accepts <code>?embed</code>, which hides the navigation and the panel so the gallery can show the live canvas in a frame.</p>

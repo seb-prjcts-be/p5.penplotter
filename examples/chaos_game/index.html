@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chaos game - p5.penplotter</title>
+  <link rel="icon" href="../../docs/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../showcase.css">
+  <script>if (location.search.includes("embed")) document.documentElement.classList.add("embed");</script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
+  <script type="module">
+    // The core is a sibling of this repository, both on localhost and on GitHub Pages.
+    import { PlotterEngine } from "../../../vanilla.penplotter/vanilla.penplotter.js";
+    import * as Ebb from "../../../vanilla.penplotter/src/driver/ebb.js";
+    import { installP5Penplotter } from "../../p5.penplotter.js";
+    installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
+  </script>
+  <script src="sketch.js"></script>
+</head>
+<body>
+  <nav id="navbar">
+    <a class="nav-logo" href="../../index.html">p5.<span>penplotter</span></a>
+    <button class="nav-hamburger" aria-label="Toggle menu" onclick="this.closest('nav').classList.toggle('nav-open')"><span></span><span></span><span></span></button>
+    <ul class="nav-links">
+      <li><a href="../../index.html">Showcase</a></li>
+      <li><a href="../../docs/examples.html" class="active">Examples</a></li>
+      <li><a href="../../docs/setup.html">Setup</a></li>
+      <li><a href="../../docs/architecture.html">Architecture</a></li>
+      <li><a href="../../docs/guide.html">Guide</a></li>
+      <li><a href="../../docs/about.html">About</a></li>
+      <li><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">GitHub</a></li>
+    </ul>
+  </nav>
+    <main class="demo-page">
+    <div class="demo-header">
+      <div class="demo-number">Chaos game · time is the order</div>
+      <h1>Chaos game</h1>
+      <p>One point, three corners. Every step the point jumps halfway to a corner chosen at random and leaves a dot. After a few hundred dots the Sierpinski triangle is there; nobody drew it. The plan keeps the order of the game, so on paper the triangle appears the way it appears here: dot by dot, out of nothing, about half an hour long. On a screen this is over in a second. This is the first taste of <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/live.html">live mode</a>; in sheet mode it has an end.</p>
+    </div>
+    <div class="demo-layout">
+      <div class="demo-code">
+        <div class="code-label">sketch.js</div>
+        <pre><code class="language-javascript" data-src="sketch.js">// loading sketch.js …</code></pre>
+      </div>
+      <div class="demo-right">
+        <div class="demo-canvas" id="p5-preview"></div>
+      <dl>
+      <div><dt>Dots</dt><dd id="dots">—</dd></div>
+      <div><dt>On paper</dt><dd id="time">—</dd></div>
+      </dl>
+      <p id="status" role="status">P to plot, in the order of the game. S to stop.</p>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <p><a href="../../docs/examples.html">&larr; All examples</a> &nbsp;&middot;&nbsp; <a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter on GitHub</a></p>
+    <p class="footer-sub">p5.penplotter v0.2.0 &nbsp;&middot;&nbsp; p5.js v2.2.2 &nbsp;&middot;&nbsp; iDraw HSE / A2</p>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script type="module" src="../code.js"></script>
+</body>
+</html>
