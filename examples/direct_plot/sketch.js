@@ -54,6 +54,7 @@ new p5(function directPlotSketch(p) {
       plot.polyline(points);
     }
     document.querySelector("#paths").textContent = String(plot.plan().stats.paths);
+    plot.drawBed(document.querySelector("#bed"));   // where the canvas lands on the paper
     plot.go();   // ready: click the drawing to plot, click again to stop
   };
 

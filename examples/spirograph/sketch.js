@@ -48,6 +48,7 @@ function draw() {
   const stats = plot.plan().stats;
   document.querySelector("#length").textContent = `${(stats.drawDistance / 1000).toFixed(1)} m`;
 
+  plot.drawBed(document.querySelector("#bed"));   // where the canvas lands on the paper
   plot.go();   // ready: click the drawing to plot, click again to stop
 }
 

@@ -30,6 +30,7 @@ function draw() {
   document.querySelector("#dots").textContent = String(dots);
   const minutes = plot.plan({ strategy: "drawn" }).stats.estimatedSeconds / 60;
   document.querySelector("#time").textContent = Math.round(minutes) + " min";
+  plot.drawBed(document.querySelector("#bed"));
   if (dots >= DOTS) {
     noLoop();
     plot.go({ plan: { strategy: "drawn" } });   // in the order of the game; click the drawing to start

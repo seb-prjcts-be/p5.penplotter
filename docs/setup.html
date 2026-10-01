@@ -90,6 +90,22 @@ function draw() {
   plot.circle(200, 150, 80);
   plot.go();   // ready: click the drawing to plot, click again to stop
 }</code></pre>
+    <h3>Your canvas on the paper</h3>
+    <p>Your canvas is a rectangle on the paper. <code>width</code> says how wide it is in millimetres; <code>x</code> and <code>y</code> say how far its top-left corner sits from the machine's home corner, the corner where you park the carriage by hand. The height follows from your canvas. Without <code>x</code> and <code>y</code> the canvas sits in the home corner itself; without <code>width</code>, one pixel is one millimetre. <code>plot.drawBed(canvas)</code> draws this picture for your own sketch.</p>
+    <svg class="bed-figure" viewBox="0 0 320 240" width="320" height="240" role="img" aria-label="The bed with the home corner top left, and the canvas as a sheet placed x to the right and y down, width wide">
+      <rect x="10" y="10" width="297" height="216" fill="#fff" stroke="#000" stroke-width="1"/>
+      <circle cx="10" cy="10" r="4" fill="#000"/>
+      <text x="18" y="24" font-family="Inter, Arial, sans-serif" font-size="10">home corner</text>
+      <rect x="50" y="85" width="60" height="37.5" fill="rgba(0,0,0,.05)" stroke="#000" stroke-width="1"/>
+      <text x="52" y="110" font-family="Inter, Arial, sans-serif" font-size="9">your canvas</text>
+      <line x1="10" y1="140" x2="50" y2="140" stroke="#000" stroke-width="1" stroke-dasharray="3 2"/>
+      <text x="22" y="152" font-family="Courier New, monospace" font-size="10">x</text>
+      <line x1="140" y1="10" x2="140" y2="85" stroke="#000" stroke-width="1" stroke-dasharray="3 2"/>
+      <text x="144" y="50" font-family="Courier New, monospace" font-size="10">y</text>
+      <line x1="50" y1="130" x2="110" y2="130" stroke="#000" stroke-width="1"/>
+      <text x="66" y="142" font-family="Courier New, monospace" font-size="10">width</text>
+      <text x="200" y="220" font-family="Inter, Arial, sans-serif" font-size="9">the bed, 594 by 432 mm</text>
+    </svg>
     <h3>Why it works</h3>
     <p><code>sketch.js</code> runs as a classic script at step 2 of the timeline. It only <em>defines</em> <code>setup</code> and <code>draw</code>; nothing is called yet. The inline module runs at step 4 and installs <code>createPlot</code> on <code>p5.prototype</code>. At step 6 p5 calls <code>setup()</code>, and by then the adapter has been there for two steps.</p>
     <h3>Rules</h3>

@@ -132,3 +132,6 @@ html.embed .demo-canvas canvas { max-height: 100%; width: auto !important; heigh
   #navbar { padding-left: 1.25rem; padding-right: 1.25rem; }
   .demo-page { padding: 1.5rem 1.25rem 3rem; }
 }
+
+/* the bed: where the canvas lands on the paper, drawn by plot.drawBed() */
+.demo-right .bed { display: block; width: 100%; height: auto; margin: 10px 0 0; border: 1px solid rgba(0, 0, 0, 0.15); background: #fff; }
