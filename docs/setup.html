@@ -27,7 +27,7 @@
     <header class="page-header">
       <div class="section-tag">p5.js addon library · v0.2.1</div>
       <h1>p5.<span class="accent">penplotter</span> Setup</h1>
-      <p class="guide-intro">From a plain p5 sketch with <code>function setup()</code> to import maps. Same adapter, same engine — only the wiring changes. Start at 1 and stop where you are comfortable.</p>
+      <p class="guide-intro">Four ways to wire the same adapter and the same engine into a sketch: a plain p5 sketch with <code>function setup()</code>, a sketch as a module, a module that publishes its globals, and import maps. Only the wiring changes. Start at 1 and stop where you are comfortable.</p>
     </header>
 
     <h2>The one fact everything hinges on</h2>
@@ -116,12 +116,12 @@ function draw() {
       <li>The position of the module in the document does not matter. Deferred is deferred.</li>
     </ul>
     <h3 id="editor">In the p5.js Web Editor</h3>
-    <p>Replace the editor's <code>index.html</code> with the one above and keep <code>sketch.js</code> as a normal file. Drawing, <code>plan()</code> and the on-screen preview work. <code>plot.go()</code> does not: the editor runs sketches in an iframe that has no Web Serial permission. Plot from a local folder instead — see section 5.</p>
+    <p>Replace the editor's <code>index.html</code> with the one above and keep <code>sketch.js</code> as a normal file. Drawing, <code>plan()</code> and the on-screen preview work. <code>plot.go()</code> does not: the editor runs sketches in an iframe that has no Web Serial permission. Plot from a local folder instead; see section 5.</p>
     <h3>If it breaks</h3>
     <ul>
-      <li><code>createPlot is not defined</code> — <code>sketch.js</code> has <code>type="module"</code>, or <code>createPlot()</code> is called outside <code>setup()</code>.</li>
-      <li><code>p5 is not defined</code> in the module — the p5 script tag comes after the module, or failed to load.</li>
-      <li>An older version keeps showing up after an update — reload with Ctrl+F5 to drop the browser's cached module.</li>
+      <li><code>createPlot is not defined</code>: <code>sketch.js</code> has <code>type="module"</code>, or <code>createPlot()</code> is called outside <code>setup()</code>.</li>
+      <li><code>p5 is not defined</code> in the module: the p5 script tag comes after the module, or failed to load.</li>
+      <li>An older version keeps showing up after an update: reload with Ctrl+F5 to drop the browser's cached module.</li>
     </ul>
 
     <h2>2. Instance mode, sketch as a module</h2>
@@ -202,7 +202,7 @@ window.draw = draw;</code></pre>
     <h3>Why it works</h3>
     <p>The module runs at step 4, installs the adapter, and puts <code>setup</code> and <code>draw</code> on <code>window</code>. At step 6 p5 finds them there, exactly as it would find a classic script's functions. Inside the functions, <code>createCanvas</code> and <code>key</code> resolve because p5 in global mode copies its API onto <code>window</code> before calling <code>setup()</code>.</p>
     <h3>When to use it</h3>
-    <p>When you want one file and no <code>p.</code> prefix, and you are fine with the <code>window.</code> lines at the bottom. Every p5 callback you use — <code>mousePressed</code>, <code>windowResized</code> — needs its own line. Forget one and p5 silently never calls it.</p>
+    <p>When you want one file and no <code>p.</code> prefix, and you are fine with the <code>window.</code> lines at the bottom. Every p5 callback you use (<code>mousePressed</code>, <code>windowResized</code>) needs its own line. Forget one and p5 silently never calls it.</p>
 
     <h2>4. Import maps and local neighbours</h2>
     <p>Two refinements for development. Both change only where the modules come from, not how the sketch is written; they combine with setup 1, 2 or 3.</p>
@@ -231,7 +231,7 @@ import { installP5Penplotter } from "p5.penplotter";
 
 installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
     <p>The import map must appear before the first module script. Bare names like <code>"p5.penplotter"</code> are what a package manager would resolve; the import map does the same job in the browser, without one.</p>
-    <p class="callout">The GitHub Pages URLs always serve the latest <code>main</code>. The adapter checks the core's version at install and refuses a mismatch with a clear message, so a silent drift between the two is not possible — but a sketch that worked yesterday can stop today. For anything you want to keep, copy both repositories next to it and use the local-neighbour form.</p>
+    <p class="callout">The GitHub Pages URLs always serve the latest <code>main</code>. The adapter checks the core's version at install and refuses a mismatch with a clear message, so a silent drift between the two is not possible, but a sketch that worked yesterday can stop today. For anything you want to keep, copy both repositories next to it and use the local-neighbour form.</p>
 
     <h2>5. Plotting for real, in every setup</h2>
     <p>Whichever wiring you pick, direct plotting needs the same three things:</p>
@@ -244,12 +244,12 @@ installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
 
     <h2>Choosing</h2>
     <ul>
-      <li><strong>Teaching, Web Editor, "just draw"</strong> — setup 1. The sketch is indistinguishable from any other p5 sketch.</li>
-      <li><strong>Library work, examples, tests</strong> — setup 2. Explicit, self-contained, no load-order assumptions.</li>
-      <li><strong>One file, no prefix</strong> — setup 3, and remember the <code>window.</code> lines.</li>
-      <li><strong>Working on the libraries</strong> — setup 4 on top of any of the above.</li>
+      <li><strong>Teaching, Web Editor, "just draw"</strong>: setup 1. The sketch is indistinguishable from any other p5 sketch.</li>
+      <li><strong>Library work, examples, tests</strong>: setup 2. Explicit, self-contained, no load-order assumptions.</li>
+      <li><strong>One file, no prefix</strong>: setup 3, and remember the <code>window.</code> lines.</li>
+      <li><strong>Working on the libraries</strong>: setup 4 on top of any of the above.</li>
     </ul>
-    <p>None of these is a compromise. The install is explicit in all four — a design decision, see <a href="architecture.html">Architecture</a> — and the adapter has no idea which one you picked.</p>
+    <p>None of these is a compromise. The install is explicit in all four (a design decision, see <a href="architecture.html">Architecture</a>) and the adapter has no idea which one you picked.</p>
   </main>
   <footer>
     <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; <a href="handbook.html">Handbook</a> &middot; <a href="about.html">About</a> &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine</p>

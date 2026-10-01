@@ -14,7 +14,7 @@ You sketch in p5.js the way you always do. Write `plot.line()` instead of `line(
 | to the pen | `plot.go()` | `driver.run(plot.plan())` |
 | take it if | you sketch in p5.js | you work without p5, or want to build your own layer on top |
 
-**Two ways to draw, two modes.** *Sheet mode*: draw everything, then plot. Your sketch makes the whole drawing, you click it, the plotter draws it start to finish. That is what 0.2.0 does. *Live mode*: draw something, plot it. Your sketch makes one thing, the plotter draws it, your sketch makes the next; the drawing grows on paper while you watch, in the order you made it. That is for things that happen over time: an animation appearing dot by dot, a hand drawing in the air, a drawing nobody looks at on a screen. Live mode is designed, not built; [Two modes](https://seb-prjcts-be.github.io/vanilla.penplotter/docs/live.html) explains both in plain words first, then the design.
+**Two ways to draw, two modes.** *Sheet mode*: draw everything, then plot. Your sketch makes the whole drawing, you click it, the plotter draws it start to finish. That is what 0.2.1 does. *Live mode*: draw something, plot it. Your sketch makes one thing, the plotter draws it, your sketch makes the next; the drawing grows on paper while you watch, in the order you made it. That is for things that happen over time: an animation appearing dot by dot, a hand drawing in the air, a drawing nobody looks at on a screen. Live mode is designed, not built; [Two modes](https://seb-prjcts-be.github.io/vanilla.penplotter/docs/live.html) explains both in plain words first, then the design.
 
 **Three commands, no thinking of its own.** `createPlot()`, `createPlotterEngine()` and `drawRoute()` become part of p5, in global and instance mode. Everything that takes thought, the shapes in millimetres, the tidying, the route for the pen, the files for other machines and the talking to the plotter, stays in `vanilla.penplotter`. When something is fixed there, it is fixed for everyone at once.
 
@@ -183,12 +183,12 @@ Each one is a standalone page under `examples/`; a click on the drawing plots, a
 
 ## Public API
 
-- `installP5Penplotter(p5, PlotterEngine, { driver })` — installs the adapter explicitly; `driver` is optional and only needed for `plot.go()`.
-- `createPlot(options)` — creates a `P5Plot`: `point`, `line`, `circle`, `ellipse`, `arc`, `rect`, `square`, `triangle`, `quad`, `polyline` and `polygon` draw on the canvas and record in mm, with the same arguments as in p5; `hatch`, `crossHatch` and `stipple` fill a polygon; `clear()`, `plan()`, `connect()`, `go()` and `stop()` control the job; `engine` is the underlying `PlotterEngine`. Options: `x`, `y`, `width` (mm on the bed) or `mmPerPixel`, `profile`, `confirm`, `log`.
-- `createPlotterEngine(options)` — creates a bare engine with, by default, the current canvas size and `px` as unit.
-- `drawRoute(plan, options)` — draws the route: the plan as the machine will draw it, via p5.js. Also `drawPlotPlan()`.
-- `plot.drawBed(canvas)` — draws the bed as the machine sees it, with your canvas as the sheet on it: where it lands, how big, whether it fits.
-- `drawPlanWithP5(p, plan, options)` — the same renderer without the prototype helper.
+- `installP5Penplotter(p5, PlotterEngine, { driver })`: installs the adapter explicitly; `driver` is optional and only needed for `plot.go()`.
+- `createPlot(options)`: creates a `P5Plot`: `point`, `line`, `circle`, `ellipse`, `arc`, `rect`, `square`, `triangle`, `quad`, `polyline` and `polygon` draw on the canvas and record in mm, with the same arguments as in p5; `hatch`, `crossHatch` and `stipple` fill a polygon; `clear()`, `plan()`, `connect()`, `go()` and `stop()` control the job; `engine` is the underlying `PlotterEngine`. Options: `x`, `y`, `width` (mm on the bed) or `mmPerPixel`, `profile`, `confirm`, `log`.
+- `createPlotterEngine(options)`: creates a bare engine with, by default, the current canvas size and `px` as unit.
+- `drawRoute(plan, options)`: draws the route: the plan as the machine will draw it, via p5.js. Also `drawPlotPlan()`.
+- `plot.drawBed(canvas)`: draws the bed as the machine sees it, with your canvas as the sheet on it: where it lands, how big, whether it fits.
+- `drawPlanWithP5(p, plan, options)`: the same renderer without the prototype helper.
 
 Version 0.2.1 targets p5.js 2.2.2. The core and hardware status are determined solely by `vanilla.penplotter`.
 

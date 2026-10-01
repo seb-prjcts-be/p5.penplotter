@@ -273,7 +273,6 @@ footer a:hover { color: #000; }
 .page-header .section-tag, .page-header .eyebrow { margin-bottom: 0.6rem; }
 
 .callout {
-  border-left: 3px solid #000;
   background: var(--bg2);
   padding: 0.9rem 1.2rem;
   margin: 1.2rem 0;
