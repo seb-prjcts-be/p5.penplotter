@@ -395,5 +395,4 @@ footer a:hover { color: #000; }
 .make-card { display: block; text-decoration: none; color: inherit; }
 .make-card .ex-canvas { margin-bottom: 0.6rem; }
 .make-card p { margin: 0; font-family: 'Oswald', sans-serif; font-size: 1.1rem; font-weight: 400; letter-spacing: 0.02em; color: #000; }
-.section-dark .make-card p { color: #fff; }
 .make-card:hover p { text-decoration: underline; }
