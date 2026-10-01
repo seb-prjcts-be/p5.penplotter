@@ -120,8 +120,15 @@ async function testAgainstRealCore() {
   const plot = new FakeP5().createPlot({ x: 80, y: 70, width: 200 });
   plot.line(0, 0, 80, 0); // 80 px -> 40 mm along X
   const compiled = Ebb.compileEbbPlan(plot.plan({ strategy: "input" }), { drawSpeed: 10 });
-  const draw = compiled.commands.find((entry) => entry.kind === "draw");
-  assert.equal(draw.cmd, "SM,4000,3200,3200", "40 mm is 3200 steps on both motors");
+  // One pen-down stroke, whatever the core splits it into: constant-speed SM
+  // moves (core 0.2) or accelerating LM phases (core 0.3+).
+  const stepsOf = (cmd) => {
+    const parts = cmd.split(",").map(Number);
+    return cmd.startsWith("LM,") ? [parts[2], parts[5]] : [parts[2], parts[3]];
+  };
+  const draws = compiled.commands.filter((entry) => entry.kind === "draw");
+  const steps = draws.reduce((sum, entry) => sum.map((value, axis) => value + stepsOf(entry.cmd)[axis]), [0, 0]);
+  assert.deepEqual(steps, [3200, 3200], "40 mm is 3200 steps on both motors");
 
   // Fills come from the core and are drawn back on the canvas.
   const filled = new FakeP5().createPlot({ x: 80, y: 70, width: 200 });
