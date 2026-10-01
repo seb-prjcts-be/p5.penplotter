@@ -34,10 +34,8 @@
     </div>
     <div class="demo-layout">
       <div class="demo-code">
-        <div class="code-label">Core snippet</div>
-        <pre><code class="language-javascript">const waveY = Waves.wave(x + row * 7, { wave: waveSeed, t: 0, amplitude: 22, frequency: 0.045 });
-points.push({ x, y: 86 + row * 24 + waveY });
-plot.polyline(points);</code></pre>
+        <div class="code-label">sketch.js</div>
+        <pre><code class="language-javascript" data-src="sketch.js">// loading sketch.js …</code></pre>
       </div>
       <div class="demo-right">
         <div class="demo-canvas" id="p5-preview"></div>
@@ -56,5 +54,6 @@ plot.polyline(points);</code></pre>
   </footer>
   <script type="module" src="sketch.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script type="module" src="../code.js"></script>
 </body>
 </html>

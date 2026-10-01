@@ -40,11 +40,8 @@
     </div>
     <div class="demo-layout">
       <div class="demo-code">
-        <div class="code-label">Core snippet</div>
-        <pre><code class="language-javascript">plot = p.createPlot({ x: 80, y: 150, width: 80 });   // mm on the bed
-plot.rect(10, 10, 380, 230);
-plot.polyline(points);
-if (p.key === "p") plot.go();</code></pre>
+        <div class="code-label">sketch.js</div>
+        <pre><code class="language-javascript" data-src="sketch.js">// loading sketch.js …</code></pre>
       </div>
       <div class="demo-right">
         <div class="demo-canvas" id="p5-preview"></div>
@@ -66,5 +63,6 @@ if (p.key === "p") plot.go();</code></pre>
   </footer>
   <script type="module" src="sketch.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script type="module" src="../code.js"></script>
 </body>
 </html>

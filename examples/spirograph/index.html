@@ -41,11 +41,8 @@
     </div>
     <div class="demo-layout">
       <div class="demo-code">
-        <div class="code-label">Core snippet</div>
-        <pre><code class="language-javascript">const t = (i / steps) * TWO_PI * turns;
-points.push([cx + (R - r) * cos(t) + d * cos(((R - r) / r) * t),
-             cy + (R - r) * sin(t) - d * sin(((R - r) / r) * t)]);
-plot.polyline(points);</code></pre>
+        <div class="code-label">sketch.js</div>
+        <pre><code class="language-javascript" data-src="sketch.js">// loading sketch.js …</code></pre>
       </div>
       <div class="demo-right">
         <div class="demo-canvas" id="p5-preview"></div>
@@ -64,5 +61,6 @@ plot.polyline(points);</code></pre>
     <p class="footer-sub">p5.penplotter v0.2.0 &nbsp;&middot;&nbsp; p5.js v2.2.2 &nbsp;&middot;&nbsp; iDraw HSE / A2</p>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script type="module" src="../code.js"></script>
 </body>
 </html>
