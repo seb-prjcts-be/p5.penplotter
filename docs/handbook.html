@@ -65,7 +65,7 @@
     <section class="toc">
       <h2>Contents</h2>
       <ol>
-        <li><a href="#c1">What the adapter is, and what it is not</a></li>
+        <li><a href="#c1">The adapter</a></li>
         <li><a href="#c2">Installing: the version contract</a></li>
         <li><a href="#c3">Wiring a sketch: four ways and one timeline</a></li>
         <li><a href="#c4">createPlot(): one object for screen and paper</a></li>
@@ -85,7 +85,7 @@
       </ol>
     </section>
 
-    <h2 id="c1"><span class="num">1</span>What the adapter is, and what it is not</h2>
+    <h2 id="c1"><span class="num">1</span>The adapter</h2>
     <p>A p5 sketch runs sixty times a second and forgets every frame. A pen plotter draws once and keeps it. <code>p5.penplotter</code> is the smallest bridge between those two habits: you keep writing the sketch you always write, put <code>plot.</code> in front of the shapes that should reach paper, and press a key. The adapter adds three methods to the p5 prototype and nothing else:</p>
     <table>
       <thead><tr><th>method</th><th>what it is for</th></tr></thead>
@@ -96,7 +96,7 @@
       </tbody>
     </table>
     <p>Everything else, geometry, optimisation, route planning, exports, machine profiles and the driver, lives in <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a>, which knows nothing about p5. The adapter contains no copy of any of it; a bug in the pipeline is fixed there, once, for both libraries. The one piece of real work the adapter does own is the translation from canvas pixels to millimetres on the bed.</p>
-    <p>What it is not: not p5.plotSvg, which records a sketch between <code>beginRecordSvg()</code> and <code>endRecordSvg()</code> into an SVG file and covers far more of p5's drawing API. That library stops at the file on purpose; this one has no file at all. The two are not rivals. A p5.plotSvg file can be plotted by the engine's <em>SVG to pen</em> example.</p>
+    <p>It is not p5.plotSvg, which records a sketch between <code>beginRecordSvg()</code> and <code>endRecordSvg()</code> into an SVG file and covers far more of p5's drawing API. That library stops at the file on purpose; this one has no file at all. The two are not rivals. A p5.plotSvg file can be plotted by the engine's <em>SVG to pen</em> example.</p>
 
     <h2 id="c2"><span class="num">2</span>Installing: the version contract</h2>
     <p>Installation is explicit. The adapter is handed the p5 constructor and the engine class, and, when you want to plot, the engine's driver module:</p>
