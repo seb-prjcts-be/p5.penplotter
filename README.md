@@ -14,6 +14,8 @@ You sketch in p5.js the way you always do. Write `plot.line()` instead of `line(
 | to the pen | `plot.go()` | `driver.run(plot.plan())` |
 | take it if | you sketch in p5.js | you work without p5, or want to build your own layer on top |
 
+**Two modes, two sentences.** *Sheet mode*: draw everything, then plot; `plot.go()` sends the last frame as one planned sheet. That is what 0.2.0 does. *Live mode*: draw something, plot it; `createPlot({ live: true })` and the pen follows `draw()` frame by frame, in the order you made the strokes, so you can draw without a preview, draw with your hands through ml5, or set `frameRate(0.5)` and watch an animation appear on paper. Live mode is designed, not built; the design lives with the engine: [Two modes](https://seb-prjcts-be.github.io/vanilla.penplotter/docs/live.html).
+
 **Three methods, no engine of its own.** `createPlot()`, `createPlotterEngine()` and `drawPlotPlan()` land on the p5 prototype, in global and instance mode. Geometry, optimisation, planning, exports and the driver stay in `vanilla.penplotter`; a bug in the pipeline is fixed there, once.
 
 **Plots for real on one machine so far:** an iDraw HSE / A2 with an EBB board, from Chrome or Edge. For every other plotter the engine can still hand you the plan as SVG, HPGL or G-code; that is the side door, not the road.
