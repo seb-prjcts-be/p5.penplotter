@@ -70,7 +70,7 @@ function draw() {
 
 `plot.go()` is written where the drawing is finished, like any other line. It does not plot by itself: the browser only opens its list of ports after a click, so the status line asks you to check the machine and click the drawing. That click is the confirmation. While the pen runs, a click on the drawing stops it, pen up. Park the carriage in the home corner by hand first; the machine has no home position of its own. And remember that `draw()` runs sixty times a second while a plotter draws once: what gets plotted is always the last frame.
 
-Tested on one machine: iDraw HSE / A2 (EBB firmware 3.0.2) on 2026-09-21. Plots from the p5.js Web Editor as well, confirmed on paper on 2026-10-01.
+Tested on one machine: iDraw HSE / A2 (EBB firmware 3.0.2) on 2026-09-21. Plotted from the p5.js Web Editor on 2026-10-01.
 
 ## Requirements
 
