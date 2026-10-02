@@ -6,9 +6,11 @@ You draw with p5.js. The supported `plot.line()`, `plot.circle()` and other shap
 
 The adapter converts canvas coordinates to millimetres using the width and offset passed to `createPlot()`. A p5 circle takes a diameter; the core receives a radius. A point becomes a short dash on paper.
 
-Paper and canvas area can have different sizes and positions. `plot.drawBed(canvas, { sheet: { x, y, width, height } })` shows the actual sheet in millimetres alongside the planned strokes. Without `sheet`, it shades the canvas area mapped by `createPlot()`. This preview does not alter the plan or rotate the drawing; p5 screen transforms are still not captured.
+Paper and canvas area can have different sizes and positions. `plot.drawBed(canvas, { sheet: { x, y, width, height } })` shows the actual sheet in millimetres alongside the planned strokes. Without `sheet`, it uses selected `plot.paper` or, when no paper was selected, the mapped canvas area. Preview does not alter the plan or rotate the drawing; p5 screen transforms are still not captured.
 
 ## What is recorded
+
+`createPlot({ paper: "A2", margin: 12 })` asks the core's `PlotterEngine.paperSize()` for sheet dimensions. It centres paper on the installed profile's bed and fits the canvas proportionally inside its margins. Without a profile, paper starts at zero. Automatic orientation follows the canvas aspect ratio and tries the other orientation if needed to fit the bed; an explicit orientation is honoured or refused. `width`/`mmPerPixel` overrides fitting, `x`/`y` locates the canvas, and `paperX`/`paperY` locates the sheet. `plot.paper` is the resolved sheet and the default for `drawBed()`. `plan()` checks recorded draw moves against paper margins before `start()` connects. Paper dimensions remain in the core; sketches without `paper` keep their existing mapping.
 
 The plot keeps the shapes recorded since the last `plot.clear()`. To record one frame, clear at its start. For a stable drawing, use `noLoop()` and redraw when you choose a new seed.
 

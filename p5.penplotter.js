@@ -101,6 +101,37 @@ export class P5Plot {
     this.offset = { x: options.x ?? 0, y: options.y ?? 0 };
     // width: how many millimetres wide the canvas lands on the bed.
     this.scale = options.width ? options.width / p.width : options.mmPerPixel ?? 1;
+    this.paper = null;
+    if (options.paper !== undefined) {
+      if (typeof EngineClass.paperSize !== "function") {
+        throw new Error("createPlot({ paper }) needs current vanilla.penplotter source with PlotterEngine.paperSize(). Update both libraries.");
+      }
+      if (!(Number.isFinite(p.width) && p.width > 0 && Number.isFinite(p.height) && p.height > 0)) {
+        throw new RangeError("Create a canvas with positive dimensions before choosing paper.");
+      }
+      const bed = this.kit?.EBB_PROFILES?.[this.profileId]?.travel;
+      const requested = options.orientation ?? "auto";
+      if (!["auto", "portrait", "landscape"].includes(requested)) throw new RangeError("Use auto, portrait or landscape for paper orientation.");
+      let orientation = requested === "auto" ? (p.width >= p.height ? "landscape" : "portrait") : requested;
+      let size = EngineClass.paperSize(options.paper, orientation);
+      if (bed && requested === "auto" && (size.width > bed.width || size.height > bed.height)) {
+        orientation = orientation === "landscape" ? "portrait" : "landscape";
+        size = EngineClass.paperSize(options.paper, orientation);
+      }
+      const margin = options.margin ?? 12;
+      if (!Number.isFinite(margin) || margin < 0 || 2 * margin >= Math.min(size.width, size.height)) throw new RangeError("Paper margin must leave a positive drawing area.");
+      const x = options.paperX ?? (bed ? (bed.width - size.width) / 2 : 0);
+      const y = options.paperY ?? (bed ? (bed.height - size.height) / 2 : 0);
+      if (!Number.isFinite(x) || !Number.isFinite(y) || x < 0 || y < 0 || (bed && (x + size.width > bed.width + 1e-6 || y + size.height > bed.height + 1e-6))) throw new RangeError("The chosen paper does not fit on the machine bed at this position.");
+      this.scale = options.width !== undefined ? options.width / p.width : options.mmPerPixel ?? Math.min((size.width - 2 * margin) / p.width, (size.height - 2 * margin) / p.height);
+      if (!Number.isFinite(this.scale) || this.scale <= 0) throw new RangeError("Drawing scale must be positive.");
+      this.offset = {
+        x: options.x ?? x + (size.width - p.width * this.scale) / 2,
+        y: options.y ?? y + (size.height - p.height * this.scale) / 2
+      };
+      if (!Number.isFinite(this.offset.x) || !Number.isFinite(this.offset.y) || this.offset.x < x + margin - 1e-6 || this.offset.y < y + margin - 1e-6 || this.offset.x + p.width * this.scale > x + size.width - margin + 1e-6 || this.offset.y + p.height * this.scale > y + size.height - margin + 1e-6) throw new RangeError("The drawing canvas does not fit inside the paper margins.");
+      this.paper = { x, y, ...size, margin, format: String(options.paper).toUpperCase(), orientation };
+    }
     this.transport = null;
     this.driver = null;
     this.busy = false;
@@ -115,7 +146,7 @@ export class P5Plot {
       units: "mm",
       page: travel
         ? { ...travel }
-        : { width: this.offset.x + this.p.width * this.scale, height: this.offset.y + this.p.height * this.scale }
+        : { width: this.paper ? this.paper.x + this.paper.width : this.offset.x + this.p.width * this.scale, height: this.paper ? this.paper.y + this.paper.height : this.offset.y + this.p.height * this.scale }
     });
     return this;
   }
@@ -248,7 +279,17 @@ export class P5Plot {
   }
 
   plan(options) {
-    return this.engine.plan(options);
+    const plan = this.engine.plan(options);
+    if (this.paper) {
+      const { x, y, width, height, margin } = this.paper;
+      for (const move of plan.moves) {
+        if (move.type !== "draw") continue;
+        for (const point of move.points) {
+          if (!Number.isFinite(point.x) || !Number.isFinite(point.y) || point.x < x + margin - 1e-6 || point.y < y + margin - 1e-6 || point.x > x + width - margin + 1e-6 || point.y > y + height - margin + 1e-6) throw new RangeError("Recorded strokes fall outside the paper margins. Keep the strokes inside the canvas or adjust the drawing size and position.");
+        }
+      }
+    }
+    return plan;
   }
 
   // The bed as the machine sees it. Supply sheet (mm) for actual paper;
@@ -259,7 +300,8 @@ export class P5Plot {
       throw new Error("plot.drawBed() needs a vanilla.penplotter build with drawBed(). See Setup for current-source imports.");
     }
     const bed = this.kit?.EBB_PROFILES?.[this.profileId]?.travel || this.engine.document.page;
-    const sheet = options.sheet ?? { x: this.offset.x, y: this.offset.y, width: this.p.width * this.scale, height: this.p.height * this.scale };
+    const sheet = options.sheet ?? this.paper ?? { x: this.offset.x, y: this.offset.y, width: this.p.width * this.scale, height: this.p.height * this.scale };
+    this.plan();
     const context = typeof canvas.getContext === "function" ? canvas.getContext("2d") : canvas;
     this.engine.drawBed(context, { bed, sheet });
     return this;

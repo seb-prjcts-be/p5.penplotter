@@ -151,6 +151,29 @@ installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
     <p>Inside, the object holds a fresh <code>PlotterEngine</code> in millimetres. Its page is the profile's travel (594 × 432 mm) when a driver was installed, so the engine's bounds check is the machine's; without a driver it is just large enough to hold the canvas at its offset. Two small helpers do all the geometry: <code>toMm(x, y)</code> is <code>offset + pixel · scale</code>, and <code>toPx(point)</code> is its inverse, used to draw the engine's fills back onto the canvas.</p>
     <p><code>clear()</code> replaces the engine with an empty one. That is how a frame starts: every <code>draw()</code> that wants a fresh job calls <code>plot.clear()</code> first, exactly where it calls <code>background()</code>. <code>plan(options)</code> asks the engine for its plan and returns it; <code>engine</code> is the engine itself, for layers, pens and exports the adapter does not wrap.</p>
 
+    <h3>Paper, drawing and bed</h3>
+    <p>The canvas size is in pixels; <code>width</code> sets its mapped width in millimetres. A 400 × 250 pixel canvas with <code>createPlot({ x: 80, y: 150, width: 80 })</code> occupies an 80 × 50 mm area on the bed. A rectangle at (10, 10) with width 380 and height 230 occupies 76 × 46 mm inside it. The paper can be larger and have its own position.</p>
+    <table>
+      <thead><tr><th>paper</th><th>portrait, mm</th><th>landscape, mm</th></tr></thead>
+      <tbody>
+        <tr><td>A4</td><td>210 × 297</td><td>297 × 210</td></tr>
+        <tr><td>A3</td><td>297 × 420</td><td>420 × 297</td></tr>
+        <tr><td>A2</td><td>420 × 594</td><td>594 × 420</td></tr>
+      </tbody>
+    </table>
+    <p>The HSE/A2 bed is 594 × 432 mm, with X along the long rail. A2 fits with its 594 mm edge along X; centred paper has its nearest corner at X = 0, Y = 6 mm. A machine's model name does not set the drawing size.</p>
+    <h3>Choose an A format</h3>
+    <pre><code class="language-javascript">plot = createPlot({ paper: "A2", margin: 12 });</code></pre>
+    <p><code>paper</code> accepts A0–A6 through the core's <code>PlotterEngine.paperSize()</code>. The canvas fits proportionally inside paper margins, default 12 mm, and is centred on the sheet. Paper is centred on the installed machine profile's bed; without a profile it starts at X/Y = 0. Default <code>orientation: "auto"</code> follows the canvas aspect ratio and tries the other orientation if needed to fit the bed. Explicit <code>"portrait"</code> or <code>"landscape"</code> is honoured or refused. A2 on the HSE/A2 is 594 × 420 mm at X = 0, Y = 6 mm. A 400 × 250 canvas with a 12 mm margin maps to 570 × 356.25 mm.</p>
+    <p><code>paperX</code>/<code>paperY</code> move the sheet; <code>x</code>/<code>y</code> locate the canvas. <code>width</code> or <code>mmPerPixel</code> overrides fitting. <code>plot.paper</code> reports the resolved sheet, used automatically by <code>plot.drawBed(canvas)</code>. Invalid paper placement or a canvas outside the margins is refused; <code>plan()</code> also checks recorded strokes before connecting to the machine. Existing sketches without <code>paper</code> keep their mapping. Both libraries need current source for this option.</p>
+    <h3>Show the actual paper</h3>
+    <pre><code class="language-javascript">// After recording the drawing; bedCanvas is a separate HTML canvas.
+plot.drawBed(bedCanvas, {
+  sheet: { x: 60, y: 100, width: 210, height: 297 }
+});</code></pre>
+    <p><code>sheet</code> gives the actual paper's X/Y position and width/height in millimetres. Without it, <code>drawBed()</code> uses selected <code>plot.paper</code> or, when no paper was selected, the mapped canvas area. The preview draws the existing planned strokes; it does not move, scale or rotate them. Swap the preview sheet's width and height to preview landscape paper. That changes the outline only. Screen <code>rotate()</code> still does not rotate the recorded geometry.</p>
+    <p>For quarter-turn placement of a complete job, use the core's <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/examples/first_job/">paper and bed panel</a>. It turns the drawing with the sheet and checks both against their bounds. These bed helpers require current source in both libraries; use the imports on <a href="setup.html">Setup</a>, rather than assuming the tagged builds include them.</p>
+
     <h2 id="c5"><span class="num">5</span>The shape methods, one by one</h2>
     <p>Every shape method does two things in one call: it calls the same p5 function with the same arguments, so the canvas shows what you wrote in the sketch's current style, and it records the shape in millimetres in the engine. The arguments are p5's, including its habit of taking a diameter where the engine takes a radius.</p>
     <table>

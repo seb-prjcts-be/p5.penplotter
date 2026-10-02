@@ -69,10 +69,10 @@ plot.polyline(points);</code></pre>
     </div>
     <div class="ex-preview">
       <div class="ex-canvas"><iframe src="../examples/direct_plot/index.html?embed" title="Direct plot" loading="lazy"></iframe></div>
-<pre class="ex-code-block"><code class="language-javascript">plot = p.createPlot({ x: 80, y: 150, width: 80 });   // mm on the bed
+<pre class="ex-code-block"><code class="language-javascript">plot = p.createPlot({ paper: "A2", margin: 12 });
 plot.rect(10, 10, 380, 230);
 plot.polyline(points);
-plot.drawBed(bedCanvas, { sheet: { x: 60, y: 100, width: 210, height: 297 } });
+plot.drawBed(bedCanvas); // uses the chosen A2 paper
 plot.go();   // click the drawing to plot</code></pre>
 <a class="ex-full-link" href="../examples/direct_plot/index.html">-&gt; full example</a>
     </div>

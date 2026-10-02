@@ -12,10 +12,8 @@ try {
   throw error;
 }
 
-// Where the canvas lands on the bed, in millimetres from the home corner.
-const PLACE = { x: 80, y: 150, width: 80 };
-// Actual A4 paper, independent of the 80 x 50 mm canvas area.
-const PAPER = { x: 60, y: 100, width: 210, height: 297 };
+// Fit the canvas on A2, with a 12 mm paper margin.
+const PLACE = { paper: "A2", margin: 12 };
 
 let waveSeed = Math.floor(Math.random() * 34);
 
@@ -29,9 +27,9 @@ new p5(function directPlotSketch(p) {
       ...PLACE,
       log: (message) => { document.querySelector("#status").textContent = message; }
     });
-    const mmPerPixel = PLACE.width / p.width;
-    document.querySelector("#size").textContent = `${PLACE.width} × ${(p.height * mmPerPixel).toFixed(0)} mm`;
-    document.querySelector("#place").textContent = `${PLACE.x} / ${PLACE.y} mm`;
+    document.querySelector("#size").textContent = `${(p.width * plot.scale).toFixed(1)} × ${(p.height * plot.scale).toFixed(1)} mm`;
+    document.querySelector("#place").textContent = `${plot.offset.x.toFixed(1)} / ${plot.offset.y.toFixed(1)} mm`;
+    document.querySelector("#paper").textContent = `${plot.paper.format} · ${plot.paper.width} × ${plot.paper.height} mm, at X ${plot.paper.x} / Y ${plot.paper.y} mm`;
     p.noLoop();
   };
 
@@ -56,7 +54,7 @@ new p5(function directPlotSketch(p) {
       plot.polyline(points);
     }
     document.querySelector("#paths").textContent = String(plot.plan().stats.paths);
-    plot.drawBed(document.querySelector("#bed"), { sheet: PAPER });
+    plot.drawBed(document.querySelector("#bed"));
     plot.go();   // ready: click the drawing to plot, click again to stop
   };
 

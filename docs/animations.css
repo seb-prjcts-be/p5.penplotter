@@ -7,3 +7,13 @@ html.embed .doc-animation { display: none; }
 .doc-animation figcaption { overflow-wrap: anywhere; }
 .page h1, .page h2, .page h3, .demo-header h1, .section-header h2 { font-weight: 300; }
 .doc-animation { scroll-margin-top: 5rem; }
+
+/* Keep the measured diagram and schematic preview together. */
+.canvas-placement-figures { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: 1.5rem; align-items: start; margin: 1.2rem 0 2rem; }
+.canvas-placement-figures figure { margin: 0; width: 100%; min-width: 0; }
+.canvas-placement-diagram svg { display: block; width: 100%; height: auto; }
+.canvas-placement-diagram figcaption { margin-top: .65rem; color: var(--text-muted); font-size: .85rem; line-height: 1.6; }
+@media (max-width: 620px) {
+  .canvas-placement-figures { grid-template-columns: minmax(0, 1fr); }
+  .canvas-placement-diagram { max-width: 320px; }
+}

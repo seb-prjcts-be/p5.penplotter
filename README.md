@@ -190,10 +190,14 @@ Each one is a standalone page under `examples/`; the [examples page](https://seb
 - `createPlot(options)`: creates a `P5Plot` that draws supported shapes on screen and records them in millimetres. Its `engine` is the underlying `PlotterEngine`.
 - `createPlotterEngine(options)`: creates a bare engine with, by default, the current canvas size and `px` as unit.
 - `drawRoute(plan, options)`: draws the route: the plan as the machine will draw it, via p5.js. Also `drawPlotPlan()`.
-- `plot.drawBed(canvas, { sheet })`: draws the planned strokes on the bed. Optional `sheet` describes the actual paper with `x`, `y`, `width` and `height` in millimetres. Without it, the shaded rectangle is the mapped canvas area. Paper preview never scales or moves the drawing.
+- `plot.drawBed(canvas, { sheet })`: draws the planned strokes on the bed. Optional `sheet` describes actual paper with `x`, `y`, `width` and `height` in millimetres. By default it uses `plot.paper` when paper was selected, otherwise the mapped canvas area. Preview never scales or moves the drawing.
 - `drawPlanWithP5(p, plan, options)`: the same renderer without the prototype helper.
 
 `createPlot()` options: `x`, `y`, `width` (mm on the bed) or `mmPerPixel`, `profile`, `confirm`, `log`. Use `clear()`, `plan()`, `connect()`, `go()` and `stop()` to control the job.
+
+Choose paper directly with `createPlot({ paper: "A2", margin: 12 })`. A0–A6 dimensions come from the core's `PlotterEngine.paperSize()`. The canvas fits proportionally inside the paper margins and is centred on the sheet; the sheet is centred on the installed machine's bed. Default `orientation: "auto"` follows the canvas aspect ratio and tries the other orientation if needed to fit the bed. On the HSE/A2, A2 is 594 × 420 mm at X = 0, Y = 6 mm. Explicit `"portrait"` or `"landscape"` never flips silently. `paperX`/`paperY` move the sheet; `x`/`y` still locate the canvas. Positions and margins are millimetres; the default margin is 12. `width` or `mmPerPixel` overrides automatic fitting.
+
+`plot.paper` reports the resolved format, orientation, dimensions, position and margin. `plot.drawBed(canvas)` uses that sheet automatically. Invalid paper placement, a canvas outside the margins or recorded strokes outside those margins are refused before direct plotting. Without a machine profile, paper starts at X/Y = 0. Without `paper`, existing mapping stays unchanged. This option requires current source in both libraries; earlier pinned builds do not include it.
 
 Version 0.2.1 targets p5.js 2.2.2. The core and hardware status are determined solely by `vanilla.penplotter`.
 
