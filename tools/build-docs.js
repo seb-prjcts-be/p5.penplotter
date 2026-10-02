@@ -57,7 +57,7 @@ export function renderMarkdown(markdown) {
     } else if (/^!\[.*\]\([^\s)]+\)$/.test(line.trim())) {
       flush();
       const [, caption, src] = line.trim().match(/^!\[(.*)\]\(([^\s)]+)\)$/);
-      html.push(`<figure class="doc-animation"><img src="${escapeHtml(src)}" width="600" height="400" loading="lazy" alt="${escapeHtml(caption).replaceAll('"', '&quot;')}"><figcaption>${inline(caption)}</figcaption></figure>`);
+      html.push(`<figure class="doc-animation"><img src="${escapeHtml(src)}" width="600" height="400" loading="lazy" alt="${escapeHtml(caption).replaceAll('"', '&quot;')}">${caption ? `<figcaption>${inline(caption)}</figcaption>` : ""}</figure>`);
       index += 1;
     } else if (/^#{1,3} /.test(line)) {
       flush();
