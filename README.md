@@ -6,7 +6,7 @@
 
 You sketch in p5.js the way you always do. Write `plot.line()` instead of `line()` and the same line is drawn on the canvas and remembered in millimetres.
 
-Write `plot.go()` when the drawing is done, click it, and it goes to the plotter. No intermediate SVG is required for direct plotting.
+Call `plot.go()` when the drawing is ready, then click the drawing to start plotting. No intermediate SVG is required for direct plotting.
 
 ## Twee manieren van werken
 
@@ -129,7 +129,7 @@ new p5(function sketch(p) {
 
 ## Shapes and fills
 
-`plot.…` knows the same 2D shapes as p5, with the same arguments: `point`,
+`plot.…` supports these p5 shapes, using their p5 arguments: `point`,
 `line`, `circle`, `ellipse`, `arc`, `rect`, `square`, `triangle`, `quad`.
 Points for `polyline` and `polygon` may be `[x, y]` or `{ x, y }`.
 Angles follow `angleMode()`.
@@ -143,7 +143,7 @@ plot.arc(330, 30, 40, 40, 0, HALF_PI, PIE);
 plot.polygon([[0, 0], [40, 0], [40, 40]]);
 ```
 
-A pen cannot make a dot, so `point()` becomes a dash of a quarter of a millimetre. An oval becomes a 96-gon, the way the engine itself flattens a circle.
+`point()` is recorded as a short dash, about a quarter of a millimetre. An ellipse is recorded as a polyline with 96 segments.
 
 Fills come from the engine and are drawn back onto the canvas, so screen and paper show the same hatching. The spacing is in millimetres on the bed, not in pixels:
 
@@ -179,12 +179,12 @@ Each one is a standalone page under `examples/`; the [examples page](https://seb
 - `molnar_grid` - nested squares that drift and turn a little more with every row; a plain global-mode sketch
 - `calibration_sheet` - ruler, tone scales, circles and line spacing: what your pen does on your paper
 - `wave_field` - streamlines through a sampled direction field; a seed chooses the field
-- `spirograph` - three hypotrochoids, each one unbroken polyline: the drawing a plotter was made for
+- `spirograph` - three hypotrochoids, each one unbroken polyline: with no pen lift within each curve
 - `chaos_game` - 1 500 dots that jump halfway to a random corner; plotted in the order of the game, the Sierpinski triangle appears on paper dot by dot
 
 ## Related work
 
-[p5.plotSvg](https://github.com/golanlevin/p5.plotSvg) by Golan Levin exports a plotter-friendly SVG from a p5 sketch, with `beginRecordSvg()` and `endRecordSvg()`, and covers many more p5 primitives than this adapter. It drives no machine. `p5.penplotter` takes the other path: no file, but `plot.go()`. A p5.plotSvg file can be plotted by the engine's `svg_to_pen` example.
+[p5.plotSvg](https://github.com/golanlevin/p5.plotSvg) by Golan Levin exports a plotter-friendly SVG from a p5 sketch, with `beginRecordSvg()` and `endRecordSvg()`, and covers many more p5 primitives than this adapter. You can use the exported file with plotting software. This adapter records explicit shape calls for direct plotting with `plot.go()`. The engine’s `svg_to_pen` example can also import supported geometry from a p5.plotSvg file.
 
 [p5.plotterControl](https://github.com/craigfahner/p5.plotterControl) (craigfahner) drives GRBL pen plotters live from p5.js. `p5.penplotter` targets EBB machines such as the iDraw HSE and plans the whole drawing before the pen moves.
 
@@ -217,7 +217,7 @@ npm run manifest
 
 ## How this was made
 
-Designed and directed by Sebastien Vanblaere, written with AI assistance, and held to one rule: nothing is claimed that a test or a plot on paper has not shown. See [About](https://seb-prjcts-be.github.io/p5.penplotter/docs/about.html).
+Written with AI assistance, under the direction of Sebastien Vanblaere. Physical plotting tests use the iDraw HSE / A2. See [About](https://seb-prjcts-be.github.io/p5.penplotter/docs/about.html).
 
 MIT License.
 

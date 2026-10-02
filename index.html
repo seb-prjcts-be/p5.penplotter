@@ -4,15 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>p5.penplotter - plot from the p5.js editor</title>
-  <meta name="description" content="Draw in p5.js as you always do, with plot. in front, and send your sketch straight to a pen plotter.">
+  <meta name="description" content="Record supported p5.js shapes and plot them from the browser on the tested iDraw HSE / A2.">
   <meta property="og:title" content="p5.penplotter - plot from the p5.js editor">
-  <meta property="og:description" content="plot.line() draws on the canvas and on paper. Click the drawing and your sketch goes to the pen.">
+  <meta property="og:description" content="plot.line() draws on the canvas and records the line for the pen. Click the drawing to start a plot.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://seb-prjcts-be.github.io/p5.penplotter/">
   <meta property="og:image" content="https://seb-prjcts-be.github.io/p5.penplotter/docs/images/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="p5.penplotter - plot from the p5.js editor">
-  <meta name="twitter:description" content="plot.line() draws on the canvas and on paper. Click the drawing and your sketch goes to the pen.">
+  <meta name="twitter:description" content="plot.line() draws on the canvas and records the line for the pen. Click the drawing to start a plot.">
   <meta name="twitter:image" content="https://seb-prjcts-be.github.io/p5.penplotter/docs/images/og-image.png">
   <link rel="icon" href="docs/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -46,9 +46,9 @@
         <figure class="home-overview">
           <img src="docs/images/animations/overview.gif" width="600" height="400" alt="A p5.js sketch is drawn on screen, then plotted on paper after a click.">
         </figure>
-        <div class="hero-badge">p5.penplotter &middot; a real pen on real paper &middot; v0.2.1</div>
+        <div class="hero-badge">p5.penplotter &middot; p5.js &middot; v0.2.1</div>
         <h1>Plot from <span class="accent">the p5.js editor</span></h1>
-        <p class="hero-sub">Draw in the p5.js editor. Record supported shapes, then click to plot them on the tested iDraw HSE / A2.<br>Change a number, try another shape, make one more.</p>
+        <p class="hero-sub">Draw in the p5.js editor. Record supported shapes, then click to plot them on the tested iDraw HSE / A2.<br>Try changing a number or adding another shape.</p>
         <div class="cta-row">
           <a href="docs/setup.html#editor" class="cta-btn">Try it in the editor &#8594;</a>
           <a href="#make" class="cta-btn secondary">See what it draws &#8595;</a>
@@ -60,7 +60,7 @@
   <section id="werkwijzen" class="section">
     <div class="section-header">
       <h2>Twee manieren van werken</h2>
-      <p>Alles tekenen en daarna plotten. Of één object tekenen en plotten, wachten tot het klaar is en dan het volgende maken. Het papier groeit mee met je werk.</p>
+      <p>Alles tekenen en daarna plotten. Of één object tekenen en plotten, wachten tot het klaar is en dan het volgende maken. Zo kun je verder werken op hetzelfde papier.</p>
     </div>
     <div style="max-width:760px; margin:0 auto;">
       <p>Een plot wist de opname niet. Gebruik <code>plot.clear()</code> vóór het volgende object; anders plot je de vorige objecten opnieuw.</p>
@@ -72,7 +72,7 @@
   <section id="make" class="section section-dark">
     <div class="section-header">
       <div class="section-tag">what you can make</div>
-      <h2>Four <span class="accent">Drawings</span></h2>
+      <h2>Four <span class="accent">drawings</span></h2>
       <p class="section-desc">Each drawing is recorded for the pen and shown on screen. Click one to open it.</p>
     </div>
     <div class="make-grid">
@@ -87,7 +87,7 @@
   <section id="try" class="section">
     <div class="section-header">
       <div class="section-tag">try it</div>
-      <h2>Eight <span class="accent">Lines</span></h2>
+      <h2>Eight <span class="accent">lines</span></h2>
       <p class="section-desc">Copy the imports from <a href="docs/setup.html#global-mode">Setup</a> into <code>index.html</code>. Put this drawing in <code>sketch.js</code>.</p>
     </div>
     <div style="max-width:760px; margin:0 auto;">
@@ -111,12 +111,12 @@ function setup() {
   <section id="change" class="section section-dark">
     <div class="section-header">
       <div class="section-tag">change one thing and look</div>
-      <h2>One <span class="accent">Change</span></h2>
+      <h2>Things to <span class="accent">try</span></h2>
       <p class="section-desc">Change one thing and compare the drawing.</p>
     </div>
     <ol class="pipeline-list">
-      <li><span>01</span><strong>120 &rarr; 200</strong><p>The same drawing, 200 mm wide on paper. The screen does not change; the pen does.</p></li>
-      <li><span>02</span><strong>a circle &rarr; a hatch</strong><p>Replace the circle with <code>plot.hatch([[40, 40], [360, 40], [360, 210], [40, 210]], 6)</code>: a filled shape, made of lines, because a pen has no fill.</p></li>
+      <li><span>01</span><strong>120 &rarr; 200</strong><p>The same drawing, 200 mm wide on paper. The canvas keeps the same size.</p></li>
+      <li><span>02</span><strong>a circle &rarr; a hatch</strong><p>Replace the circle with <code>plot.hatch([[40, 40], [360, 40], [360, 210], [40, 210]], 6)</code>: a rectangle filled with parallel pen strokes.</p></li>
       <li><span>03</span><strong>order &rarr; disorder</strong><p>Open the <a href="examples/molnar_grid/index.html">Moln&aacute;r grid</a> and change <code>wanorde</code> from <code>rij / (n - 1)</code> to <code>1</code>: every row comes apart.</p></li>
     </ol>
     <p class="section-desc" style="max-width:760px; margin:2rem auto 0;">Supported shape calls record geometry for paper: shapes, lines and dots. <code>translate()</code>, <code>rotate()</code>, <code>fill()</code> and colours stay on the screen; paper uses the recorded coordinates and the pen in the holder.</p>
@@ -126,14 +126,14 @@ function setup() {
   <section id="paper" class="section">
     <div class="section-header">
       <div class="section-tag">put it on paper</div>
-      <h2>On <span class="accent">Paper</span></h2>
-      <p class="section-desc">Four steps, the first time and every time.</p>
+      <h2>On <span class="accent">paper</span></h2>
+      <p class="section-desc">Check the connection, paper and carriage position before starting.</p>
     </div>
     <ol class="pipeline-list">
-      <li><span>01</span><strong>Chrome or Edge</strong><p>With the plotter on USB. Web Serial lives nowhere else.</p></li>
+      <li><span>01</span><strong>Chrome or Edge</strong><p>Connect the plotter by USB. These examples use Web Serial in Chrome or Edge on localhost or HTTPS.</p></li>
       <li><span>02</span><strong>Home corner</strong><p>Slide the carriage to the home corner by hand, and put the paper down.</p></li>
-      <li><span>03</span><strong>Click your drawing</strong><p>Choose the plotter in the list that opens. It draws.</p></li>
-      <li><span>04</span><strong>Click again to stop</strong><p>The pen comes up, the motors let go.</p></li>
+      <li><span>03</span><strong>Click your drawing</strong><p>Choose the plotter in the port list when the browser asks for it.</p></li>
+      <li><span>04</span><strong>Click again to stop</strong><p>The driver requests a stop, pen lift and motor release. Those commands need a working connection.</p></li>
     </ol>
     <p class="section-desc" style="max-width:760px; margin:2rem auto 0;">Direct plotting has been tested on the iDraw HSE / A2 with EBB firmware 3.0.2. Without hardware you can preview recorded shapes and use <code>plot.engine.exportSVG()</code>. Use the exported file with software that supports your machine.</p>
     <div class="cta-row">
@@ -145,11 +145,11 @@ function setup() {
   <section id="further" class="section section-dark">
     <div class="section-header">
       <div class="section-tag">go further</div>
-      <h2>Go <span class="accent">Further</span></h2>
-      <p class="section-desc">When one drawing is not enough.</p>
+      <h2>More to <span class="accent">try</span></h2>
+      <p class="section-desc">Try a fill, a second pen or points sampled from a wave.</p>
     </div>
     <ol class="pipeline-list">
-      <li><span>fill</span><strong>Hatching and dots</strong><p><code>plot.hatch()</code>, <code>plot.crossHatch()</code> and <code>plot.stipple()</code> fill a shape with lines or dots, the only fills a pen knows. <a href="docs/guide.html#animation-fills">Watch the fills &rarr;</a></p></li>
+      <li><span>fill</span><strong>Hatching and dots</strong><p><code>plot.hatch()</code>, <code>plot.crossHatch()</code> and <code>plot.stipple()</code> fill a shape with lines or short dashes. <a href="docs/guide.html#animation-fills">Watch the fills &rarr;</a></p></li>
       <li><span>pens</span><strong>Two pens, one sheet</strong><p>Black first, then red; the machine stops once and waits for you. Through <code>plot.engine</code>. <a href="docs/guide.html#animation-pens-and-layers">See the pen layers &rarr;</a></p></li>
       <li><span>waves</span><strong>Waves</strong><p>Sample a formula into points to draw rows or direction fields. <a href="examples/wave_field/index.html">Wave field &rarr;</a></p></li>
       <li><span>time</span><strong>Watch it appear</strong><p>The chaos game prepares its points before plotting and preserves the order of the game. New strokes arriving while the machine draws would need <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/live.html">live streaming</a>, which is not implemented. <a href="examples/chaos_game/index.html">Try the chaos game &rarr;</a></p></li>
@@ -160,7 +160,7 @@ function setup() {
   <section id="hood" class="section" style="text-align:center; padding:4rem 2rem;">
     <div class="section-header">
       <div class="section-tag">under the hood</div>
-      <h2>Under the <span class="accent">Hood</span></h2>
+      <h2>How it <span class="accent">works</span></h2>
       <p class="section-desc"><code>p5.penplotter</code> draws supported p5 shapes and records their coordinates in millimetres. <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> supplies cleanup, route planning, previews, file exports and the machine driver. It can also be used without p5.js.</p>
     </div>
     <div class="cta-row">

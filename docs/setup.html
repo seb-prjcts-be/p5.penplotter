@@ -106,7 +106,7 @@ function draw() {
       <li><strong>A module creates no globals.</strong> A <code>function setup()</code> written inside a module is invisible to p5, because p5's global mode looks for <code>window.setup</code>.</li>
       <li><strong>A module script is deferred.</strong> The browser runs it after the whole page has been read, but before the <code>load</code> event fires.</li>
     </ul>
-    <p>p5 starts a global-mode sketch on <code>load</code>. So the timeline of a page is always:</p>
+    <p>p5 starts a global-mode sketch on <code>load</code>. For the global-mode starter above, the load order is:</p>
     <pre><code class="language-none">1. p5.js loads                          (classic script, runs at once)
 2. classic scripts run in order         (your sketch.js defines setup/draw)
 3. page fully read
@@ -192,7 +192,7 @@ window.draw = draw;</code></pre>
     <h3>Why it works</h3>
     <p>The module runs at step 4, connects the adapter, and puts <code>setup</code> and <code>draw</code> on <code>window</code>. At step 6 p5 finds them there, exactly as it would find a classic script's functions. Inside the functions, <code>createCanvas</code> and <code>key</code> resolve because p5 in global mode copies its API onto <code>window</code> before calling <code>setup()</code>.</p>
     <h3>When to use it</h3>
-    <p>When you want one file and no <code>p.</code> prefix, and you are fine with the <code>window.</code> lines at the bottom. Every p5 callback you use (<code>mousePressed</code>, <code>windowResized</code>) needs its own line. Forget one and p5 silently never calls it.</p>
+    <p>When you want one file and no <code>p.</code> prefix, and you are fine with the <code>window.</code> lines at the bottom. Every p5 callback you use (<code>mousePressed</code>, <code>windowResized</code>) needs its own line. A callback that is not assigned to <code>window</code> will not be called by p5.</p>
 
     <h2 id="import-maps">4. Import maps and local neighbours</h2>
     <p>Use relative imports for neighbouring repositories, or an import map to keep module URLs in one place.</p>
@@ -252,7 +252,7 @@ installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
 
     </div>
 
-    <h2>5. Plotting for real, in every setup</h2>
+    <h2>5. Direct plotting</h2>
     <p>Whichever wiring you pick, direct plotting needs the same three things:</p>
     <ul>
       <li>The driver handed in at install: <code>installP5Penplotter(p5, PlotterEngine, { driver: Ebb })</code>. Without it, <code>plot.go()</code> throws and everything else still works.</li>
@@ -263,7 +263,7 @@ installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
 
     <figure class="doc-animation" id="animation-home-and-stop">
       <img src="images/animations/home-and-stop.gif" width="600" height="400" loading="lazy" alt="The home corner, a completed route and a stop in the middle of a drawing.">
-      <figcaption>The machine has no automatic homing. Park the carriage at the home corner by hand before plotting. A normal completed job returns home by default; stopping raises the pen and releases the motors where it is. The animation is schematic.</figcaption>
+      <figcaption>The machine has no automatic homing. Park the carriage at the home corner by hand before plotting. A normal completed job returns home by default; stopping requests a pen lift and motor release at the current position. Delivery needs a working connection. The animation is schematic.</figcaption>
     </figure>
 
   </main>
