@@ -150,18 +150,18 @@ plot.stipple(square, 150, 3);    // count, seed</code></pre>
     <p>The returned object is the complete core engine. Use its layers, tools, hatch fills, optimizer, planner, statistics and exports without adapter-specific alternatives. With <code>createPlot()</code>, that engine is <code>plot.engine</code>.</p>
 
     <figure class="doc-animation" id="animation-route">
-      <img src="images/animations/route.gif" width="600" height="400" loading="lazy" alt="The pen follows a planned route with less pen-up travel.">
-      <figcaption>Same marks, a different visiting order. Compare <code>plot.plan({ strategy: "drawn" })</code> with <code>plot.plan({ strategy: "nearest" })</code>. Keep the drawn order when watching the picture appear is part of the work.</figcaption>
+      <img src="images/animations/route.gif?v=20261002-colour" width="600" height="400" loading="lazy" alt="The pen follows a planned route with less pen-up travel.">
+      <figcaption>Cream solid lines show the input drawing; sage solid lines show the planned drawing. Ochre dotted lines are moves with the pen raised: they leave no ink. Same marks, a different visiting order. Compare <code>plot.plan({ strategy: "drawn" })</code> with <code>plot.plan({ strategy: "nearest" })</code>. Keep the drawn order when watching the picture appear is part of the work.</figcaption>
     </figure>
 
     <figure class="doc-animation" id="animation-pens-and-layers">
-      <img src="images/animations/pens-and-layers.gif" width="600" height="400" loading="lazy" alt="Two pens draw separate layers; one layer can be excluded.">
-      <figcaption>One pen can draw the outline; another can draw the texture. Use <code>plot.engine.pen()</code> and <code>plot.engine.layer()</code>, and set the p5 screen colour separately with <code>stroke()</code>. The physical pen change is yours to make.</figcaption>
+      <img src="images/animations/pens-and-layers.gif?v=20261002-colour" width="600" height="400" loading="lazy" alt="Two pens draw separate layers; one layer can be excluded.">
+      <figcaption>Sage is pen A; ochre is pen B. Each colour follows its assigned paths. The second pass hides one layer; it does not erase the source paths. One pen can draw the outline; another can draw the texture. Use <code>plot.engine.pen()</code> and <code>plot.engine.layer()</code>, and set the p5 screen colour separately with <code>stroke()</code>. The physical pen change is yours to make.</figcaption>
     </figure>
 
     <figure class="doc-animation" id="animation-svg-files">
-      <img src="images/animations/svg-files.gif" width="600" height="400" loading="lazy" alt="SVG geometry becomes a pen plan and can be exported in three file formats.">
-      <figcaption>A file can be a starting point too. <code>plot.engine.importSVG()</code> reads supported SVG geometry; the engine can then export SVG, HPGL or G-code. Try the engine’s <a href="../../vanilla.penplotter/examples/svg_to_pen/index.html">SVG to pen</a> page with a simple drawing of your own.</figcaption>
+      <img src="images/animations/svg-files.gif?v=20261002-colour" width="600" height="400" loading="lazy" alt="SVG geometry becomes a pen plan and can be exported in three file formats.">
+      <figcaption>Ochre shows the imported geometry becoming pen strokes. Sage connectors lead from one plan to three export formats; those connectors explain the workflow and are not plotter travel. A file can be a starting point too. <code>plot.engine.importSVG()</code> reads supported SVG geometry; the engine can then export SVG, HPGL or G-code. Try the engine’s <a href="../../vanilla.penplotter/examples/svg_to_pen/index.html">SVG to pen</a> page with a simple drawing of your own.</figcaption>
     </figure>
 
     <h2>9. Copy-paste starters</h2>
