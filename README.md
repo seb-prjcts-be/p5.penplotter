@@ -4,33 +4,25 @@
 
 **[Open site](https://seb-prjcts-be.github.io/p5.penplotter/)** · **[Setup](https://seb-prjcts-be.github.io/p5.penplotter/docs/setup.html)** · **[Examples](https://seb-prjcts-be.github.io/p5.penplotter/docs/examples.html)** · **[vanilla.penplotter](https://github.com/seb-prjcts-be/vanilla.penplotter)**
 
-You sketch in p5.js the way you always do. Write `plot.line()` instead of `line()` and the same line is drawn on the canvas and remembered in millimetres. Write `plot.go()` when the drawing is done, click it, and it goes to the plotter. No intermediate SVG is required for direct plotting.
+You sketch in p5.js the way you always do. Write `plot.line()` instead of `line()` and the same line is drawn on the canvas and remembered in millimetres.
 
-**Which of the two do you need?**
+Write `plot.go()` when the drawing is done, click it, and it goes to the plotter. No intermediate SVG is required for direct plotting.
 
-| | p5.penplotter (this repository) | vanilla.penplotter |
-|---|---|---|
-| what it is | a p5.js adapter that calls the engine | the engine: geometry in millimetres, optimizer, route planner, time estimate, machine driver |
-| needs | p5.js ≥ 2.2.2 and the engine | nothing; plain ES modules, no p5.js |
-| you draw with | supported p5 shapes: `plot.line()` instead of `line()` | your own code, arrays of points, Paper.js, an SVG file |
-| to the pen | `plot.go()` | `driver.run(plot.plan())` |
-| take it if | you sketch in p5.js | you work without p5, or want to build your own layer on top |
+## Which library?
+
+**p5.penplotter** connects the engine to p5.js. Use it when you want to draw with supported p5 shapes and send them to the pen with `plot.go()`.
+
+**[vanilla.penplotter](https://github.com/seb-prjcts-be/vanilla.penplotter)** is the engine. Use it for your own JavaScript, arrays of points or supported SVG geometry. It has no dependencies and works without p5.js.
 
 The libraries prepare a complete drawing before plotting. Live streaming is not implemented; [live drawing notes](https://seb-prjcts-be.github.io/vanilla.penplotter/docs/live.html) describe the proposed direction.
 
-**The p5 helpers.** `createPlot()`, `createPlotterEngine()` and `drawRoute()` become part of p5, in global and instance mode. Everything that takes thought, the shapes in millimetres, the tidying, the route for the pen, the files for other machines and the talking to the plotter, stays in `vanilla.penplotter`. When something is fixed there, it is fixed for everyone at once.
+### Screen and paper
+
+`createPlot()`, `createPlotterEngine()` and `drawRoute()` become part of p5, in global and instance mode.
+
+The shapes in millimetres, cleanup, route planning, exports and machine commands stay in `vanilla.penplotter`.
 
 **Direct plotting is physically tested on one profile:** iDraw HSE / A2, EBB firmware 3.0.2, over Web Serial in Chrome or Edge. SVG, HPGL and G-code exports need software and settings suited to the receiving machine.
-
-```text
-p5.js
-        ↓
-    p5.penplotter
-        ↓
- vanilla.penplotter
-        ↓
-   the pen  (or SVG / HPGL / G-code for another machine)
-```
 
 ## Install
 
@@ -47,7 +39,11 @@ The site uses current source. The latest tags are core `v0.3.1` and adapter `v0.
 <script src="sketch.js"></script>
 ```
 
-Pinned tags, to keep the library versions fixed. Test your sketch with the pinned pair. The GitHub Pages URLs (`https://seb-prjcts-be.github.io/…`) always serve the latest `main`; the adapter checks the engine's version at install and refuses a core below the required minimum. Leave out `{ driver: Ebb }` if you only preview. All four ways of wiring a sketch, with the load-order timeline behind them, are on the [Setup](https://seb-prjcts-be.github.io/p5.penplotter/docs/setup.html) page; that page exists because getting a module into a global-mode sketch is the one thing that went wrong more than once.
+Pinned tags, to keep the library versions fixed. Test your sketch with the pinned pair. The GitHub Pages URLs (`https://seb-prjcts-be.github.io/…`) always serve the latest `main`; the adapter checks the engine's version at install and refuses a core below the required minimum.
+
+Leave out `{ driver: Ebb }` if you only preview.
+
+All four ways of wiring a sketch, with the load-order timeline behind them, are on the [Setup](https://seb-prjcts-be.github.io/p5.penplotter/docs/setup.html) page.
 
 ## Quick start
 
@@ -72,13 +68,21 @@ function draw() {
 }
 ```
 
-`plot.go()` is written where the drawing is finished, like any other line. It does not plot by itself: the browser only opens its list of ports after a click, so the status line asks you to check the machine and click the drawing. That click is the confirmation. While the pen runs, a click on the drawing stops it, pen up. Park the carriage in the home corner by hand first; the machine has no home position of its own. The plot contains the shape calls recorded since the last `plot.clear()`. Clear at the start of `draw()` to replace each frame, and use `noLoop()` for a stable drawing. Screen transforms and styling are not recorded.
+### Click to plot
+
+<p align="center">
+  <img src="docs/images/animations/starting-plot.gif" alt="The drawing waits for a click, asks for a port when needed, then plots; a second click requests a stop" width="480">
+</p>
+
+`plot.go()` waits for a click when called from `setup()` or `draw()`. Check the machine, then click the drawing. The browser asks for a serial port when needed. A click while plotting requests a stop.
+
+Park the carriage in the home corner by hand first; the machine has no home position of its own.
+
+The plot contains the shape calls recorded since the last `plot.clear()`. Clear at the start of `draw()` to replace each frame, and use `noLoop()` for a stable drawing. Screen transforms and styling are not recorded.
 
 Tested on one machine: iDraw HSE / A2 (EBB firmware 3.0.2) on 2026-09-21. Plotted from the p5.js Web Editor on 2026-10-01.
 
 ## Requirements
-
-This table is literally identical in the README of `vanilla.penplotter`; a test guards that.
 
 <!-- vereisten:start -->
 | component | requires | note |
@@ -163,7 +167,7 @@ plot.polyline(points);
 
 ## Examples
 
-Each one is a standalone page under `examples/`; a click on the drawing plots, a second click stops; the [examples page](https://seb-prjcts-be.github.io/p5.penplotter/docs/examples.html) shows them live.
+Each one is a standalone page under `examples/`; the [examples page](https://seb-prjcts-be.github.io/p5.penplotter/docs/examples.html) shows them live.
 
 - `direct_plot` - draw with `plot.…`, click the drawing, and the sketch goes to the plotter
 - `first_plot` - create the engine from a p5 canvas and draw what the planner made of it
@@ -183,11 +187,13 @@ Each one is a standalone page under `examples/`; a click on the drawing plots, a
 ## Public API
 
 - `installP5Penplotter(p5, PlotterEngine, { driver })`: connects the adapter to p5.js and the core engine; `driver` is optional and only needed for `plot.go()`.
-- `createPlot(options)`: creates a `P5Plot`: `point`, `line`, `circle`, `ellipse`, `arc`, `rect`, `square`, `triangle`, `quad`, `polyline` and `polygon` draw on the canvas and record in mm, with the same arguments as in p5; `hatch`, `crossHatch` and `stipple` fill a polygon; `clear()`, `plan()`, `connect()`, `go()` and `stop()` control the job; `engine` is the underlying `PlotterEngine`. Options: `x`, `y`, `width` (mm on the bed) or `mmPerPixel`, `profile`, `confirm`, `log`.
+- `createPlot(options)`: creates a `P5Plot` that draws supported shapes on screen and records them in millimetres. Its `engine` is the underlying `PlotterEngine`.
 - `createPlotterEngine(options)`: creates a bare engine with, by default, the current canvas size and `px` as unit.
 - `drawRoute(plan, options)`: draws the route: the plan as the machine will draw it, via p5.js. Also `drawPlotPlan()`.
 - `plot.drawBed(canvas)`: draws the bed as the machine sees it, with your canvas as the sheet on it: where it lands, how big, whether it fits.
 - `drawPlanWithP5(p, plan, options)`: the same renderer without the prototype helper.
+
+`createPlot()` options: `x`, `y`, `width` (mm on the bed) or `mmPerPixel`, `profile`, `confirm`, `log`. Use `clear()`, `plan()`, `connect()`, `go()` and `stop()` to control the job.
 
 Version 0.2.1 targets p5.js 2.2.2. The core and hardware status are determined solely by `vanilla.penplotter`.
 
@@ -197,7 +203,6 @@ Version 0.2.1 targets p5.js 2.2.2. The core and hardware status are determined s
 npm test
 npm run docs
 npm run manifest
-npm run handbook
 ```
 
 `npm test` checks the adapter against a fake p5 and against the real engine in the sibling folder `../vanilla.penplotter` (or `VANILLA_PLOTTER_ROOT`), every local link on the site, that every example is in the gallery and the manifest, and that the generated architecture page is current.
@@ -207,3 +212,5 @@ npm run handbook
 Designed and directed by Sebastien Vanblaere, written with AI assistance, and held to one rule: nothing is claimed that a test or a plot on paper has not shown. See [About](https://seb-prjcts-be.github.io/p5.penplotter/docs/about.html).
 
 MIT License.
+
+Sebastien Vanblaere
