@@ -110,6 +110,8 @@ function draw() {
   plot.rect(10, 10, 380, 230);
   plot.go();         // ready: click the drawing to plot, click again to stop
 }</code></pre>
+    <p>A 400 × 250 pixel canvas with <code>createPlot({ x: 80, y: 150, width: 80 })</code> maps to an 80 × 50 mm area on the bed. The rectangle from (10, 10) to (390, 240) occupies 76 × 46 mm inside it. <code>x</code> and <code>y</code> place the canvas area in millimetres from home; they do not set its size.</p>
+    <p>Paper is a separate choice: A4 is 210 × 297 mm in portrait or 297 × 210 mm in landscape. A3 is 297 × 420 mm; A2 is 420 × 594 mm. Changing the paper does not resize the drawing. The HSE/A2 bed is 594 × 432 mm, with X along the long rail. Place and orient your paper inside that area, then choose the drawing’s width and position.</p>
     <p class="callout">Tested on one machine so far: an iDraw HSE / A2 with EBB firmware 3.0.2.</p>
 
     <figure class="doc-animation" id="animation-plot-go">
