@@ -63,8 +63,8 @@
       <p>Alles tekenen en daarna plotten. Of één object tekenen en plotten, wachten tot het klaar is en dan het volgende maken. Het papier groeit mee met je werk.</p>
     </div>
     <div style="max-width:760px; margin:0 auto;">
-      <p>Een plot wist de opname niet. Zonder een nieuwe opname plot je ook eerdere objecten opnieuw. Je kiest dus zelf: het hele werk in één job, of afzonderlijke jobs op hetzelfde papier.</p>
-      <p><a href="docs/guide.html#werkwijzen">Lees hoe beide werkwijzen werken en wat er wordt onthouden.</a></p>
+      <p>Een plot wist de opname niet. Gebruik <code>plot.clear()</code> vóór het volgende object; anders plot je de vorige objecten opnieuw.</p>
+      <p><a href="docs/guide.html#werkwijzen">Alles tegelijk of object voor object plotten.</a></p>
     </div>
   </section>
 
@@ -73,7 +73,7 @@
     <div class="section-header">
       <div class="section-tag">what you can make</div>
       <h2>Four <span class="accent">Drawings</span></h2>
-      <p class="section-desc">Each one records explicit shape coordinates for the pen and previews them on screen. Click one to open it.</p>
+      <p class="section-desc">Each drawing is recorded for the pen and shown on screen. Click one to open it.</p>
     </div>
     <div class="make-grid">
       <a class="make-card" href="examples/molnar_grid/index.html"><div class="ex-canvas"><iframe src="examples/molnar_grid/index.html?embed" title="Moln&aacute;r grid" loading="lazy"></iframe></div><p>Let the grid come apart.</p></a>
@@ -88,7 +88,7 @@
     <div class="section-header">
       <div class="section-tag">try it</div>
       <h2>Eight <span class="accent">Lines</span></h2>
-      <p class="section-desc">This is a complete sketch. Paste it in the editor, or in any p5 project, and you have a drawing that can go to paper.</p>
+      <p class="section-desc">Copy the imports from <a href="docs/setup.html#global-mode">Setup</a> into <code>index.html</code>. Put this drawing in <code>sketch.js</code>.</p>
     </div>
     <div style="max-width:760px; margin:0 auto;">
       <pre class="code-block"><code class="language-javascript">let plot;
@@ -112,7 +112,7 @@ function setup() {
     <div class="section-header">
       <div class="section-tag">change one thing and look</div>
       <h2>One <span class="accent">Change</span></h2>
-      <p class="section-desc">A number, a shape, a line. Each one shows you something the screen alone cannot.</p>
+      <p class="section-desc">Change one thing and compare the drawing.</p>
     </div>
     <ol class="pipeline-list">
       <li><span>01</span><strong>120 &rarr; 200</strong><p>The same drawing, 200 mm wide on paper. The screen does not change; the pen does.</p></li>

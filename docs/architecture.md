@@ -2,7 +2,7 @@
 
 ## Twee werkwijzen
 
-Voor een volledige tekening neem je alle objecten op en roep je daarna `plot.go()` aan. Voor object voor object wacht je op een voltooide job, wist de opname met `plot.clear()` en neemt alleen het volgende object op. Het scherm en papier worden door clear niet gewist. Zonder clear bevat de volgende job ook de vorige objecten. Beide werkwijzen gebruiken complete jobs; er is geen live streaming tijdens een lopende job. Zie de [Guide](guide.html#werkwijzen) voor de stappen en grenzen.
+Teken alles en roep `plot.go()` aan. Of plot één object, wacht tot het klaar is, wis de opname met `plot.clear()` en teken het volgende. Clear wist het scherm en papier niet. Zonder clear plot je vorige objecten opnieuw. Live streaming is nog niet geïmplementeerd. Zie de [Guide](guide.html#werkwijzen).
 
 ## Screen and paper
 

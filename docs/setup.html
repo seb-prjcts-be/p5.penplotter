@@ -28,7 +28,7 @@
     <header class="page-header">
       <div class="section-tag">p5.js addon library · v0.2.1</div>
       <h1>Setup</h1>
-      <p class="guide-intro">Four ways to wire the same adapter and the same engine into a sketch: a plain p5 sketch with <code>function setup()</code>, a sketch as a module, a module that publishes its globals, and import maps. Only the wiring changes. For a first drawing, use setup 1; the other setups are alternatives, not further required steps.</p>
+      <p class="guide-intro">Start with global mode below. Instance mode, module globals and import maps follow. You only need one setup.</p>
     </header>
 
     <figure class="doc-animation" id="animation-dependencies">
@@ -36,17 +36,9 @@
       <figcaption>Your sketch stays on top. p5.penplotter records its shapes; vanilla.penplotter plans the route and talks to the machine.</figcaption>
     </figure>
 
-    <p>De aansluiting hieronder werkt voor beide <a href="guide.html#werkwijzen">werkwijzen: alles tekenen en plotten, of object voor object</a>. Kies je aansluitwijze los van de manier waarop je het werk opbouwt.</p>
-    <h2 id="choose">Choose a setup</h2>
-    <ul>
-      <li><strong>Teaching, Web Editor, "just draw"</strong>: <a href="#global-mode">setup 1</a>. The sketch is indistinguishable from any other p5 sketch.</li>
-      <li><strong>Library work, examples, tests</strong>: <a href="#instance-mode">setup 2</a>. Explicit, self-contained, no load-order assumptions.</li>
-      <li><strong>One file, no prefix</strong>: <a href="#module-globals">setup 3</a>, and remember the <code>window.</code> lines.</li>
-      <li><strong>Working on the libraries</strong>: <a href="#import-maps">setup 4</a> on top of any of the above.</li>
-    </ul>
-    <p>None of these is a compromise. The connection is explicit in all four (a design decision, see <a href="architecture.html">Architecture</a>) and the adapter has no idea which one you picked.</p>
+    <p>Met elke aansluiting kun je <a href="guide.html#werkwijzen">alles tegelijk of object voor object plotten</a>.</p>
     <h2 id="global-mode">1. Global mode, wiring in index.html</h2>
-    <p class="callout">Start here. This is the setup for a classroom, for the p5.js Web Editor, and for anyone who wants <code>sketch.js</code> to look like every other p5 sketch.</p>
+    <p>Use these two files in the p5.js Web Editor or a folder served through localhost.</p>
     <p>The imports pin the same source commits as the <a href="guide.html#global-mode">Guide starter</a>. They live in <code>index.html</code>, inside one inline module. <code>sketch.js</code> is a plain script with no imports at all.</p>
     <h3>index.html</h3>
     <pre><code class="language-javascript">&lt;!DOCTYPE html&gt;
@@ -91,7 +83,7 @@ function draw() {
   plot.go();   // ready: click the drawing to plot, click again to stop
 }</code></pre>
     <h3>Why it works</h3>
-    <p><code>sketch.js</code> runs as a classic script at step 2 of the timeline. It only <em>defines</em> <code>setup</code> and <code>draw</code>; nothing is called yet. The inline module runs at step 4 and installs <code>createPlot</code> on <code>p5.prototype</code>. At step 6 p5 calls <code>setup()</code>, and by then the adapter has been there for two steps.</p>
+    <p><code>sketch.js</code> defines <code>setup()</code> and <code>draw()</code>. The module installs <code>createPlot()</code> before p5 calls them.</p>
     <h3>Rules</h3>
     <ul>
       <li>Load p5.js <strong>before</strong> the module. The module reads the global <code>p5</code> the moment it runs.</li>
@@ -108,7 +100,7 @@ function draw() {
       <li>An older version keeps showing up after an update: reload with Ctrl+F5 to drop the browser's cached module.</li>
     </ul>
 
-    <h2>The one fact everything hinges on</h2>
+    <h2>Module load order</h2>
     <p><code>p5.penplotter</code> and <code>vanilla.penplotter</code> are ES modules: files that use <code>import</code> and <code>export</code>. A module has two properties that decide every setup below.</p>
     <ul>
       <li><strong>A module creates no globals.</strong> A <code>function setup()</code> written inside a module is invisible to p5, because p5's global mode looks for <code>window.setup</code>.</li>
@@ -121,10 +113,10 @@ function draw() {
 4. module scripts run                   (the adapter is installed here)
 5. DOMContentLoaded
 6. load  →  p5 calls window.setup()     (createPlot already exists)</code></pre>
-    <p>Everything that follows is a way of placing the three <code>import</code> lines somewhere on that timeline.</p>
+    <p>Keep the imports in a module and the global sketch in a normal script.</p>
 
     <h2 id="instance-mode">2. Instance mode, sketch as a module</h2>
-    <p>An alternative for a sketch with its own p5 instance. The three imports move into <code>sketch.js</code>, which becomes a module. Because a module creates no globals, the sketch hands itself to p5 explicitly with <code>new p5(…)</code>, and every p5 call gets a <code>p.</code> in front.</p>
+    <p>Put the imports in <code>sketch.js</code> and load it as a module. Create the sketch with <code>new p5(…)</code>; p5 calls use the <code>p.</code> prefix.</p>
     <h3>index.html</h3>
     <pre><code class="language-markup">&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
 &lt;script type="module" src="sketch.js"&gt;&lt;/script&gt;</code></pre>
@@ -162,11 +154,10 @@ new p5(function sketch(p) {
       <li>Several sketches on one page, each with its own <code>plot</code>.</li>
       <li>The same file runs under a bundler or in a test without changes.</li>
     </ul>
-    <h3>What it costs</h3>
-    <p>The <code>p.</code> prefix on every p5 call, and <code>p.key</code> instead of <code>key</code>. For beginners that is a real cost; for a library author it is the honest form.</p>
+
 
     <h2 id="module-globals">3. Global mode from a module</h2>
-    <p>A middle road, and the clearest demonstration of what global mode actually is. The sketch stays a module with its own imports, but it publishes its functions on <code>window</code> itself.</p>
+    <p>Keep the imports in the sketch module and assign each p5 callback to <code>window</code>.</p>
     <h3>index.html</h3>
     <pre><code class="language-markup">&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
 &lt;script type="module" src="sketch.js"&gt;&lt;/script&gt;</code></pre>
@@ -204,7 +195,7 @@ window.draw = draw;</code></pre>
     <p>When you want one file and no <code>p.</code> prefix, and you are fine with the <code>window.</code> lines at the bottom. Every p5 callback you use (<code>mousePressed</code>, <code>windowResized</code>) needs its own line. Forget one and p5 silently never calls it.</p>
 
     <h2 id="import-maps">4. Import maps and local neighbours</h2>
-    <p>Two refinements for development. Both change only where the modules come from, not how the sketch is written; they combine with setup 1, 2 or 3.</p>
+    <p>Use relative imports for neighbouring repositories, or an import map to keep module URLs in one place.</p>
     <h3>Local neighbours</h3>
     <p>While working on the libraries themselves, load them from sibling folders instead of GitHub Pages. This is how the repository's own examples are wired, on localhost and on the published site alike:</p>
     <pre><code class="language-javascript">import { PlotterEngine } from "../vanilla.penplotter/vanilla.penplotter.js";
@@ -212,7 +203,7 @@ import * as Ebb from "../vanilla.penplotter/src/driver/ebb.js";
 import { installP5Penplotter } from "../p5.penplotter/p5.penplotter.js";</code></pre>
     <p>Relative imports resolve against the importing file. <code>vanilla.penplotter.js</code> re-exports from its own <code>src/</code> folder, so the whole repository has to be present, not the single file.</p>
     <h3>Import maps</h3>
-    <p>An import map lets the sketch import by <em>name</em>, and keeps every URL in one place in <code>index.html</code>. Switching from GitHub Pages to a local copy, or pinning a version, then touches a single block and no sketch.</p>
+    <p>An import map assigns a name to each module URL in <code>index.html</code>. The sketch imports by that name.</p>
     <pre><code class="language-markup">&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
 &lt;script type="importmap"&gt;
 {
@@ -230,7 +221,7 @@ import { installP5Penplotter } from "p5.penplotter";
 
 installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
     <p>The import map must appear before the first module script. Bare names like <code>"p5.penplotter"</code> are what a package manager would resolve; the import map does the same job in the browser, without one.</p>
-    <p class="callout">The GitHub Pages URLs serve current <code>main</code>. The adapter refuses a core below its required minimum; it does not verify every change between versions. For a project you want to keep, pin both versions or keep tested local copies of both repositories.</p>
+    <p>The GitHub Pages URLs serve current <code>main</code>. The adapter refuses a core below its required minimum; it does not verify every change between versions. For a project you want to keep, pin both versions or keep tested local copies of both repositories.</p>
 
     <h2 id="canvas-on-paper">Your canvas on the paper</h2>
     <p>For the sketches above, <code>createPlot({ x: 80, y: 150, width: 120 })</code> places the canvas 80 mm right and 150 mm down from the machine's home corner, where you park the carriage by hand. A 400 × 250 canvas becomes a 120 × 75 mm drawing area. <code>width</code> sets the drawing width in millimetres; the height follows the canvas proportions.</p>

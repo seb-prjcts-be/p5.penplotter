@@ -10,7 +10,7 @@ Write `plot.go()` when the drawing is done, click it, and it goes to the plotter
 
 ## Twee manieren van werken
 
-Alles tekenen, dan plotten: één volledige tekening vormt één job. Of één object tekenen en plotten, wachten tot de job klaar is en daarna een nieuwe opname maken voor het volgende object op hetzelfde papier. Een plot wist de opgenomen geometrie niet automatisch. De [Guide](https://seb-prjcts-be.github.io/p5.penplotter/docs/guide.html#werkwijzen) legt beide werkwijzen en hun grenzen uit. Dit zijn opeenvolgende complete jobs; live streaming tijdens een lopende job is nog niet geïmplementeerd.
+Teken alles en plot één keer. Of teken en plot één object, wacht tot het klaar is en maak het volgende. Gebruik `plot.clear()` vóór een nieuw object; anders plot je eerdere objecten opnieuw. Clear wist geen inkt. De [Guide](https://seb-prjcts-be.github.io/p5.penplotter/docs/guide.html#werkwijzen) toont beide werkwijzen.
 
 ## Which library?
 

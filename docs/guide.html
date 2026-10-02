@@ -28,19 +28,19 @@
     <header class="page-header">
       <div class="section-tag">p5.js addon library · v0.2.1</div>
       <h1>Guide</h1>
-      <p class="guide-intro">Start with one global-mode sketch. Draw on screen, choose its size on paper, then add the click that starts the pen. Alternative wiring and core access follow the first drawing.</p>
+      <p class="guide-intro">Draw on screen, choose a size on paper and click to plot. Start with the two files below.</p>
     </header>
 
     <nav aria-label="On this page"><p><a href="#werkwijzen">Twee werkwijzen</a> · <a href="#global-mode">Start</a> · <a href="#change-drawing">Change</a> · <a href="#paper">Paper</a> · <a href="#plotting">Plot</a> · <a href="#shapes">Shapes</a> · <a href="#starters">Starters</a> · <a href="#core-access">Core</a> · <a href="#instance-mode">Instance mode</a> · <a href="#reference">Reference</a></p></nav>
 
     <h2 id="werkwijzen">Twee manieren van werken</h2>
-    <p>Je kunt eerst een volledige tekening maken en die daarna plotten. Je kunt ook één object tekenen, het plotten en pas daarna het volgende tekenen. In beide gevallen krijgt de machine een afgebakende job. Het verschil is wanneer jij beslist dat de tekening klaar is.</p>
+    <p>Teken alles en plot één keer. Of teken en plot één object, wacht tot het klaar is en maak dan het volgende.</p>
     <h3>Alles tekenen, dan plotten</h3>
-    <p>Je tekent alle lijnen en vormen, bekijkt het geheel en start één plot. De planner kan de route binnen die job ordenen. Kies <code>strategy: "drawn"</code> als de volgorde waarin je tekent ook op papier moet blijven staan.</p>
+    <p>Teken alle vormen en start één plot. Kies <code>strategy: "drawn"</code> om je tekenvolgorde te behouden.</p>
     <h3>Eén object tekenen en plotten, dan het volgende</h3>
-    <p>Je tekent een object, plot het en wacht tot de job klaar is. Dan maak je een nieuwe opname voor het volgende object en plot je opnieuw, op hetzelfde papier. Zo groeit het werk terwijl je verder tekent. De planner kent telkens alleen de huidige job; hij kan de route niet over toekomstige objecten heen verbeteren.</p>
-    <p><strong>Na een plot blijft de opname bestaan.</strong> Opnieuw plotten zonder die opname te wissen tekent ook de vorige objecten opnieuw. Dat kan bewust zijn, bijvoorbeeld voor een tweede passage. Voor alleen het volgende object begin je een nieuwe opname. Wat al op papier staat, blijft daar staan.</p>
-    <p>Dit is werken in opeenvolgende jobs. Nieuwe lijnen aanleveren terwijl de machine nog tekent is live streaming; dat is nog niet geïmplementeerd. Een object kan één lijn zijn, maar ook een groep vormen die je samen wilt plotten.</p>
+    <p>Plot één object en wacht tot het klaar is. Wis de opname met <code>plot.clear()</code>, teken het volgende en plot opnieuw op hetzelfde papier. Een object mag ook een groep vormen zijn. De planner ordent alleen de huidige job.</p>
+    <p><strong>Een plot wist de opname niet.</strong> Zonder <code>clear()</code> plot je vorige objecten opnieuw. Dat kan een bewuste tweede passage zijn. <code>clear()</code> wist geen inkt.</p>
+    <p>Wacht tussen jobs. Nieuwe lijnen aanleveren terwijl de machine tekent, is nog niet mogelijk.</p>
     <h3>In p5.penplotter</h3>
     <p>Gebruik dezelfde <code>plot</code> en dezelfde papierinstellingen voor opeenvolgende objecten. <code>plot.clear()</code> wist de opgenomen geometrie, niet het scherm en niet het papier. <code>background()</code> wist het scherm, niet de opname. Een normale voltooide job keert terug naar home. Na een stop of fout controleer je de machine en parkeer je de carriage opnieuw bij home vóór een volgende job.</p>
     <pre><code class="language-javascript">// Alles tekenen, dan plotten:
@@ -96,7 +96,7 @@ function draw() {
   plot.circle(200, 125, 80);
 }</code></pre>
 
-    <p>These imports pin a tested source pair that includes paper fitting and bed preview. All examples on this page use that pair. Keep the imports in <code>index.html</code> and the drawing in <code>sketch.js</code>. You can draw and export without a connected plotter.</p>
+    <p>The imports pin both libraries, including paper fitting and bed preview. Keep them in <code>index.html</code>; put the drawing in <code>sketch.js</code>. No plotter is needed to draw or export.</p>
     <p><code>background()</code> clears the screen; <code>plot.clear()</code> starts a new recording. <code>noLoop()</code> keeps this drawing still. Screen <code>translate()</code>, <code>rotate()</code>, styling and changes to <code>rectMode()</code> or <code>ellipseMode()</code> do not transform the recorded geometry. Rectangles use corner coordinates and circles use diameters.</p>
 
     <h2 id="change-drawing">2. Change the drawing</h2>
@@ -143,7 +143,7 @@ plot.drawBed(bedCanvas, {
   sheet: { x: 60, y: 100, width: 210, height: 297 } // A4 portrait, mm
 });</code></pre>
     <p>This shades the A4 paper and draws the planned strokes at their existing position. It does not move or scale them. Without <code>sheet</code>, the preview uses selected <code>plot.paper</code>, or the mapped canvas when no paper was selected. To place A4 in landscape, use width 297 and height 210; that changes the paper preview only. For quarter-turn placement of a complete job, use the core’s <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/examples/first_job/">paper and bed panel</a>. Both previews require current-source imports as described in <a href="setup.html">Setup</a>.</p>
-    <p class="callout">Tested on one machine so far: an iDraw HSE / A2 with EBB firmware 3.0.2.</p>
+    <p>Tested on one machine so far: an iDraw HSE / A2 with EBB firmware 3.0.2.</p>
 
     <h2 id="plotting">4. Start a plot</h2>
     <p>In the module block in <code>index.html</code>, add the driver import and replace the installation line:</p>
@@ -251,7 +251,7 @@ function draw() {
 }</code></pre>
     <p>Finished versions of these, and more, are on <a href="examples.html">Examples</a>; what a plotter can do beyond them is on the engine's <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/possibilities.html">Possibilities</a> page.</p>
     <h2 id="core-access">Core access and route planning</h2>
-    <p><code>createPlot()</code> returns the draw-and-record adapter. Its <code>plot.engine</code> is the core engine. <code>createPlotterEngine()</code> returns that core directly, without the draw-and-record shape methods. Use its layers, tools, hatch fills, optimizer, planner, statistics and exports without adapter-specific alternatives. With <code>createPlot()</code>, that engine is <code>plot.engine</code>.</p>
+    <p><code>plot.engine</code> gives you the core: layers, pens, cleanup, route planning and exports. <code>createPlotterEngine()</code> creates a core engine directly; its shapes are recorded but not drawn on screen.</p>
 
     <figure class="doc-animation" id="animation-route">
       <img src="images/animations/route.gif?v=20261002-colour" width="600" height="400" loading="lazy" alt="The pen follows a planned route with less pen-up travel.">
@@ -290,7 +290,7 @@ function draw() {
       <tr><td><code>go(), stop()</code></td><td>Go from setup/draw waits for a click and needs the installed driver. Stop requests an abort; neither is a preview method.</td></tr>
       <tr><td><code>createPlotterEngine(), drawRoute(plan)</code></td><td>Advanced core route. Engine geometry uses document units; its circle takes a radius. DrawRoute displays planned routes through p5.</td></tr>
     </tbody></table>
-    <p>For alternate module wiring, see <a href="setup.html">Setup</a>. For recording limits and ownership of geometry, see <a href="architecture.html">Architecture</a>. Tagged releases may lack these current-source helpers; keep both source pins together.</p>
+    <p><a href="setup.html">Setup</a> shows the imports. <a href="architecture.html">Architecture</a> explains what is recorded. Keep both source pins together; older tags lack some helpers.</p>
   </main>
   <footer>
     <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; <a href="about.html">About</a> &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine</p>
