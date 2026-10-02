@@ -31,8 +31,34 @@
       <p class="guide-intro">Start with one global-mode sketch. Draw on screen, choose its size on paper, then add the click that starts the pen. Alternative wiring and core access follow the first drawing.</p>
     </header>
 
-    <nav aria-label="On this page"><p><a href="#global-mode">Start</a> · <a href="#change-drawing">Change</a> · <a href="#paper">Paper</a> · <a href="#plotting">Plot</a> · <a href="#shapes">Shapes</a> · <a href="#starters">Starters</a> · <a href="#core-access">Core</a> · <a href="#instance-mode">Instance mode</a> · <a href="#reference">Reference</a></p></nav>
+    <nav aria-label="On this page"><p><a href="#werkwijzen">Twee werkwijzen</a> · <a href="#global-mode">Start</a> · <a href="#change-drawing">Change</a> · <a href="#paper">Paper</a> · <a href="#plotting">Plot</a> · <a href="#shapes">Shapes</a> · <a href="#starters">Starters</a> · <a href="#core-access">Core</a> · <a href="#instance-mode">Instance mode</a> · <a href="#reference">Reference</a></p></nav>
 
+    <h2 id="werkwijzen">Twee manieren van werken</h2>
+    <p>Je kunt eerst een volledige tekening maken en die daarna plotten. Je kunt ook één object tekenen, het plotten en pas daarna het volgende tekenen. In beide gevallen krijgt de machine een afgebakende job. Het verschil is wanneer jij beslist dat de tekening klaar is.</p>
+    <h3>Alles tekenen, dan plotten</h3>
+    <p>Je tekent alle lijnen en vormen, bekijkt het geheel en start één plot. De planner kan de route binnen die job ordenen. Kies <code>strategy: "drawn"</code> als de volgorde waarin je tekent ook op papier moet blijven staan.</p>
+    <h3>Eén object tekenen en plotten, dan het volgende</h3>
+    <p>Je tekent een object, plot het en wacht tot de job klaar is. Dan maak je een nieuwe opname voor het volgende object en plot je opnieuw, op hetzelfde papier. Zo groeit het werk terwijl je verder tekent. De planner kent telkens alleen de huidige job; hij kan de route niet over toekomstige objecten heen verbeteren.</p>
+    <p><strong>Na een plot blijft de opname bestaan.</strong> Opnieuw plotten zonder die opname te wissen tekent ook de vorige objecten opnieuw. Dat kan bewust zijn, bijvoorbeeld voor een tweede passage. Voor alleen het volgende object begin je een nieuwe opname. Wat al op papier staat, blijft daar staan.</p>
+    <p>Dit is werken in opeenvolgende jobs. Nieuwe lijnen aanleveren terwijl de machine nog tekent is live streaming; dat is nog niet geïmplementeerd. Een object kan één lijn zijn, maar ook een groep vormen die je samen wilt plotten.</p>
+    <h3>In p5.penplotter</h3>
+    <p>Gebruik dezelfde <code>plot</code> en dezelfde papierinstellingen voor opeenvolgende objecten. <code>plot.clear()</code> wist de opgenomen geometrie, niet het scherm en niet het papier. <code>background()</code> wist het scherm, niet de opname. Een normale voltooide job keert terug naar home. Na een stop of fout controleer je de machine en parkeer je de carriage opnieuw bij home vóór een volgende job.</p>
+    <pre><code class="language-javascript">// Alles tekenen, dan plotten:
+plot.clear();
+plot.rect(10, 10, 100, 80);
+plot.circle(200, 125, 60);
+await plot.go();
+
+// Object voor object: start dit vanuit een async gebruikersactie.
+plot.clear();
+plot.rect(10, 10, 100, 80);
+const eerste = await plot.go();
+if (eerste.status === "complete") {
+  plot.clear();
+  plot.circle(200, 125, 60);
+  await plot.go();
+}</code></pre>
+    <p>Dit zijn workflowfragmenten voor een bestaande <code>plot</code> met driver. Vanuit <code>setup()</code> of <code>draw()</code> wacht <code>go()</code> op een klik. Vanuit een gebruikersactie vraagt de adapter bevestiging. Voeg het volgende object pas toe na <code>status: "complete"</code>; een geannuleerde, gestopte of mislukte job is geen afgerond object. Wissel papier of positie niet ongemerkt tussen de jobs.</p>
     <h2 id="global-mode">1. Draw on screen</h2>
     <p>Put these two files in the same folder, or use the matching files in the p5.js Web Editor. Open the folder through a web server. The sketch draws a rectangle and a circle; it needs no plotter connection.</p>
     <p>The imports load the libraries; <code>installP5Penplotter()</code> connects them to p5.js.</p>

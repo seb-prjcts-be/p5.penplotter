@@ -8,6 +8,10 @@ You sketch in p5.js the way you always do. Write `plot.line()` instead of `line(
 
 Write `plot.go()` when the drawing is done, click it, and it goes to the plotter. No intermediate SVG is required for direct plotting.
 
+## Twee manieren van werken
+
+Alles tekenen, dan plotten: één volledige tekening vormt één job. Of één object tekenen en plotten, wachten tot de job klaar is en daarna een nieuwe opname maken voor het volgende object op hetzelfde papier. Een plot wist de opgenomen geometrie niet automatisch. De [Guide](https://seb-prjcts-be.github.io/p5.penplotter/docs/guide.html#werkwijzen) legt beide werkwijzen en hun grenzen uit. Dit zijn opeenvolgende complete jobs; live streaming tijdens een lopende job is nog niet geïmplementeerd.
+
 ## Which library?
 
 **p5.penplotter** connects the engine to p5.js. Use it when you want to draw with supported p5 shapes and send them to the pen with `plot.go()`.

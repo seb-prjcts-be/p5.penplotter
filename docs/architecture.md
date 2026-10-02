@@ -1,5 +1,9 @@
 # How p5.penplotter works
 
+## Twee werkwijzen
+
+Voor een volledige tekening neem je alle objecten op en roep je daarna `plot.go()` aan. Voor object voor object wacht je op een voltooide job, wist de opname met `plot.clear()` en neemt alleen het volgende object op. Het scherm en papier worden door clear niet gewist. Zonder clear bevat de volgende job ook de vorige objecten. Beide werkwijzen gebruiken complete jobs; er is geen live streaming tijdens een lopende job. Zie de [Guide](guide.html#werkwijzen) voor de stappen en grenzen.
+
 ## Screen and paper
 
 You draw with p5.js. The supported `plot.line()`, `plot.circle()` and other shape calls draw on the canvas and also record points for the pen. `vanilla.penplotter` cleans up those points, plans their route and supplies the machine driver.

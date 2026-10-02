@@ -30,6 +30,8 @@
       <h1>How p5.penplotter works</h1>
       <p class="guide-intro">How a supported p5 shape becomes recorded geometry for the pen.</p>
     </header>
+<h2>Twee werkwijzen</h2>
+<p>Voor een volledige tekening neem je alle objecten op en roep je daarna <code>plot.go()</code> aan. Voor object voor object wacht je op een voltooide job, wist de opname met <code>plot.clear()</code> en neemt alleen het volgende object op. Het scherm en papier worden door clear niet gewist. Zonder clear bevat de volgende job ook de vorige objecten. Beide werkwijzen gebruiken complete jobs; er is geen live streaming tijdens een lopende job. Zie de <a href="guide.html#werkwijzen">Guide</a> voor de stappen en grenzen.</p>
 <h2>Screen and paper</h2>
 <p>You draw with p5.js. The supported <code>plot.line()</code>, <code>plot.circle()</code> and other shape calls draw on the canvas and also record points for the pen. <code>vanilla.penplotter</code> cleans up those points, plans their route and supplies the machine driver.</p>
 <p>The adapter converts canvas coordinates to millimetres using the width and offset passed to <code>createPlot()</code>. A p5 circle takes a diameter; the core receives a radius. A point becomes a short dash on paper.</p>
