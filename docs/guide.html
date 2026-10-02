@@ -28,7 +28,7 @@
     <header class="page-header">
       <div class="section-tag">p5.js addon library · v0.2.1</div>
       <h1>Guide</h1>
-      <p class="guide-intro">Install the adapter, record shapes, then preview the planned route.</p>
+      <p class="guide-intro">Connect the adapter, record shapes, then preview the planned route.</p>
     </header>
 
     <p class="callout">This guide uses current source. Newer aliases and bed preview helpers are not all present in the latest tagged releases.</p>
@@ -36,7 +36,8 @@
     <pre><code class="language-markup">&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
 &lt;script type="module" src="sketch.js"&gt;&lt;/script&gt;</code></pre>
 
-    <h2>2. Install the adapter</h2>
+    <h2>2. Connect the adapter</h2>
+    <p>The imports load the two libraries. Calling <code>installP5Penplotter(p5, PlotterEngine)</code> then connects them to p5.js and makes the plotter methods available in your sketch.</p>
     <pre><code class="language-javascript">import { PlotterEngine } from "https://seb-prjcts-be.github.io/vanilla.penplotter/vanilla.penplotter.js";
 import { installP5Penplotter } from "https://seb-prjcts-be.github.io/p5.penplotter/p5.penplotter.js";
 

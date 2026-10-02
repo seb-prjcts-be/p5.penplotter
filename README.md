@@ -180,7 +180,7 @@ Each one is a standalone page under `examples/`; a click on the drawing plots, a
 
 ## Public API
 
-- `installP5Penplotter(p5, PlotterEngine, { driver })`: installs the adapter explicitly; `driver` is optional and only needed for `plot.go()`.
+- `installP5Penplotter(p5, PlotterEngine, { driver })`: connects the adapter to p5.js and the core engine; `driver` is optional and only needed for `plot.go()`.
 - `createPlot(options)`: creates a `P5Plot`: `point`, `line`, `circle`, `ellipse`, `arc`, `rect`, `square`, `triangle`, `quad`, `polyline` and `polygon` draw on the canvas and record in mm, with the same arguments as in p5; `hatch`, `crossHatch` and `stipple` fill a polygon; `clear()`, `plan()`, `connect()`, `go()` and `stop()` control the job; `engine` is the underlying `PlotterEngine`. Options: `x`, `y`, `width` (mm on the bed) or `mmPerPixel`, `profile`, `confirm`, `log`.
 - `createPlotterEngine(options)`: creates a bare engine with, by default, the current canvas size and `px` as unit.
 - `drawRoute(plan, options)`: draws the route: the plan as the machine will draw it, via p5.js. Also `drawPlotPlan()`.

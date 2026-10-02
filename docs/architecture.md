@@ -20,7 +20,7 @@ When `plot.go()` is called from `setup()` or `draw()`, it waits for a click on t
 
 The driver comes from `vanilla.penplotter`; this adapter contains no machine protocol. Direct plotting has been physically tested on an iDraw HSE / A2 with EBB firmware 3.0.2. The same core can preview and export a drawing without a connected plotter.
 
-## Installing the adapter
+## Connecting the adapter
 
 ```js
 installP5Penplotter(p5, PlotterEngine, { driver: Ebb });

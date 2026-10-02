@@ -39,7 +39,7 @@
 <h2>Starting a plot</h2>
 <p>When <code>plot.go()</code> is called from <code>setup()</code> or <code>draw()</code>, it waits for a click on the drawing. That click starts a plan from the recorded geometry, asks the browser for a serial port when needed, and runs the supplied driver. A click while plotting requests a stop. Calls from a key or mouse handler ask for confirmation instead.</p>
 <p>The driver comes from <code>vanilla.penplotter</code>; this adapter contains no machine protocol. Direct plotting has been physically tested on an iDraw HSE / A2 with EBB firmware 3.0.2. The same core can preview and export a drawing without a connected plotter.</p>
-<h2>Installing the adapter</h2>
+<h2>Connecting the adapter</h2>
 <pre><code class="language-javascript">installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
 <p>Leave out the driver for preview and export. Installation adds helpers to the p5 prototype for global and instance mode. <code>createPlotterEngine()</code> exposes the core, while <code>drawRoute()</code> draws its planned routes in p5. Pen-up travel belongs to the core preview.</p>
 <p>The adapter checks its minimum dependencies, not every possible version combination. The site's examples load current source from the neighbouring core repository. For your own project, pin both libraries and test the pair. The <a href="setup.html">Setup</a> page shows the load order and wiring.</p>
