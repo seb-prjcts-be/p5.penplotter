@@ -6,8 +6,8 @@
   <title>Chaos game - p5.penplotter</title>
   <link rel="icon" href="../../docs/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../showcase.css">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../showcase.css?v=20261002b">
   <script>if (location.search.includes("embed")) document.documentElement.classList.add("embed");</script>
   <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
   <script type="module">
@@ -18,6 +18,7 @@
     installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
   </script>
   <script src="sketch.js"></script>
+  <link rel="stylesheet" href="../../docs/animations.css">
 </head>
 <body>
   <nav id="navbar">
@@ -37,7 +38,7 @@
     <div class="demo-header">
       <div class="demo-number">Chaos game · time is the order</div>
       <h1>Chaos game</h1>
-      <p>One point, three corners. Every step the point jumps halfway to a corner chosen at random and leaves a dot. After a few hundred dots the Sierpinski triangle is there; nobody drew it. The plan keeps the order of the game, so on paper the triangle appears the way it appears here: dot by dot, out of nothing, about half an hour long. On a screen this is over in a second. This is the first taste of <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/live.html">live mode</a>; in sheet mode it has an end.</p>
+      <p>One point, three corners. At each step the point jumps halfway to a randomly chosen corner and leaves a dot. A Sierpinski triangle emerges. The sketch prepares all 1,500 points before plotting and preserves their order, so you can watch the pattern appear on paper. The duration depends on the machine settings. <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/live.html">Live streaming</a> is a separate proposal and is not implemented.</p>
     </div>
     <div class="demo-layout">
       <div class="demo-code">
@@ -54,6 +55,11 @@
       <p id="status" role="status">When the 1 500 dots are there: click the drawing to plot, in the order of the game. Click again to stop.</p>
       </div>
     </div>
+    <figure class="doc-animation" id="animation-chaos-game">
+      <img src="../../docs/images/animations/chaos-game.gif" width="600" height="400" loading="lazy" alt="Random halfway jumps gradually reveal a Sierpinski triangle.">
+      <figcaption>A triangle appears without anyone tracing its edges. Each point moves halfway towards a randomly chosen corner. This animation uses 700 marks; the sketch above uses 1,500. Keep <code>strategy: "drawn"</code> to preserve the order of the game. Try changing the number of points and watch when the triangle becomes recognisable.</figcaption>
+    </figure>
+
   </main>
   <footer>
     <p><a href="../../docs/examples.html">&larr; All examples</a> &nbsp;&middot;&nbsp; <a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter on GitHub</a></p>

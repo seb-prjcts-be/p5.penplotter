@@ -1,7 +1,7 @@
 /* ============================================================
-   penplotter sites - the family look of p5.waves and p5.gysin:
+   penplotter sites - the family look of the drawing libraries:
    sober black and white, Oswald titles, Inter body, Courier New
-   code on warm paper. The rules are p5.waves' own, taken over as
+   code on warm paper. The rules are shared, taken over as
    they are. Identical in vanilla.penplotter and p5.penplotter.
    ============================================================ */
 
@@ -256,10 +256,10 @@ footer a:hover { color: #000; }
 ::-webkit-scrollbar-thumb { background: #aaa; }
 ::-webkit-scrollbar-thumb:hover { background: #555; }
 
-/* ── DOC PAGES (p5.waves' guide-wrap) ── */
+/* ── DOC PAGES (reading layout) ── */
 .page, .guide-wrap { max-width: 960px; margin: 0 auto; padding: 6rem 2rem 5rem; }
 .page h1 { font-size: 2.8rem; margin-bottom: 0.3rem; }
-.page h2 { font-size: 1.5rem; margin: 3rem 0 0.7rem; text-transform: uppercase; letter-spacing: .05em; border-bottom: 2px solid #000; padding-bottom: 0.3rem; }
+.page h2 { font-size: 1.5rem; margin: 3rem 0 0.7rem; text-transform: uppercase; letter-spacing: .05em; padding-bottom: 0.3rem; }
 .page h3 { font-size: 1.1rem; margin: 1.8rem 0 0.4rem; text-transform: uppercase; letter-spacing: .04em; }
 .page p, .page li { line-height: 1.7; color: var(--text-muted); }
 .page p { margin: 0 0 0.8rem; }
@@ -319,7 +319,7 @@ footer a:hover { color: #000; }
 .example-card { padding: 1.4rem; border: 1px solid var(--border-mid); background: var(--surface); }
 .example-card h2 { margin: 0.4rem 0 0.8rem; font-size: 1.4rem; border: 0; padding: 0; }
 
-/* ── EXAMPLES AND POSSIBILITIES PAGES (p5.waves' examples page) ── */
+/* ── EXAMPLES AND POSSIBILITIES PAGES (gallery layout) ── */
 .ex-page-header { max-width: 1100px; margin: 0 auto; padding: 7rem 2rem 3rem; text-align: center; }
 .ex-page-header h1 { font-size: 2.8rem; margin-bottom: 0.6rem; }
 .ex-page-header > p { max-width: 620px; margin: 0 auto 2rem; line-height: 1.7; color: var(--text-muted); }
@@ -395,3 +395,19 @@ footer a:hover { color: #000; }
 .make-card .ex-canvas { margin-bottom: 0.6rem; }
 .make-card p { margin: 0; font-family: 'Oswald', sans-serif; font-size: 1.1rem; font-weight: 400; letter-spacing: 0.02em; color: #000; }
 .make-card:hover p { text-decoration: underline; }
+
+/* Titles use Oswald Light; keep the existing sizes and placement. */
+:is(#hero, .page, .section, .ex-page-header, .demo-header, .hb) :is(h1, h2, h3) {
+  font-weight: 300;
+}
+
+/* Long inline references must not widen the page. */
+p code, li code, td code { overflow-wrap: anywhere; }
+
+
+/* Preserve code indentation inside a contained scrolling panel. */
+pre, .ex-code-block { max-width: 100%; min-width: 0; box-sizing: border-box; }
+pre code { white-space: pre; overflow-wrap: normal; }
+
+.token.tag, .token.attr-name { color: #E45649; }
+.token.attr-value { color: #50A14F; }

@@ -1,12 +1,12 @@
 /* ============================================================
-   penplotter example pages - p5.waves' showcase layout, taken
+   penplotter example pages - shared showcase layout, taken
    over as it is: nav, demo header, code on the left, canvas on
    the right, footer. Plus the shared "to the pen" panel
    (examples/pen.js). Identical in vanilla.penplotter and
    p5.penplotter.
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@400;500&display=swap');
 
 :root { --bg:#f5f5f5; --bg2:#eeeeee; --surface:#ffffff; --paper:#faf8f3; --border:rgba(0,0,0,.1); --border-mid:rgba(0,0,0,.2); --text:#111111; --text-muted:#666666; --text-faint:#999999; }
 *, *::before, *::after { box-sizing: border-box; }
@@ -135,3 +135,13 @@ html.embed .demo-canvas canvas { max-height: 100%; width: auto !important; heigh
 
 /* the bed: where the canvas lands on the paper, drawn by plot.drawBed() */
 .demo-right .bed { display: block; width: 100%; height: auto; margin: 10px 0 0; border: 1px solid rgba(0, 0, 0, 0.15); background: #fff; }
+
+/* Keep the shared example layout; allow its controls to shrink. */
+.demo-header h1 { font-weight: 300; }
+.pen-fields { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.pen-fields label { min-width: 0; }
+.pen-fields input, .pen-fields select { width: 100%; min-width: 0; }
+
+
+.token.tag, .token.attr-name { color: #E45649; }
+.token.attr-value { color: #50A14F; }

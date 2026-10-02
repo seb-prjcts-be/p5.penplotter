@@ -1,27 +1,27 @@
 # p5.penplotter
 
-**[Open site](https://seb-prjcts-be.github.io/p5.penplotter/)** · **[Setup](https://seb-prjcts-be.github.io/p5.penplotter/docs/setup.html)** · **[Examples](https://seb-prjcts-be.github.io/p5.penplotter/docs/examples.html)** · **[Handbook (PDF)](https://seb-prjcts-be.github.io/p5.penplotter/docs/p5.penplotter-handbook.pdf)** · **[vanilla.penplotter](https://github.com/seb-prjcts-be/vanilla.penplotter)**
+**[Open site](https://seb-prjcts-be.github.io/p5.penplotter/)** · **[Setup](https://seb-prjcts-be.github.io/p5.penplotter/docs/setup.html)** · **[Examples](https://seb-prjcts-be.github.io/p5.penplotter/docs/examples.html)** · **[Handbook](https://seb-prjcts-be.github.io/p5.penplotter/docs/handbook.html)** · **[vanilla.penplotter](https://github.com/seb-prjcts-be/vanilla.penplotter)**
 
-You sketch in p5.js the way you always do. Write `plot.line()` instead of `line()` and the same line is drawn on the canvas and remembered in millimetres. Write `plot.go()` when the drawing is done, click it, and it goes to the plotter. No SVG, no vpype, no Inkscape in between.
+You sketch in p5.js the way you always do. Write `plot.line()` instead of `line()` and the same line is drawn on the canvas and remembered in millimetres. Write `plot.go()` when the drawing is done, click it, and it goes to the plotter. No intermediate SVG is required for direct plotting.
 
 **Which of the two do you need?**
 
 | | p5.penplotter (this repository) | vanilla.penplotter |
 |---|---|---|
-| what it is | three methods on p5.js that call the engine | the engine: geometry in millimetres, optimizer, route planner, time estimate, machine driver |
+| what it is | a p5.js adapter that calls the engine | the engine: geometry in millimetres, optimizer, route planner, time estimate, machine driver |
 | needs | p5.js ≥ 2.2.2 and the engine | nothing; plain ES modules, no p5.js |
-| you draw with | p5 as you always do: `plot.line()` instead of `line()` | your own code, arrays of points, Paper.js, an SVG file |
+| you draw with | supported p5 shapes: `plot.line()` instead of `line()` | your own code, arrays of points, Paper.js, an SVG file |
 | to the pen | `plot.go()` | `driver.run(plot.plan())` |
 | take it if | you sketch in p5.js | you work without p5, or want to build your own layer on top |
 
-**Two ways to draw, two modes.** *Sheet mode*: draw everything, then plot. Your sketch makes the whole drawing, you click it, the plotter draws it start to finish. That is what 0.2.1 does. *Live mode*: draw something, plot it. Your sketch makes one thing, the plotter draws it, your sketch makes the next; the drawing grows on paper while you watch, in the order you made it. That is for things that happen over time: an animation appearing dot by dot, a hand drawing in the air, a drawing nobody looks at on a screen. Live mode is designed, not built; [Two modes](https://seb-prjcts-be.github.io/vanilla.penplotter/docs/live.html) explains both in plain words first, then the design.
+The libraries prepare a complete drawing before plotting. Live streaming is not implemented; [live drawing notes](https://seb-prjcts-be.github.io/vanilla.penplotter/docs/live.html) describe the proposed direction.
 
-**Three commands, no thinking of its own.** `createPlot()`, `createPlotterEngine()` and `drawRoute()` become part of p5, in global and instance mode. Everything that takes thought, the shapes in millimetres, the tidying, the route for the pen, the files for other machines and the talking to the plotter, stays in `vanilla.penplotter`. When something is fixed there, it is fixed for everyone at once.
+**The p5 helpers.** `createPlot()`, `createPlotterEngine()` and `drawRoute()` become part of p5, in global and instance mode. Everything that takes thought, the shapes in millimetres, the tidying, the route for the pen, the files for other machines and the talking to the plotter, stays in `vanilla.penplotter`. When something is fixed there, it is fixed for everyone at once.
 
-**Plots for real on one machine so far:** an iDraw HSE / A2 with an EBB board, from Chrome or Edge. For every other plotter the engine can still hand you the plan as SVG, HPGL or G-code; that is the side door, not the road.
+**Direct plotting is physically tested on one profile:** iDraw HSE / A2, EBB firmware 3.0.2, over Web Serial in Chrome or Edge. SVG, HPGL and G-code exports need software and settings suited to the receiving machine.
 
 ```text
-p5.js / p5.waves
+p5.js
         ↓
     p5.penplotter
         ↓
@@ -31,6 +31,8 @@ p5.js / p5.waves
 ```
 
 ## Install
+
+The site uses current source. The latest tags are core `v0.3.1` and adapter `v0.2.1`; newer `pen()`, `drawRoute()` and bed preview helpers are available on `main`, not in all tagged builds. The [handbook](https://seb-prjcts-be.github.io/p5.penplotter/docs/handbook.html) describe this current source.
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
@@ -43,7 +45,7 @@ p5.js / p5.waves
 <script src="sketch.js"></script>
 ```
 
-Pinned tags, so a sketch that works today works next year. The GitHub Pages URLs (`https://seb-prjcts-be.github.io/…`) always serve the latest `main`; the adapter checks the engine's version at install and refuses a mismatch in plain words. Leave out `{ driver: Ebb }` if you only preview. All four ways of wiring a sketch, with the load-order timeline behind them, are on the [Setup](https://seb-prjcts-be.github.io/p5.penplotter/docs/setup.html) page; that page exists because getting a module into a global-mode sketch is the one thing that went wrong more than once.
+Pinned tags, to keep the library versions fixed. Test your sketch with the pinned pair. The GitHub Pages URLs (`https://seb-prjcts-be.github.io/…`) always serve the latest `main`; the adapter checks the engine's version at install and refuses a core below the required minimum. Leave out `{ driver: Ebb }` if you only preview. All four ways of wiring a sketch, with the load-order timeline behind them, are on the [Setup](https://seb-prjcts-be.github.io/p5.penplotter/docs/setup.html) page; that page exists because getting a module into a global-mode sketch is the one thing that went wrong more than once.
 
 ## Quick start
 
@@ -68,7 +70,7 @@ function draw() {
 }
 ```
 
-`plot.go()` is written where the drawing is finished, like any other line. It does not plot by itself: the browser only opens its list of ports after a click, so the status line asks you to check the machine and click the drawing. That click is the confirmation. While the pen runs, a click on the drawing stops it, pen up. Park the carriage in the home corner by hand first; the machine has no home position of its own. And remember that `draw()` runs sixty times a second while a plotter draws once: what gets plotted is always the last frame.
+`plot.go()` is written where the drawing is finished, like any other line. It does not plot by itself: the browser only opens its list of ports after a click, so the status line asks you to check the machine and click the drawing. That click is the confirmation. While the pen runs, a click on the drawing stops it, pen up. Park the carriage in the home corner by hand first; the machine has no home position of its own. The plot contains the shape calls recorded since the last `plot.clear()`. Clear at the start of `draw()` to replace each frame, and use `noLoop()` for a stable drawing. Screen transforms and styling are not recorded.
 
 Tested on one machine: iDraw HSE / A2 (EBB firmware 3.0.2) on 2026-09-21. Plotted from the p5.js Web Editor on 2026-10-01.
 
@@ -84,14 +86,14 @@ This table is literally identical in the README of `vanilla.penplotter`; a test 
 | `p5.penplotter` | p5.js ≥ 2.2.2 | tested with 2.2.2, in global and instance mode |
 | direct plotting | Chrome or Edge, on `localhost` or https | Web Serial; the browser shows its port list only after a click or keypress |
 | direct plotting | iDraw HSE / A2 with EBB firmware 3.0.2 | the only physically tested profile (`idraw-hse-a2`) |
-| examples | p5.waves 3.4.0, vanilla.waves (pinned commit) | examples only; neither library depends on them |
+| examples | wave formulas, vanilla.waves (pinned commit) | examples only; neither library depends on them |
 
 Tested together: `vanilla.penplotter` 0.3.1 with `p5.penplotter` 0.2.1.
 
 Publishing: always `vanilla.penplotter` first, then `p5.penplotter`. The examples of
 `p5.penplotter` load the core as a sibling folder (`../vanilla.penplotter/`), locally under
 `htdocs` and online on GitHub Pages. They therefore always get the latest core, not a
-pinned one; the version check in the adapter catches a core that does not match.
+pinned one; the version check refuses a core below the required minimum.
 <!-- vereisten:end -->
 
 ## Instance mode
@@ -142,21 +144,16 @@ plot.crossHatch(square, 4);      // second direction perpendicular to the first
 plot.stipple(square, 150, 3);    // count, seed: same seed, same dots
 ```
 
-## p5.waves
+## Sampling a wave
 
-`Waves.wave()` returns a single number. Build ordinary points with it and pass them on:
+`Math.sin()` returns a number. Build ordinary points with it and pass them on:
 
 ```js
 const points = [];
 for (let x = 40; x <= 760; x += 4) {
   points.push({
     x,
-    y: 400 + Waves.wave(x, {
-      wave: "triangle sine",
-      t: 0,
-      amplitude: 80,
-      frequency: 0.04
-    })
+    y: 400 + 80 * Math.sin(x * 0.04)
   });
 }
 plot.polyline(points);
@@ -168,10 +165,10 @@ Each one is a standalone page under `examples/`; a click on the drawing plots, a
 
 - `direct_plot` - draw with `plot.…`, click the drawing, and the sketch goes to the plotter
 - `first_plot` - create the engine from a p5 canvas and draw what the planner made of it
-- `wave_plot` - 24 rows sampled from one of p5.waves' 35 formulas
+- `wave_plot` - 24 rows sampled from a wave formula
 - `molnar_grid` - nested squares that drift and turn a little more with every row; a plain global-mode sketch
 - `calibration_sheet` - ruler, tone scales, circles and line spacing: what your pen does on your paper
-- `wave_field` - streamlines through a direction field that p5.waves shapes; 35 fields in one sketch
+- `wave_field` - streamlines through a sampled direction field; a seed chooses the field
 - `spirograph` - three hypotrochoids, each one unbroken polyline: the drawing a plotter was made for
 - `chaos_game` - 1 500 dots that jump halfway to a random corner; plotted in the order of the game, the Sierpinski triangle appears on paper dot by dot
 
@@ -201,7 +198,7 @@ npm run manifest
 npm run handbook
 ```
 
-`npm test` checks the adapter against a fake p5 and against the real engine in the sibling folder `../vanilla.penplotter` (or `VANILLA_PLOTTER_ROOT`), every local link on the site, that every example is in the gallery and the manifest, and that the generated architecture page is current. `npm run handbook` prints `docs/handbook.html`, the in-depth handbook, to `docs/p5.penplotter-handbook.pdf` with a headless Chrome or Edge.
+`npm test` checks the adapter against a fake p5 and against the real engine in the sibling folder `../vanilla.penplotter` (or `VANILLA_PLOTTER_ROOT`), every local link on the site, that every example is in the gallery and the manifest, and that the generated architecture page is current.
 
 ## How this was made
 

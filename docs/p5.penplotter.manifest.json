@@ -1,6 +1,6 @@
 {
   "version": "0.2.1",
-  "generated": "2026-09-30",
+  "generated": "2026-10-02",
   "p5js_target": "2.2.2",
   "core": "vanilla.penplotter@>=0.2.0",
   "core_plan_schema": "vanilla.penplotter/plan@1",

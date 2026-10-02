@@ -1,0 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap');
+/* Small, autoplaying explanations alongside the existing guide. */
+.doc-animation { margin: 1.5rem auto 2rem; width: min(100%, 600px); }
+.doc-animation img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; background: #000; image-rendering: pixelated; }
+.doc-animation figcaption { margin-top: .65rem; color: var(--text-muted); font-size: .85rem; line-height: 1.6; }
+html.embed .doc-animation { display: none; }
+.doc-animation figcaption { overflow-wrap: anywhere; }
+.page h1, .page h2, .page h3, .demo-header h1, .section-header h2 { font-weight: 300; }
+.doc-animation { scroll-margin-top: 5rem; }

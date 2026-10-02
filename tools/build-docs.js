@@ -10,7 +10,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const VERSION = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8")).version;
 
 export const PAGES = [
-  { source: "docs/architecture.md", target: "docs/architecture.html", eyebrow: "Architecture · an adapter, not a second engine" }
+  { source: "docs/architecture.md", target: "docs/architecture.html", eyebrow: "How a supported p5 shape becomes recorded geometry for the pen." }
 ];
 
 function escapeHtml(value) {
@@ -48,10 +48,11 @@ export function renderMarkdown(markdown) {
     const line = lines[index];
     if (line.startsWith("```")) {
       flush();
+      const language = line.slice(3).trim();
       const code = [];
       index += 1;
       while (index < lines.length && !lines[index].startsWith("```")) code.push(lines[index++]);
-      html.push(`<pre><code>${escapeHtml(code.join("\n"))}</code></pre>`);
+      html.push(`<pre><code class="language-${language === "js" ? "javascript" : language === "html" ? "markup" : language || "none"}">${escapeHtml(code.join("\n"))}</code></pre>`);
       index += 1;
     } else if (/^#{1,3} /.test(line)) {
       flush();
@@ -98,8 +99,8 @@ export function renderPage(page, markdown) {
   <title>${escapeHtml(title)} - p5.penplotter</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=20261002c">
 </head>
 <body>
   <nav id="navbar">
@@ -118,8 +119,8 @@ export function renderPage(page, markdown) {
   <main class="page">
     <header class="page-header">
       <div class="section-tag">p5.js addon library · v${VERSION}</div>
-      <h1>p5.<span class="accent">penplotter</span> ${escapeHtml(title)}</h1>
-      <p class="guide-intro">${escapeHtml(page.eyebrow)}. Generated from <a href="${path.basename(page.source)}">${path.basename(page.source)}</a>; edit the Markdown and run <code>npm run docs</code>.</p>
+      <h1>${escapeHtml(title)}</h1>
+      <p class="guide-intro">${escapeHtml(page.eyebrow)}</p>
     </header>
 ${content}
   </main>
@@ -127,6 +128,7 @@ ${content}
     <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; <a href="handbook.html">Handbook</a> &middot; <a href="about.html">About</a> &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine</p>
     <p class="footer-sub">MIT License &middot; v${VERSION}</p>
   </footer>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
 </body>
 </html>
 `;

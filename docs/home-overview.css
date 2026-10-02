@@ -1,0 +1,8 @@
+/* The overview is the central hero image on both homepages. */
+#hero { height: auto; min-height: 100vh; }
+#hero .hero-overlay { position: relative; inset: auto; min-height: 100vh; background: none; }
+#hero .hero-text { width: 100%; min-width: 0; padding: 7rem 1.25rem 4rem; }
+#hero .home-overview { width: min(100%, 600px); margin: 0 auto 2rem; }
+#hero .home-overview img { display: block; width: 100%; max-width: 100%; height: auto; aspect-ratio: 3 / 2; image-rendering: pixelated; }
+h1, h2, h3 { font-weight: 300; }
+.hero-sub { font-family: 'Oswald', sans-serif; font-weight: 300; }

@@ -4,11 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About - p5.penplotter</title>
-  <meta name="description" content="Why p5.penplotter is three methods and nothing more, how it relates to p5.plotSvg, and how it was made.">
+  <meta name="description" content="Why p5.penplotter exists, what it records, and which machine has been tested.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=20261002c">
+  <link rel="stylesheet" href="animations.css">
 </head>
 <body>
   <nav id="navbar">
@@ -32,31 +33,41 @@
     </header>
 
     <h2>Why</h2>
-    <p>The usual way to plot a p5 sketch is to record it as an SVG, clean it up in vpype, open it in Inkscape and send it from there. Four programs for one drawing. <code>p5.penplotter</code> replaces them with one object: every <code>plot.line()</code>, <code>plot.circle()</code> or <code>plot.hatch()</code> draws on the canvas <em>and</em> is remembered in millimetres, and <code>plot.go()</code> hands the last frame to the machine. The sketch stays a sketch; <code>draw()</code> still runs, <code>random()</code> still rolls, and the plot is always the snapshot of what you last saw.</p>
+    <p>I wanted a small route from a p5 sketch to my plotter. Supported <code>plot.line()</code>, <code>plot.circle()</code> and other shape calls draw on the canvas and record geometry in millimetres. <code>plot.go()</code> plans that recording when you start the plot. Clear at the start of a frame to replace earlier geometry, or leave it to accumulate.</p>
 
-    <h2>Three commands, no thinking of its own</h2>
-    <p>p5.penplotter gives p5 three new commands, <code>createPlot()</code>, <code>createPlotterEngine()</code> and <code>drawRoute()</code>, in global and instance mode, and that is all. Everything that takes thought lives in <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a>, which knows nothing about p5: the shapes in millimetres, the tidying, the route for the pen, the files for other machines, the facts about the plotter and the talking to it. When something is fixed there, it is fixed for everyone at once. The one thing p5.penplotter does decide is where your canvas lands on the paper and how wide: <code>createPlot({ x, y, width })</code> says so, and from then on every pixel has its millimetre.</p>
+    <figure class="doc-animation" id="animation-last-frame">
+      <img src="images/animations/last-frame.gif" width="600" height="400" loading="lazy" alt="A running sketch produces changing frames, then one recorded drawing is plotted.">
+      <figcaption>Screen animation and a paper drawing have different clocks. With <code>plot.clear()</code> at the beginning of <code>draw()</code>, each frame replaces the recorded geometry. The click plots that recording. Without clearing it, the lines accumulate. Use <code>noLoop()</code> when you want to keep one drawing still.</figcaption>
+    </figure>
+
+    <h2>Drawing in p5, planning in the engine</h2>
+    <p><code>createPlot()</code> supplies the draw-and-record object. <code>createPlotterEngine()</code> exposes the core directly, and <code>drawRoute()</code> draws its planned routes in p5. The adapter maps pixels to millimetres; geometry, cleanup, planning, exports and machine control stay in <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a>.</p>
     <p>The dependency runs one way, and it is checked: when a driver is handed in, p5.penplotter reads the engine's version and refuses one that is too old, with a plain sentence. The <em>Requirements</em> table is identical in both READMEs because a test says so.</p>
 
-    <h2>Not p5.plotSvg</h2>
-    <p><a href="https://github.com/golanlevin/p5.plotSvg">p5.plotSvg</a> by Golan Levin records a p5 sketch between <code>beginRecordSvg()</code> and <code>endRecordSvg()</code> and writes an SVG. It covers far more of p5's drawing API than this adapter: curves, text, arcs in every mode. It deliberately stops at the file. <code>p5.penplotter</code> chose the other end of the road: fewer primitives, but no file. The two are not rivals; a p5.plotSvg file can be read and plotted by the engine's <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/examples/svg_to_pen/index.html">SVG to pen</a> example.</p>
+    <h2>SVG capture and direct plotting</h2>
+    <p><a href="https://github.com/golanlevin/p5.plotSvg">p5.plotSvg</a> by Golan Levin records a p5 sketch as SVG and covers a wider drawing API. This adapter records a smaller set of explicit shape calls and can pass them to the EBB driver. SVG import and export are also available through the core; imported files must fit its supported subset.</p>
 
     <h2>The machine</h2>
-    <p>Everything so far has been plotted on one machine, mine: an iDraw HSE with an A2 bed and an EBB board, over Web Serial from Chrome. The machine facts, measured on paper on 2026-09-21, live in the engine. The sketch only needs to know that the home corner is 0,0, that the carriage is parked there by hand, and that <code>plot.go()</code> has to come from a key or a click, because a browser shows its port list only after a user gesture.</p>
+    <p>Physical tests use my iDraw HSE / A2 with EBB firmware 3.0.2. Park the carriage at home by hand. You can write <code>plot.go()</code> at the end of <code>draw()</code>; it waits for a click to open the connection and start plotting. Other machines have not been physically tested here.</p>
+
+    <figure class="doc-animation" id="animation-readme">
+      <img src="images/animations/readme.gif" width="600" height="400" loading="lazy" alt="A pixel-written summary explains that the same line is drawn and recorded, with no intermediate SVG required.">
+      <figcaption>This is the small bridge I wanted: the line you draw is also remembered for the pen. The direct route needs no intermediate SVG file. SVG export is still there when you want it.</figcaption>
+    </figure>
 
     <h2>How this was made</h2>
-    <p>I use AI to build bridges, not cities. This adapter is the smallest bridge I could make: three methods between p5.js and an engine that already existed, so that a sketch reaches a pen. The conversations that built it connected things I could not connect before. They never replaced the pleasure of coding; that stays mine, and so does the responsibility for what is here.</p>
-    <p>I designed and directed it, wrote it with AI assistance, and held it to one rule: nothing is claimed that a test or a plot on paper has not shown. The commit history is in my name only. The <a href="setup.html">Setup</a> page exists because getting a module-based adapter into a global-mode sketch is the one thing that went wrong more than once.</p>
+    <p>I use AI to build bridges, not cities. This adapter is the smallest bridge I could make: helpers between p5.js and an engine that already existed, so that a sketch reaches a pen. The conversations that built it connected things I could not connect before. They never replaced the pleasure of coding; that stays mine, and so does the responsibility for what is here.</p>
+    <p>I designed and directed it and wrote it with AI assistance. The <a href="setup.html">Setup</a> page grew out of the load-order problems I encountered with modules and p5 global mode.</p>
     <p><strong>Sebastien Vanblaere</strong> &middot; <a href="https://prjcts.be" target="_blank">prjcts.be</a></p>
 
     <h2>Related work</h2>
     <ul>
       <li><a href="https://github.com/golanlevin/p5.plotSvg">p5.plotSvg</a>: SVG capture for p5.js.</li>
       <li><a href="https://github.com/craigfahner/p5.plotterControl">p5.plotterControl</a>: live control of GRBL pen plotters from p5.js; this adapter targets EBB boards and plans the whole drawing first.</li>
-      <li><a href="https://seb-prjcts-be.github.io/p5.gysin/">p5.gysin</a> and <a href="https://seb-prjcts-be.github.io/p5.waves/">p5.waves</a>: the sister libraries; the second supplies the numbers several examples here draw with.</li>
+      <li><a href="https://seb-prjcts-be.github.io/p5.gysin/">p5.gysin</a> and wave samplers: the sister libraries; the second supplies the numbers several examples here draw with.</li>
     </ul>
 
-    <p class="callout">Every method, what it maps to, and where a sketch goes wrong: the <a href="handbook.html">handbook</a> is on the site and as a <a href="p5.penplotter-handbook.pdf">PDF</a>. MIT License. Source and issues on <a href="https://github.com/seb-prjcts-be/p5.penplotter">GitHub</a>.</p>
+    <p class="callout">The <a href="handbook.html">handbook</a> explains the methods and recording limits. MIT License. Source and issues on <a href="https://github.com/seb-prjcts-be/p5.penplotter">GitHub</a>.</p>
   </main>
   <footer>
     <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; <a href="handbook.html">Handbook</a> &middot; <a href="about.html">About</a> &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine</p>

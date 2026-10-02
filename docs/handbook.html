@@ -7,10 +7,10 @@
   <meta name="description" content="The p5.penplotter handbook: how the adapter turns a p5.js sketch into a plot, method by method, and what it deliberately leaves to the engine.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=20261002c">
   <style>
-    .hb-cover { padding: 4rem 0 3rem; border-bottom: 2px solid #000; margin-bottom: 2rem; }
+    .hb-cover { padding: 4rem 0 3rem;  margin-bottom: 2rem; }
     .hb-cover h1 { font-size: 3.4rem; font-weight: 400; margin: 0.6rem 0 0.4rem; }
     .hb-cover .hb-sub { font-family: 'Oswald', sans-serif; font-size: 1.2rem; text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); }
     .hb-meta { font-family: 'Courier New', monospace; font-size: .82rem; color: var(--text-muted); margin-top: 1.4rem; }
@@ -24,10 +24,12 @@
     .page table { font-size: .82rem; }
     .page th:first-child, .page td:first-child { width: 28%; }
     .page th:nth-child(2) { width: auto; }
+    .hb table { table-layout: fixed; }
+    .hb td:first-child { white-space: normal; overflow-wrap: anywhere; }
     @media print {
       @page { size: A4; margin: 18mm 17mm 20mm; }
       html, body { background: #fff; padding: 0; }
-      #navbar, .no-print { display: none !important; }
+      #navbar, footer, .no-print { display: none !important; }
       .page { max-width: none; padding: 0; }
       .hb-cover { page-break-after: always; border: 0; padding-top: 6rem; }
       .toc { page-break-after: always; columns: 2; }
@@ -60,8 +62,8 @@
       <p class="section-tag">Handbook · version 0.2.1</p>
       <h1>p5.penplotter</h1>
       <p class="hb-sub">How a p5.js sketch becomes a plot</p>
-      <p class="lead">Three methods on the p5 prototype, one object that draws and remembers at the same time, and a key that sends the last frame to the pen. This handbook explains what each method does, what it maps to in the engine, what it deliberately does not do, and where a sketch can go wrong.</p>
-      <p class="hb-meta">Sebastien Vanblaere · 2026-09-30 · MIT · seb-prjcts-be.github.io/p5.penplotter · PDF of docs/handbook.html<br>Companion to the vanilla.penplotter handbook, which covers the engine this adapter calls.</p>
+      <p class="lead">p5 helpers and an object that draws supported shapes while recording their coordinates for the pen. This handbook explains what each method does, what it maps to in the engine, what it deliberately does not do, and where a sketch can go wrong.</p>
+      <p class="hb-meta">Sebastien Vanblaere · 2026-10-02 · MIT · seb-prjcts-be.github.io/p5.penplotter<br>Companion to the vanilla.penplotter handbook, which covers the engine this adapter calls.</p>
     </header>
 
     <section class="toc">
@@ -77,7 +79,7 @@
         <li><a href="#c8">plot.go(): connect, confirm, plot, stop</a></li>
         <li><a href="#c9">createPlotterEngine() and drawRoute()</a></li>
         <li><a href="#c10">What is not recorded</a></li>
-        <li><a href="#c11">p5.waves in a sketch</a></li>
+        <li><a href="#c11">Sampling waves in a sketch</a></li>
         <li><a href="#c12">The examples, one by one</a></li>
         <li><a href="#c13">Recipes</a></li>
         <li><a href="#c14">Pitfalls, with their error messages</a></li>
@@ -88,7 +90,7 @@
     </section>
 
     <h2 id="c1"><span class="num">1</span>The adapter</h2>
-    <p>A p5 sketch runs sixty times a second and forgets every frame. A pen plotter draws once and keeps it. <code>p5.penplotter</code> is the smallest bridge between those two habits: you keep writing the sketch you always write, put <code>plot.</code> in front of the shapes that should reach paper, and press a key. The adapter adds three methods to the p5 prototype and nothing else:</p>
+    <p>The adapter draws supported p5 shapes and records their coordinates for the pen. Geometry, planning and machine control come from <code>vanilla.penplotter</code>. Its main p5 helpers are:</p>
     <table>
       <thead><tr><th>method</th><th>what it is for</th></tr></thead>
       <tbody>
@@ -98,22 +100,24 @@
       </tbody>
     </table>
     <p>Everything else, geometry, optimisation, route planning, exports, machine profiles and the driver, lives in <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a>, which knows nothing about p5. The adapter contains no copy of any of it; a bug in the pipeline is fixed there, once, for both libraries. The one piece of real work the adapter does own is the translation from canvas pixels to millimetres on the bed.</p>
-    <p>It is not p5.plotSvg, which records a sketch between <code>beginRecordSvg()</code> and <code>endRecordSvg()</code> into an SVG file and covers far more of p5's drawing API. That library stops at the file on purpose; this one has no file at all. The two are not rivals. A p5.plotSvg file can be plotted by the engine's <em>SVG to pen</em> example.</p>
+    <p>It is not p5.plotSvg, which records a sketch between <code>beginRecordSvg()</code> and <code>endRecordSvg()</code> into an SVG file and covers far more of p5's drawing API. That library stops at the file on purpose; this adapter can plot directly and also export through its engine. Supported SVG paths and basic shapes can be imported in the core's <em>SVG to pen</em> example; arbitrary SVG features are not reproduced.</p>
 
     <h2 id="c2"><span class="num">2</span>Installing: the version contract</h2>
+    <p>This handbook covers current source. The latest tags are core <code>v0.3.1</code> and adapter <code>v0.2.1</code>. Newer <code>pen()</code>, <code>drawRoute()</code> and bed helpers are not all in those tags; use the earlier <code>tool()</code>, <code>drawPreview()</code> or <code>drawPlotPlan()</code> names with a tagged build.</p>
+
     <p>Installation is explicit. The adapter is handed the p5 constructor and the engine class, and, when you want to plot, the engine's driver module:</p>
-    <pre><code>import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.3.1/vanilla.penplotter.js";
+    <pre><code class="language-javascript">import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.3.1/vanilla.penplotter.js";
 import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.3.1/src/driver/ebb.js";
 import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.1/p5.penplotter.js";
 
 installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
     <p>Why not auto-detect a global? Because load order and versions would become invisible, and the first thing that goes wrong with two libraries loaded from two places is a version mismatch nobody can see. So the contract is written down once, in code, as <code>REQUIRES = { core: "0.2.0", p5: "2.2.2" }</code>, and everything else is tested against it: <code>package.json</code>'s peer dependencies, the manifest, and the <em>Requirements</em> table in the README, which is byte for byte the same table as in the engine's README.</p>
     <p>At install time the adapter checks three things. <code>p5</code> must be a constructor with a prototype. <code>PlotterEngine</code> must be a class. And when a driver is passed, it must expose <code>EbbDriver</code>, <code>createWebSerialTransport</code> and <code>EBB_PROFILES</code>, and the engine's static <code>version</code> must be 0.2.0 or newer, because an older engine has no driver at all. The refusal is a plain sentence: "p5.penplotter needs vanilla.penplotter 0.2.0 or newer for direct plotting; this one is 0.1.9. Update vanilla.penplotter first." Without a driver, nothing is checked and <code>createPlotterEngine()</code> and <code>drawRoute()</code> work with any engine; only <code>go()</code> will throw.</p>
-    <div class="fact"><strong>Pinned or latest</strong>The jsDelivr URLs above are pinned to a tag: a sketch that works today works next year. The GitHub Pages URLs (<code>https://seb-prjcts-be.github.io/…/</code>) always serve the latest <code>main</code> of both libraries, which is what the site's own examples use, with the version check as their guardrail. After an update, a browser can hold the old engine in its cache and the adapter will refuse it, correctly; reload with Ctrl+F5.</div>
+    <div class="fact"><strong>Pinned or latest</strong>The jsDelivr URLs above are pinned to a tag: the library versions stay fixed. Test the pinned pair with your sketch. The GitHub Pages URLs (<code>https://seb-prjcts-be.github.io/…/</code>) always serve the latest <code>main</code> of both libraries, which is what the site's own examples use, with the version check as their guardrail. After an update, a browser can hold the old engine in its cache and the adapter will refuse it, correctly; reload with Ctrl+F5.</div>
 
     <h2 id="c3"><span class="num">3</span>Wiring a sketch: four ways and one timeline</h2>
     <p>Both libraries are ES modules, and a module has two properties that decide every setup: it creates no globals, so a <code>function setup()</code> written inside a module is invisible to p5's global mode, and it is deferred, so it runs after the page has been read but before the <code>load</code> event on which p5 starts a global-mode sketch. The timeline of any page is therefore:</p>
-    <pre><code>1. p5.js loads                          (classic script, runs at once)
+    <pre><code class="language-none">1. p5.js loads                          (classic script, runs at once)
 2. classic scripts run in order         (your sketch.js defines setup/draw)
 3. page fully read
 4. module scripts run                   (the adapter is installed here)
@@ -130,7 +134,7 @@ installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
 
     <h2 id="c4"><span class="num">4</span>createPlot(): one object for screen and paper</h2>
     <p><code>createPlot(options)</code> returns a <code>P5Plot</code>. Its constructor decides one thing that everything else depends on: the scale between canvas pixels and millimetres on the bed.</p>
-    <pre><code>plot = createPlot({ x: 147, y: 66, width: 300 });
+    <pre><code class="language-none">plot = createPlot({ x: 147, y: 66, width: 300 });
 // the canvas lands with its top-left corner 147 mm right and 66 mm down from the home corner,
 // and is 300 mm wide on the bed; the scale is 300 / width (of the canvas) mm per pixel</code></pre>
     <table>
@@ -168,22 +172,22 @@ installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
 
     <h2 id="c6"><span class="num">6</span>Fills</h2>
     <p>p5 fills a shape with colour; a pen cannot. The three fill methods hand a polygon to the engine's fills, in millimetres, and draw the resulting lines back onto the canvas with the sketch's current stroke, so screen and paper show the same hatching:</p>
-    <pre><code>let square = [[20, 80], [120, 80], [120, 180], [20, 180]];
+    <pre><code class="language-javascript">let square = [[20, 80], [120, 80], [120, 180], [20, 180]];
 plot.hatch(square, 3, PI / 4);   // spacing 3 mm on the bed, angle in angleMode()
 plot.crossHatch(square, 4);      // second pass at right angles
 plot.stipple(square, 150, 3);    // 150 dots, seed 3: same seed, same dots</code></pre>
-    <p>The spacing is a physical distance, not a pixel count: 3 mm reads as a mid grey whatever the canvas size. The angle follows <code>angleMode()</code> like every other angle in the sketch. Stipple dots come back as <code>point()</code> calls at the centre of each dash. The engine's own optimizer later joins the hatch lines end to end and orders them, which is why a hatched square plots as a zigzag and not as a hundred separate strokes.</p>
+    <p>Spacing is a physical distance in millimetres. The resulting tone depends on the pen, ink and paper. Angles follow <code>angleMode()</code>. Hatch lines are separate strokes, not an automatically connected zigzag; stipple centres are drawn as p5 points while the pen records short dashes.</p>
 
     <h2 id="c7"><span class="num">7</span>The frame model: sixty frames, one plot</h2>
-    <p><code>draw()</code> runs sixty times a second; a plotter draws once. The adapter does not try to reconcile the two. It records whatever the shape methods were called with since the last <code>clear()</code>, and <code>go()</code> plots that. So what gets plotted is always the last frame you saw, which is the natural thing: you look, you like it, you click it.</p>
-    <pre><code>function draw() {
+    <p>The plot contains the geometry recorded since the last <code>clear()</code>. Clearing at the start of <code>draw()</code> replaces the recording for each frame; without it, shapes accumulate. The plan is taken when the plot starts, before the connection is opened. The adapter records coordinates, not every aspect of the screen image.</p>
+    <pre><code class="language-javascript">function draw() {
   background(255);   // screen only: no plot. in front of it, so it is not recorded
   plot.clear();      // new frame, new job
   plot.rect(10, 10, 380, 230);
   plot.line(30, 125, 370, 125);
   plot.go();         // ready: click the drawing to plot
 }</code></pre>
-    <p>Two habits make this comfortable. Call <code>noLoop()</code> in <code>setup()</code> and <code>redraw()</code> on a key when the sketch is generative, so a plot never races a frame; the Molnár grid does this with R for a new seed. And keep <code>randomSeed()</code> at the top of <code>draw()</code>, so the frame you plotted can be drawn again tomorrow. A sketch that animates can still be plotted: the frame that is on screen when you click is the one that goes to paper.</p>
+    <p>Two habits make this comfortable. Call <code>noLoop()</code> in <code>setup()</code> and <code>redraw()</code> on a key when the sketch is generative, so a plot never races a frame; the Molnár grid does this with R for a new seed. And keep <code>randomSeed()</code> at the top of <code>draw()</code>, so the frame you plotted can be drawn again tomorrow. For an animated sketch, clear the recording each frame and pause on the drawing you want to plot. Screen transforms and styling still need explicit handling.</p>
 
     <h2 id="c8"><span class="num">8</span>plot.go(): connect, confirm, plot, stop</h2>
     <p><code>go()</code> is one method because a person at a plotter wants one gesture: you write it at the end of the drawing, and a click on the drawing starts the pen. Called from <code>setup()</code> or <code>draw()</code>, where there is no click yet, it writes the safety checklist to the status line and waits for one click on the canvas; that click is the confirmation, and no dialog follows. Called from a key or mouse handler, it goes straight on and asks once with a dialog. A second <code>go()</code> while one is waiting does not queue a second plot. Inside it does four things in order:</p>
@@ -193,7 +197,7 @@ plot.stipple(square, 150, 3);    // 150 dots, seed 3: same seed, same dots</code
       <li><strong>Connect.</strong> <code>connect()</code> reuses an open transport; otherwise it takes a port the browser already granted (<code>navigator.serial.getPorts()</code>) or opens the browser's port picker with no USB filter, so an EBB clone with unusual ids still shows up; the driver's <code>V</code> handshake then decides. A closed picker becomes a plain message: "No plotter was chosen. If no list appeared at all, open this page in Chrome or Edge itself."</li>
       <li><strong>Confirm and run.</strong> The <code>confirm</code> function (a dialog by default) asks whether the carriage is parked in the home corner, the paper is in place with no magnet in the way, and hands are clear. A refusal returns <code>{ status: "cancelled" }</code> and sends nothing. Otherwise <code>driver.run(plan, { confirmed: true })</code> streams the plan; the result is returned, and the status line reads "plot complete" or "stopped safely: …" on an error, which is then rethrown so the sketch can show it.</li>
     </ol>
-    <p>While the pen runs, a click on the drawing calls <code>stop()</code>; so does <code>plot.stop()</code> from your own code. It calls the driver's <code>abort()</code>, which ends in the engine's safe stop: motion cleared, pen up, motors off. Every status change goes through <code>say()</code>: to the <code>log</code> function when you gave one, otherwise to the console. The examples pass a function that writes into a status line on the page.</p>
+    <p>While the pen runs, a click on the drawing calls <code>stop()</code>; so does <code>plot.stop()</code> from your own code. It calls the driver's <code>abort()</code>, which requests the engine's stop sequence: motion cleared, pen up, motors off. A working connection is needed to deliver those commands. Every status change goes through <code>say()</code>: to the <code>log</code> function when you gave one, otherwise to the console. The examples pass a function that writes into a status line on the page.</p>
     <p>The confirmation is the adapter's own, on top of the engine's <code>confirmed: true</code> requirement; the bounds check, the speeds, the flow control and the safe stop are the engine's and are not duplicated here. The engine's handbook, chapter 9, describes what happens on the wire.</p>
 
     <h2 id="c9"><span class="num">9</span>createPlotterEngine() and drawRoute()</h2>
@@ -210,14 +214,14 @@ plot.stipple(square, 150, 3);    // 150 dots, seed 3: same seed, same dots</code
       <li><strong>Everything without <code>plot.</code></strong>, which is the point: <code>background()</code>, a debug text, a mouse cursor, a grid you draw to help yourself, all stay on screen.</li>
     </ul>
 
-    <h2 id="c11"><span class="num">11</span>p5.waves in a sketch</h2>
-    <p><code>Waves.wave(x, options)</code> returns a number; the adapter never sees the library. Build ordinary points with it and pass them to <code>polyline</code>. Two things matter for paper: pick a fixed <code>t</code>, because the plotter draws one moment, and use the wave for something a pen can show, such as the y of a line, the angle of a field, or the spacing of a hatch.</p>
-    <pre><code>const points = [];
+    <h2 id="c11"><span class="num">11</span>Sampling waves in a sketch</h2>
+    <p><code>Math.sin(x)</code> returns a number; the adapter receives the resulting points. Build ordinary points with it and pass them to <code>polyline</code>. Two things matter for paper: pick a fixed <code>t</code>, because the plotter draws one moment, and use the wave for something a pen can show, such as the y of a line, the angle of a field, or the spacing of a hatch.</p>
+    <pre><code class="language-javascript">const points = [];
 for (let x = 40; x &lt;= 760; x += 4) {
-  points.push({ x, y: 400 + Waves.wave(x, { wave: "triangle sine", t: 0, amplitude: 80, frequency: 0.04 }) });
+  points.push({ x, y: 400 + 80 * Math.sin(x * 0.04) });
 }
 plot.polyline(points);</code></pre>
-    <p>The Wave field example goes one step further: two waves, one per axis, give every point of the sheet a direction, and sixty lines follow that direction until they leave the frame. The seed picks the wave shape, so one sketch is thirty-five different fields.</p>
+    <p>The Wave field example goes one step further: two waves, one per axis, give every point of the sheet a direction, and sixty lines follow that direction until they leave the frame. The seed picks the wave shape, so different seeds produce different fields.</p>
 
     <h2 id="c12"><span class="num">12</span>The examples, one by one</h2>
     <table>
@@ -225,29 +229,29 @@ plot.polyline(points);</code></pre>
       <tbody>
         <tr><td>direct_plot</td><td>five wave lines in a frame; a click on the drawing plots, a second click stops; the status line is the adapter's log</td><td>instance mode, sibling imports</td></tr>
         <tr><td>first_plot</td><td><code>createPlotterEngine()</code> and <code>drawRoute()</code>: a hatched polygon and a circle, drawn as the planner ordered them</td><td>instance mode</td></tr>
-        <tr><td>wave_plot</td><td>24 rows sampled from one of p5.waves' 35 formulas; a button rerolls the wave</td><td>instance mode</td></tr>
+        <tr><td>wave_plot</td><td>24 rows sampled from a wave formula; a button rerolls the wave</td><td>instance mode</td></tr>
         <tr><td>molnar_grid</td><td>ten rows of nested squares that drift and turn a little more each row; one seed, R rerolls; a plain global-mode sketch with no imports</td><td>global mode, wiring in index.html</td></tr>
         <tr><td>calibration_sheet</td><td>a 100 mm ruler, hatch and cross-hatch scales down to 0.8 mm, stipple densities, circles from 2 to 40 mm, line pairs from 0.3 mm apart: only physical variables; plot it once per pen</td><td>global mode</td></tr>
-        <tr><td>wave_field</td><td>streamlines through a direction field shaped by p5.waves; thirty-four fields in one sketch</td><td>global mode</td></tr>
+        <tr><td>wave_field</td><td>streamlines through a sampled direction field; a seed chooses the field</td><td>global mode</td></tr>
         <tr><td>spirograph</td><td>three hypotrochoids around one centre, each a single unbroken polyline, wheels chosen so every curve closes within eleven turns</td><td>global mode</td></tr>
-        <tr><td>chaos_game</td><td>one point jumps halfway to a random corner and leaves a dot, 1 500 times; <code>plan({ strategy: "drawn" })</code> keeps the order of the game, so the Sierpinski triangle appears on paper dot by dot, half an hour long</td><td>global mode</td></tr>
+        <tr><td>chaos_game</td><td>one point jumps halfway to a random corner and leaves a dot, 1 500 times; <code>plan({ strategy: "drawn" })</code> keeps the order of the game, so the Sierpinski triangle appears on paper dot by dot, with a duration that depends on the plotting settings</td><td>global mode</td></tr>
       </tbody>
     </table>
     <p>The global-mode examples are the test of the root: a <code>sketch.js</code> with no imports, no instance mode, only <code>createPlot</code>, <code>polygon</code> with <code>[x, y]</code> pairs, <code>random</code> and a for-loop, with the wiring in <code>index.html</code> as Setup 1 describes it. Every example page accepts <code>?embed</code>, which hides the navigation and the panel so the gallery can show the live canvas in a frame.</p>
 
     <h2 id="c13"><span class="num">13</span>Recipes</h2>
     <h3>Rings</h3>
-    <pre><code>function draw() {
+    <pre><code class="language-javascript">function draw() {
   background(255); noFill();
   plot.clear();
   for (let d = 40; d &lt;= 560; d += 20) plot.circle(300, 300, d);
 }</code></pre>
     <h3>A frame you can measure</h3>
-    <pre><code>// 300 px wide canvas, 300 mm on the bed: one pixel is one millimetre, so a 40 px square is 40 mm on paper
+    <pre><code class="language-javascript">// 300 px wide canvas, 300 mm on the bed: one pixel is one millimetre, so a 40 px square is 40 mm on paper
 plot = createPlot({ x: 147, y: 66, width: 300 });
 plot.square(20, 20, 40);</code></pre>
     <h3>Two pens from a sketch</h3>
-    <pre><code>const engine = plot.engine;                 // the vanilla.penplotter engine behind the plot
+    <pre><code class="language-javascript">const engine = plot.engine;                 // the vanilla.penplotter engine behind the plot
 engine.tool({ id: "red", color: "#c8402c", width: 0.8 });
 engine.layer("accent", { toolId: "red" });   // recorded shapes now land on this layer
 plot.circle(300, 300, 200);
@@ -255,7 +259,7 @@ engine.layer("default");                     // back to the black pen
 plot.rect(20, 20, 560, 560);
 // plot.go() pauses once, after the default layer, and asks for the red pen</code></pre>
     <h3>A series</h3>
-    <pre><code>function draw() {
+    <pre><code class="language-javascript">function draw() {
   randomSeed(seed);
   // … the drawing …
   plot.go();                                           // like it? click it
@@ -265,7 +269,7 @@ function keyPressed() {
   if (key === "r") { seed += 1; redraw(); }           // look again
 }</code></pre>
     <h3>Plot a transformed shape correctly</h3>
-    <pre><code>// wrong: the rotation is on the canvas only
+    <pre><code class="language-javascript">// wrong: the rotation is on the canvas only
 // rotate(a); plot.rect(0, 0, 100, 40);
 // right: rotate the corners yourself and pass a polygon
 const corners = [[0, 0], [100, 0], [100, 40], [0, 40]].map(([x, y]) =&gt; [
@@ -300,13 +304,13 @@ plot.polygon(corners);</code></pre>
       <li>No <code>layer()</code> or <code>tool()</code> on the plot itself; two pens go through <code>plot.engine</code>.</li>
       <li>One machine profile, one browser family, one click: the engine's limits are the adapter's.</li>
     </ul>
-    <p>Next on the roadmap for the adapter: arcs and curves as p5 primitives, a pen and layer convenience on the plot, and, when the engine has it, pause and resume. Everything about speed, acceleration and machines belongs to the engine and is listed in its handbook.</p>
+    <p>Arcs are already implemented. General Bézier curves and pen/layer helpers remain possible additions. Mid-stroke pause, resume and live streaming depend on future core work. See the core roadmap for proposed changes.</p>
 
     <h2 id="c17"><span class="num">17</span>Reference</h2>
     <table>
       <thead><tr><th>export</th><th>what it is</th></tr></thead>
       <tbody>
-        <tr><td><code>installP5Penplotter(p5, PlotterEngine, { driver })</code></td><td>installs the three methods on <code>p5.prototype</code>; returns the constructor</td></tr>
+        <tr><td><code>installP5Penplotter(p5, PlotterEngine, { driver })</code></td><td>installs helpers on <code>p5.prototype</code>; returns the constructor</td></tr>
         <tr><td><code>REQUIRES</code></td><td><code>{ core: "0.2.0", p5: "2.2.2" }</code>, the contract every other statement is tested against</td></tr>
         <tr><td><code>P5Plot</code></td><td>the class behind <code>createPlot()</code>: <code>clear</code>, <code>toMm</code>, <code>toPx</code>, the shape and fill methods, <code>plan</code>, <code>connect</code>, <code>go</code>, <code>stop</code>, <code>say</code>; fields <code>engine</code>, <code>scale</code>, <code>offset</code>, <code>status</code>, <code>busy</code></td></tr>
         <tr><td><code>drawPlanWithP5(p, plan, options)</code></td><td>the renderer behind <code>drawRoute()</code></td></tr>
@@ -326,13 +330,14 @@ plot.polygon(corners);</code></pre>
       <thead><tr><th>go() result</th><th>meaning</th></tr></thead>
       <tbody>
         <tr><td><code>{ status: "complete", commands, durationMs }</code></td><td>the driver sent everything</td></tr>
-        <tr><td><code>{ status: "aborted", index }</code></td><td><code>stop()</code> was called; the machine ended in the safe stop</td></tr>
+        <tr><td><code>{ status: "aborted", commands, durationMs }</code></td><td><code>stop()</code> was called; the driver attempted its stop sequence</td></tr>
         <tr><td><code>{ status: "cancelled" }</code></td><td>the confirmation was declined; nothing was sent</td></tr>
         <tr><td><code>{ status: "busy" }</code></td><td>a plot was already running</td></tr>
-        <tr><td>a thrown error</td><td>no driver, no port chosen, a point off the bed, or a machine error; the status line says which</td></tr>
+        <tr><td><code>{ status: "failed", error }</code></td><td>a failure after the deferred click; the status line reports it</td></tr>
+        <tr><td>a thrown error</td><td>missing driver, or a connection or run failure when called directly from a user gesture</td></tr>
       </tbody>
     </table>
-    <p class="callout">This handbook describes version 0.2.1 of 2026-10-01. Where the code and this text disagree, the code and its tests are right, and the text needs a fix: open an issue on GitHub.</p>
+
   </main>
   <footer>
     <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; <a href="handbook.html">Handbook</a> &middot; <a href="about.html">About</a> &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine</p>

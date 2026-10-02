@@ -6,8 +6,9 @@
   <title>Setup - p5.penplotter</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=20261002c">
+  <link rel="stylesheet" href="animations.css">
 </head>
 <body>
   <nav id="navbar">
@@ -26,9 +27,14 @@
   <main class="page">
     <header class="page-header">
       <div class="section-tag">p5.js addon library · v0.2.1</div>
-      <h1>p5.<span class="accent">penplotter</span> Setup</h1>
+      <h1>Setup</h1>
       <p class="guide-intro">Four ways to wire the same adapter and the same engine into a sketch: a plain p5 sketch with <code>function setup()</code>, a sketch as a module, a module that publishes its globals, and import maps. Only the wiring changes. Start at 1 and stop where you are comfortable.</p>
     </header>
+
+    <figure class="doc-animation" id="animation-dependencies">
+      <img src="images/animations/dependencies.gif" width="600" height="400" loading="lazy" alt="The dependency diagram connects a sketch and optional wave sampler to the p5 adapter and vanilla engine.">
+      <figcaption>Your sketch stays on top. p5.penplotter records its shapes; vanilla.penplotter plans the route and talks to the machine.</figcaption>
+    </figure>
 
     <h2>The one fact everything hinges on</h2>
     <p><code>p5.penplotter</code> and <code>vanilla.penplotter</code> are ES modules: files that use <code>import</code> and <code>export</code>. A module has two properties that decide every setup below.</p>
@@ -37,7 +43,7 @@
       <li><strong>A module script is deferred.</strong> The browser runs it after the whole page has been read, but before the <code>load</code> event fires.</li>
     </ul>
     <p>p5 starts a global-mode sketch on <code>load</code>. So the timeline of a page is always:</p>
-    <pre><code>1. p5.js loads                          (classic script, runs at once)
+    <pre><code class="language-none">1. p5.js loads                          (classic script, runs at once)
 2. classic scripts run in order         (your sketch.js defines setup/draw)
 3. page fully read
 4. module scripts run                   (the adapter is installed here)
@@ -49,7 +55,7 @@
     <p class="callout">Start here. This is the setup for a classroom, for the p5.js Web Editor, and for anyone who wants <code>sketch.js</code> to look like every other p5 sketch.</p>
     <p>The imports live in <code>index.html</code>, inside one inline module. <code>sketch.js</code> is a plain script with no imports at all.</p>
     <h3>index.html</h3>
-    <pre><code>&lt;!DOCTYPE html&gt;
+    <pre><code class="language-javascript">&lt;!DOCTYPE html&gt;
 &lt;html lang="en"&gt;
 &lt;head&gt;
   &lt;meta charset="utf-8"&gt;
@@ -67,7 +73,7 @@
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
     <h3>sketch.js</h3>
-    <pre><code>let plot;
+    <pre><code class="language-javascript">let plot;
 
 function setup() {
   createCanvas(400, 250);
@@ -106,6 +112,11 @@ function draw() {
       <text x="66" y="142" font-family="Courier New, monospace" font-size="10">width</text>
       <text x="200" y="220" font-family="Inter, Arial, sans-serif" font-size="9">the bed, 594 by 432 mm</text>
     </svg>
+    <figure class="doc-animation" id="animation-draw-bed">
+      <img src="images/animations/draw-bed.gif" width="600" height="400" loading="lazy" alt="The canvas is placed within a 594 by 432 millimetre bed and checked with plot.drawBed.">
+      <figcaption>See where your canvas sits on the bed. <code>x</code> and <code>y</code> start at the home corner; <code>width</code> is in millimetres. The animation is schematic and not to scale; the diagram above shows the bed orientation. This shows placement, not an automatic homing procedure.</figcaption>
+    </figure>
+
     <h3>Why it works</h3>
     <p><code>sketch.js</code> runs as a classic script at step 2 of the timeline. It only <em>defines</em> <code>setup</code> and <code>draw</code>; nothing is called yet. The inline module runs at step 4 and installs <code>createPlot</code> on <code>p5.prototype</code>. At step 6 p5 calls <code>setup()</code>, and by then the adapter has been there for two steps.</p>
     <h3>Rules</h3>
@@ -127,10 +138,10 @@ function draw() {
     <h2>2. Instance mode, sketch as a module</h2>
     <p>The README's default. The three imports move into <code>sketch.js</code>, which becomes a module. Because a module creates no globals, the sketch hands itself to p5 explicitly with <code>new p5(…)</code>, and every p5 call gets a <code>p.</code> in front.</p>
     <h3>index.html</h3>
-    <pre><code>&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
+    <pre><code class="language-markup">&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
 &lt;script type="module" src="sketch.js"&gt;&lt;/script&gt;</code></pre>
     <h3>sketch.js</h3>
-    <pre><code>import { PlotterEngine } from "https://seb-prjcts-be.github.io/vanilla.penplotter/vanilla.penplotter.js";
+    <pre><code class="language-javascript">import { PlotterEngine } from "https://seb-prjcts-be.github.io/vanilla.penplotter/vanilla.penplotter.js";
 import * as Ebb from "https://seb-prjcts-be.github.io/vanilla.penplotter/src/driver/ebb.js";
 import { installP5Penplotter } from "https://seb-prjcts-be.github.io/p5.penplotter/p5.penplotter.js";
 
@@ -169,10 +180,10 @@ new p5(function sketch(p) {
     <h2>3. Global mode from a module</h2>
     <p>A middle road, and the clearest demonstration of what global mode actually is. The sketch stays a module with its own imports, but it publishes its functions on <code>window</code> itself.</p>
     <h3>index.html</h3>
-    <pre><code>&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
+    <pre><code class="language-markup">&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
 &lt;script type="module" src="sketch.js"&gt;&lt;/script&gt;</code></pre>
     <h3>sketch.js</h3>
-    <pre><code>import { PlotterEngine } from "https://seb-prjcts-be.github.io/vanilla.penplotter/vanilla.penplotter.js";
+    <pre><code class="language-javascript">import { PlotterEngine } from "https://seb-prjcts-be.github.io/vanilla.penplotter/vanilla.penplotter.js";
 import * as Ebb from "https://seb-prjcts-be.github.io/vanilla.penplotter/src/driver/ebb.js";
 import { installP5Penplotter } from "https://seb-prjcts-be.github.io/p5.penplotter/p5.penplotter.js";
 
@@ -208,13 +219,13 @@ window.draw = draw;</code></pre>
     <p>Two refinements for development. Both change only where the modules come from, not how the sketch is written; they combine with setup 1, 2 or 3.</p>
     <h3>Local neighbours</h3>
     <p>While working on the libraries themselves, load them from sibling folders instead of GitHub Pages. This is how the repository's own examples are wired, on localhost and on the published site alike:</p>
-    <pre><code>import { PlotterEngine } from "../vanilla.penplotter/vanilla.penplotter.js";
+    <pre><code class="language-javascript">import { PlotterEngine } from "../vanilla.penplotter/vanilla.penplotter.js";
 import * as Ebb from "../vanilla.penplotter/src/driver/ebb.js";
 import { installP5Penplotter } from "../p5.penplotter/p5.penplotter.js";</code></pre>
     <p>Relative imports resolve against the importing file. <code>vanilla.penplotter.js</code> re-exports from its own <code>src/</code> folder, so the whole repository has to be present, not the single file.</p>
     <h3>Import maps</h3>
     <p>An import map lets the sketch import by <em>name</em>, and keeps every URL in one place in <code>index.html</code>. Switching from GitHub Pages to a local copy, or pinning a version, then touches a single block and no sketch.</p>
-    <pre><code>&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
+    <pre><code class="language-markup">&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
 &lt;script type="importmap"&gt;
 {
   "imports": {
@@ -225,13 +236,13 @@ import { installP5Penplotter } from "../p5.penplotter/p5.penplotter.js";</code><
 }
 &lt;/script&gt;
 &lt;script type="module" src="sketch.js"&gt;&lt;/script&gt;</code></pre>
-    <pre><code>import { PlotterEngine } from "vanilla.penplotter";
+    <pre><code class="language-javascript">import { PlotterEngine } from "vanilla.penplotter";
 import * as Ebb from "vanilla.penplotter/driver/ebb";
 import { installP5Penplotter } from "p5.penplotter";
 
 installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
     <p>The import map must appear before the first module script. Bare names like <code>"p5.penplotter"</code> are what a package manager would resolve; the import map does the same job in the browser, without one.</p>
-    <p class="callout">The GitHub Pages URLs always serve the latest <code>main</code>. The adapter checks the core's version at install and refuses a mismatch with a clear message, so a silent drift between the two is not possible, but a sketch that worked yesterday can stop today. For anything you want to keep, copy both repositories next to it and use the local-neighbour form.</p>
+    <p class="callout">The GitHub Pages URLs serve current <code>main</code>. The adapter refuses a core below its required minimum; it does not verify every change between versions. For a project you want to keep, pin both versions or keep tested local copies of both repositories.</p>
 
     <h2>5. Plotting for real, in every setup</h2>
     <p>Whichever wiring you pick, direct plotting needs the same three things:</p>
@@ -241,6 +252,11 @@ installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
       <li>A click on the drawing. <code>plot.go()</code> is written at the end of the drawing; the browser shows its port list only after a click, so the status line asks you to check the machine and click. That click is the confirmation. A second click stops.</li>
     </ul>
     <p>Park the carriage in the home corner by hand before the first plot; the machine has no homing. The driver refuses any point outside the profile's travel with an explicit error instead of moving.</p>
+
+    <figure class="doc-animation" id="animation-home-and-stop">
+      <img src="images/animations/home-and-stop.gif" width="600" height="400" loading="lazy" alt="The home corner, a completed route and a stop in the middle of a drawing.">
+      <figcaption>The machine has no automatic homing. Park the carriage at the home corner by hand before plotting. A normal completed job returns home by default; stopping raises the pen and releases the motors where it is. The animation is schematic.</figcaption>
+    </figure>
 
     <h2>Choosing</h2>
     <ul>

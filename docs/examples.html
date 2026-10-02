@@ -7,8 +7,8 @@
   <meta name="description" content="Seven p5.js sketches that plan for a pen plotter: from a first plot to a calibration sheet, a wave field and a spirograph.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=20261002c">
 </head>
 <body>
   <nav id="navbar">
@@ -27,8 +27,8 @@
     <main>
   <div class="ex-page-header">
     <div class="section-tag">p5.js addon library · v0.2.1</div>
-    <h1>p5.<span class="accent">penplotter</span> Examples</h1>
-    <p>Every preview is the example's own page, running live. Each one plots with P and stops with S; open it for the full sketch and its source. The wave examples load p5.waves, and plotting needs Chrome or Edge. Without a plotter you can still watch what the planner does with a sketch.</p>
+    <h1>Examples</h1>
+    <p>The previews run the example pages. First plot and Wave plot show planned routes without a hardware control. The other examples plot with a click on the drawing and stop with another click; open the page for its controls and source. Direct plotting uses Chrome or Edge and the tested iDraw HSE / A2.</p>
   </div>
   <section id="first_plot" class="section section-dark">
     <div class="section-header">
@@ -50,7 +50,7 @@ p.drawRoute(plot.plan());</code></pre>
     <div class="section-header">
       <div class="section-tag">twenty-four rows of one wave</div>
       <h2>Wave <span class="accent">plot</span></h2>
-      <p class="section-desc">Sample one of 35 wave formulas into 24 rows of points and inspect the planned route. p5.waves returns numbers; the adapter passes their points to the engine.</p>
+      <p class="section-desc">Sample a wave formula into 24 rows of points and inspect the planned route. The adapter passes the sampled points to the engine.</p>
     </div>
     <div class="ex-preview">
       <div class="ex-canvas"><iframe src="../examples/wave_plot/index.html?embed" title="Wave plot" loading="lazy"></iframe></div>
@@ -65,7 +65,7 @@ plot.polyline(points);</code></pre>
     <div class="section-header">
       <div class="section-tag">five lines, a frame, and the pen</div>
       <h2>Direct <span class="accent">plot</span></h2>
-      <p class="section-desc">Every <code>plot.…</code> call draws on the canvas and is remembered for the plotter. Click the drawing and the last frame goes to an iDraw HSE / A2, no SVG in between.</p>
+      <p class="section-desc">Supported shape calls draw on the canvas and record geometry for the pen. This example clears the recording for each drawing. Click to start a complete plot on an iDraw HSE / A2.</p>
     </div>
     <div class="ex-preview">
       <div class="ex-canvas"><iframe src="../examples/direct_plot/index.html?embed" title="Direct plot" loading="lazy"></iframe></div>
@@ -109,9 +109,9 @@ plot.hatch(cellAt(20 + i * 22, 45, 18), spacing, QUARTER_PI);
 
   <section id="wave_field" class="section">
     <div class="section-header">
-      <div class="section-tag">thirty-five fields, one seed each</div>
+      <div class="section-tag">a seed chooses the field</div>
       <h2>Wave <span class="accent">field</span></h2>
-      <p class="section-desc">Two waves, one per axis, give every point a direction; sixty lines follow it until they leave the frame. The seed picks the wave shape: thirty-five fields in one sketch.</p>
+      <p class="section-desc">Two waves, one per axis, give every point a direction; sixty lines follow it until they leave the frame. The seed picks the wave shape: different fields from different seeds.</p>
     </div>
     <div class="ex-preview">
       <div class="ex-canvas"><iframe src="../examples/wave_field/index.html?embed" title="Wave field" loading="lazy"></iframe></div>
@@ -143,7 +143,7 @@ plot.polyline(points);</code></pre>
     <div class="section-header">
       <div class="section-tag">a triangle nobody drew, dot by dot</div>
       <h2>Chaos <span class="accent">game</span></h2>
-      <p class="section-desc">One point jumps halfway to a random corner and leaves a dot; after a few hundred dots the Sierpinski triangle is there. The plan keeps the order of the game, so on paper it appears the way it appeared on screen: dot by dot, out of nothing, half an hour long.</p>
+      <p class="section-desc">One point jumps halfway to a random corner and leaves a dot; after a few hundred dots the Sierpinski triangle is there. The plan keeps the order of the game, so on paper it appears the way it appeared on screen: dot by dot, out of nothing, with a duration that depends on the plotting settings.</p>
     </div>
     <div class="ex-preview">
       <div class="ex-canvas"><iframe src="../examples/chaos_game/index.html?embed" title="Chaos game" loading="lazy"></iframe></div>
@@ -153,6 +153,7 @@ p.y = (p.y + c[1]) / 2;
 plot.point(p.x, p.y);
 plot.go({ plan: { strategy: "drawn" } });   // in the order of the game</code></pre>
 <a class="ex-full-link" href="../examples/chaos_game/index.html">-&gt; full example</a>
+<a class="ex-full-link" href="../examples/chaos_game/index.html#animation-chaos-game">-&gt; watch the triangle appear</a>
     </div>
   </section>
   <section class="section" style="padding:3rem 2rem;">

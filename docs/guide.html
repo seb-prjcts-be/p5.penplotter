@@ -6,8 +6,9 @@
   <title>Guide - p5.penplotter</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=20261002c">
+  <link rel="stylesheet" href="animations.css">
 </head>
 <body>
   <nav id="navbar">
@@ -26,16 +27,17 @@
   <main class="page">
     <header class="page-header">
       <div class="section-tag">p5.js addon library · v0.2.1</div>
-      <h1>p5.<span class="accent">penplotter</span> Guide</h1>
-      <p class="guide-intro">p5.penplotter stays small: install it, build paths, then draw the actual plan.</p>
+      <h1>Guide</h1>
+      <p class="guide-intro">Install the adapter, record shapes, then preview the planned route.</p>
     </header>
 
+    <p class="callout">This guide uses current source. Newer aliases and bed preview helpers are not all present in the latest tagged releases.</p>
     <h2>1. Load p5.js</h2>
-    <pre><code>&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
+    <pre><code class="language-markup">&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
 &lt;script type="module" src="sketch.js"&gt;&lt;/script&gt;</code></pre>
 
     <h2>2. Install the adapter</h2>
-    <pre><code>import { PlotterEngine } from "https://seb-prjcts-be.github.io/vanilla.penplotter/vanilla.penplotter.js";
+    <pre><code class="language-javascript">import { PlotterEngine } from "https://seb-prjcts-be.github.io/vanilla.penplotter/vanilla.penplotter.js";
 import { installP5Penplotter } from "https://seb-prjcts-be.github.io/p5.penplotter/p5.penplotter.js";
 
 installP5Penplotter(p5, PlotterEngine);</code></pre>
@@ -43,14 +45,14 @@ installP5Penplotter(p5, PlotterEngine);</code></pre>
 
     <h2>3. Global mode</h2>
     <p>A module creates no globals, so <code>function setup()</code> inside a module <code>sketch.js</code> is never seen by p5. For global mode, keep the imports in <code>index.html</code> and make <code>sketch.js</code> a plain script:</p>
-    <pre><code>&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
+    <pre><code class="language-markup">&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
 &lt;script type="module"&gt;
   import { PlotterEngine } from "https://seb-prjcts-be.github.io/vanilla.penplotter/vanilla.penplotter.js";
   import { installP5Penplotter } from "https://seb-prjcts-be.github.io/p5.penplotter/p5.penplotter.js";
   installP5Penplotter(p5, PlotterEngine);
 &lt;/script&gt;
 &lt;script src="sketch.js"&gt;&lt;/script&gt;</code></pre>
-    <pre><code>let plot;
+    <pre><code class="language-javascript">let plot;
 
 function setup() {
   createCanvas(800, 800);
@@ -61,7 +63,7 @@ function setup() {
     <p class="callout">The module runs after the page is read and before <code>load</code>, when p5 starts the sketch. All four wirings, with the timeline behind them, are in <a href="setup.html">Setup</a>.</p>
 
     <h2>4. Instance mode</h2>
-    <pre><code>new p5(function sketch(p) {
+    <pre><code class="language-javascript">new p5(function sketch(p) {
   p.setup = function setup() {
     p.createCanvas(800, 800);
     const plot = p.createPlotterEngine();
@@ -70,24 +72,25 @@ function setup() {
   };
 });</code></pre>
 
-    <h2>5. p5.waves</h2>
-    <p>Load p5.waves after p5.js. Sample it inside a regular loop and pass plain point objects to the plotter.</p>
-    <pre><code>const points = [];
+    <h2>5. Sampling a wave</h2>
+    <p>Sample a sine wave inside a regular loop and pass plain point objects to the plotter.</p>
+    <pre><code class="language-javascript">const points = [];
 for (let x = 40; x <= 760; x += 4) {
   points.push({
     x,
-    y: 400 + Waves.wave(x, {
-      wave: "triangle sine",
-      t: 0,
-      amplitude: 80
-    })
+    y: 400 + 80 * Math.sin(x * 0.04)
   });
 }
 plot.polyline(points);</code></pre>
 
+    <figure class="doc-animation" id="animation-waves">
+      <img src="images/animations/waves.gif" width="600" height="400" loading="lazy" alt="Different wave shapes are sampled and recorded as pen lines.">
+      <figcaption>A wave gives you a number; your loop decides where the line goes. Try changing the amplitude multiplier <code>80</code> above to <code>20</code>. For a different use of the same idea, open the <a href="../examples/wave_field/index.html">wave field</a> and press R for another seed.</figcaption>
+    </figure>
+
     <h2>6. Straight to the pen</h2>
-    <p>Hand the core's driver to the adapter. Every <code>plot.…</code> call then draws on the canvas and is remembered for the plotter; <code>plot.go()</code> sends it, no SVG in between. Write it where the drawing is finished; the status line then asks you to check the machine and click the drawing, and that click starts the pen. A second click stops it. Use Chrome or Edge, and park the carriage in the home corner first.</p>
-    <pre><code>import * as Ebb from "../vanilla.penplotter/src/driver/ebb.js";
+    <p>Hand the core's driver to the adapter. Every supported shape call then draws on the canvas and is remembered for the plotter; <code>plot.go()</code> sends it, no SVG in between. Write it where the drawing is finished; the status line then asks you to check the machine and click the drawing, and that click starts the pen. A second click stops it. Use Chrome or Edge, and park the carriage in the home corner first.</p>
+    <pre><code class="language-javascript">import * as Ebb from "../vanilla.penplotter/src/driver/ebb.js";
 installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
 
 let plot;
@@ -106,25 +109,65 @@ function draw() {
 }</code></pre>
     <p class="callout">Tested on one machine so far: an iDraw HSE / A2 with EBB firmware 3.0.2.</p>
 
+    <figure class="doc-animation" id="animation-plot-go">
+      <img src="images/animations/plot-go.gif" width="600" height="400" loading="lazy" alt="A p5 drawing is prepared on screen and then drawn by a plotter.">
+      <figcaption>Draw first, then click to plot. Click again to stop. This is an illustration of a complete drawing; machine speed and placement are schematic.</figcaption>
+    </figure>
+
     <h2>7. Shapes and fills</h2>
-    <p><code>plot.…</code> has the same 2D primitives as p5, with the same arguments: <code>point</code>, <code>line</code>, <code>circle</code>, <code>ellipse</code>, <code>arc</code>, <code>rect</code>, <code>square</code>, <code>triangle</code>, <code>quad</code>, plus <code>polyline</code> and <code>polygon</code>, which take <code>[x, y]</code> pairs or <code>{ x, y }</code> objects. Angles follow <code>angleMode()</code>. A point becomes a quarter-millimetre dash, because a pen cannot dot.</p>
-    <pre><code>plot.square(30, 10, 40);
+    <p><code>plot.…</code> has these 2D primitives, with the same arguments: <code>point</code>, <code>line</code>, <code>circle</code>, <code>ellipse</code>, <code>arc</code>, <code>rect</code>, <code>square</code>, <code>triangle</code>, <code>quad</code>, plus <code>polyline</code> and <code>polygon</code>, which take <code>[x, y]</code> pairs or <code>{ x, y }</code> objects. Angles follow <code>angleMode()</code>. A point becomes a quarter-millimetre dash, because a pen cannot dot.</p>
+    <pre><code class="language-javascript">plot.square(30, 10, 40);
 plot.triangle(80, 50, 120, 10, 160, 50);
 plot.arc(330, 30, 40, 40, 0, HALF_PI, PIE);
 plot.polygon([[0, 0], [40, 0], [40, 40]]);</code></pre>
+    <figure class="doc-animation" id="animation-shapes">
+      <img src="images/animations/shapes.gif" width="600" height="400" loading="lazy" alt="Lines, circles, rectangles and other p5 shapes are drawn on screen and paper.">
+      <figcaption>The familiar shapes also leave a record for the pen. Try replacing a circle with a triangle. Keep the coordinates; change what joins them.</figcaption>
+    </figure>
+
     <p>Fills come from the core and are drawn back on the canvas, so screen and paper show the same hatching. Spacing is in millimetres on the bed.</p>
-    <pre><code>let square = [[20, 80], [120, 80], [120, 180], [20, 180]];
+    <pre><code class="language-javascript">let square = [[20, 80], [120, 80], [120, 180], [20, 180]];
 plot.hatch(square, 3, PI / 4);   // spacing in mm, angle
 plot.crossHatch(square, 4);      // second direction at right angles
 plot.stipple(square, 150, 3);    // count, seed</code></pre>
 
+    <figure class="doc-animation" id="animation-fills">
+      <img src="images/animations/fills.gif" width="600" height="400" loading="lazy" alt="Hatch, cross-hatch and stipple appear on the p5 canvas and on paper.">
+      <figcaption>The pen has no paint bucket. Try doubling the hatch spacing above: the same shape uses fewer lines and reads lighter. A fixed stipple seed puts the same tiny marks in the same places.</figcaption>
+    </figure>
+
+    <figure class="doc-animation" id="animation-screen-and-pen">
+      <img src="images/animations/screen-and-pen.gif" width="600" height="400" loading="lazy" alt="Side by side: ordinary p5 drawing stays on screen; plot.line also records geometry for the pen.">
+      <figcaption><code>line()</code> draws on the screen. <code>plot.line()</code> also records the line for the pen. <code>background()</code> changes the screen; <code>plot.clear()</code> clears the recorded drawing.</figcaption>
+    </figure>
+
+    <figure class="doc-animation" id="animation-point-closeup">
+      <img src="images/animations/point-closeup.gif" width="600" height="400" loading="lazy" alt="A tiny plotted point is enlarged to reveal its short horizontal stroke.">
+      <figcaption>Zoom in on <code>plot.point()</code>: the recorded point is a 0.24 mm dash. A row of points becomes a texture, even though every mark is a very short line.</figcaption>
+    </figure>
+
     <h2>8. Continue in vanilla.penplotter</h2>
     <p>The returned object is the complete core engine. Use its layers, tools, hatch fills, optimizer, planner, statistics and exports without adapter-specific alternatives. With <code>createPlot()</code>, that engine is <code>plot.engine</code>.</p>
 
+    <figure class="doc-animation" id="animation-route">
+      <img src="images/animations/route.gif" width="600" height="400" loading="lazy" alt="The pen follows a planned route with less pen-up travel.">
+      <figcaption>Same marks, a different visiting order. Compare <code>plot.plan({ strategy: "drawn" })</code> with <code>plot.plan({ strategy: "nearest" })</code>. Keep the drawn order when watching the picture appear is part of the work.</figcaption>
+    </figure>
+
+    <figure class="doc-animation" id="animation-pens-and-layers">
+      <img src="images/animations/pens-and-layers.gif" width="600" height="400" loading="lazy" alt="Two pens draw separate layers; one layer can be excluded.">
+      <figcaption>One pen can draw the outline; another can draw the texture. Use <code>plot.engine.pen()</code> and <code>plot.engine.layer()</code>, and set the p5 screen colour separately with <code>stroke()</code>. The physical pen change is yours to make.</figcaption>
+    </figure>
+
+    <figure class="doc-animation" id="animation-svg-files">
+      <img src="images/animations/svg-files.gif" width="600" height="400" loading="lazy" alt="SVG geometry becomes a pen plan and can be exported in three file formats.">
+      <figcaption>A file can be a starting point too. <code>plot.engine.importSVG()</code> reads supported SVG geometry; the engine can then export SVG, HPGL or G-code. Try the engine’s <a href="../../vanilla.penplotter/examples/svg_to_pen/index.html">SVG to pen</a> page with a simple drawing of your own.</figcaption>
+    </figure>
+
     <h2>9. Copy-paste starters</h2>
-    <p>Three plain global-mode sketches. Wire them up with the <code>index.html</code> from <a href="setup.html">Setup 1</a>; each one plots with P and stops with S.</p>
+    <p>Three plain global-mode sketches. Wire them up with the <code>index.html</code> from <a href="setup.html">Setup 1</a>; each one writes <code>plot.go()</code> when ready: click the drawing to plot and click again to request a stop.</p>
     <h3>Rings</h3>
-    <pre><code>let plot;
+    <pre><code class="language-javascript">let plot;
 
 function setup() {
   createCanvas(600, 600);
@@ -140,20 +183,20 @@ function draw() {
   plot.go();   // click the drawing to plot
 }</code></pre>
     <h3>A wave, twenty times</h3>
-    <pre><code>function draw() {
+    <pre><code class="language-javascript">function draw() {
   background("#ffffff");
   noFill();
   plot.clear();
   for (let row = 0; row &lt; 20; row += 1) {
     let points = [];
     for (let x = 40; x &lt;= 560; x += 4) {
-      points.push([x, 60 + row * 25 + Waves.wave(x + row * 9, { wave: "triangle sine", t: 0, amplitude: 10, frequency: 0.03 })]);
+      points.push([x, 60 + row * 25 + 10 * Math.sin((x + row * 9) * 0.03)]);
     }
     plot.polyline(points);
   }
 }</code></pre>
     <h3>Tone from lines</h3>
-    <pre><code>function draw() {
+    <pre><code class="language-javascript">function draw() {
   background("#ffffff");
   noFill();
   plot.clear();
