@@ -1,5 +1,7 @@
 # p5.penplotter
 
+![From a p5 sketch to a planned drawing on paper](docs/images/animations/overview.gif)
+
 **[Open site](https://seb-prjcts-be.github.io/p5.penplotter/)** · **[Setup](https://seb-prjcts-be.github.io/p5.penplotter/docs/setup.html)** · **[Examples](https://seb-prjcts-be.github.io/p5.penplotter/docs/examples.html)** · **[vanilla.penplotter](https://github.com/seb-prjcts-be/vanilla.penplotter)**
 
 You sketch in p5.js the way you always do. Write `plot.line()` instead of `line()` and the same line is drawn on the canvas and remembered in millimetres. Write `plot.go()` when the drawing is done, click it, and it goes to the plotter. No intermediate SVG is required for direct plotting.
