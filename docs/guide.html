@@ -28,42 +28,44 @@
     <header class="page-header">
       <div class="section-tag">p5.js addon library · v0.2.1</div>
       <h1>Guide</h1>
-      <p class="guide-intro">Connect the adapter, record shapes, then preview the planned route.</p>
+      <p class="guide-intro">CDN links and JavaScript examples for your first pen drawing.</p>
     </header>
 
-    <p class="callout">This guide uses current source. Newer aliases and bed preview helpers are not all present in the latest tagged releases.</p>
-    <h2>1. Load p5.js</h2>
-    <pre><code class="language-markup">&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
-&lt;script type="module" src="sketch.js"&gt;&lt;/script&gt;</code></pre>
+    <h2 id="global-mode">1. Global mode: CDN starter</h2>
+    <p>Put these two files in the same folder, or use the matching files in the p5.js Web Editor. Open the folder through a web server. The sketch draws a line and a circle; it needs no plotter connection.</p>
+    <p>The imports load the libraries; <code>installP5Penplotter()</code> connects them to p5.js.</p>
+    <h3>index.html</h3>
+    <pre><code class="language-markup">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;My pen drawing&lt;/title&gt;
+  &lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
+  &lt;script type="module"&gt;
+    import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.3.1/vanilla.penplotter.js";
+    import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.1/p5.penplotter.js";
+    installP5Penplotter(p5, PlotterEngine);
+  &lt;/script&gt;
+  &lt;script src="sketch.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+    <h3>sketch.js</h3>
+    <pre><code class="language-javascript">function setup() {
+  createCanvas(600, 600);
+  background(255);
+  noLoop();
 
-    <h2>2. Connect the adapter</h2>
-    <p>The imports load the two libraries. Calling <code>installP5Penplotter(p5, PlotterEngine)</code> then connects them to p5.js and makes the plotter methods available in your sketch.</p>
-    <pre><code class="language-javascript">import { PlotterEngine } from "https://seb-prjcts-be.github.io/vanilla.penplotter/vanilla.penplotter.js";
-import { installP5Penplotter } from "https://seb-prjcts-be.github.io/p5.penplotter/p5.penplotter.js";
-
-installP5Penplotter(p5, PlotterEngine);</code></pre>
-    <p class="callout">Both URLs serve the latest <code>main</code>. To pin a version, load both libraries from jsDelivr on a tag, for example <code>https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.3.1/vanilla.penplotter.js</code>.</p>
-
-    <h2>3. Global mode</h2>
-    <p>A module creates no globals, so <code>function setup()</code> inside a module <code>sketch.js</code> is never seen by p5. For global mode, keep the imports in <code>index.html</code> and make <code>sketch.js</code> a plain script:</p>
-    <pre><code class="language-markup">&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
-&lt;script type="module"&gt;
-  import { PlotterEngine } from "https://seb-prjcts-be.github.io/vanilla.penplotter/vanilla.penplotter.js";
-  import { installP5Penplotter } from "https://seb-prjcts-be.github.io/p5.penplotter/p5.penplotter.js";
-  installP5Penplotter(p5, PlotterEngine);
-&lt;/script&gt;
-&lt;script src="sketch.js"&gt;&lt;/script&gt;</code></pre>
-    <pre><code class="language-javascript">let plot;
-
-function setup() {
-  createCanvas(800, 800);
-  plot = createPlotterEngine();
-  plot.line(40, 40, 760, 760);
-  drawRoute(plot.plan());
+  const plot = createPlotterEngine();
+  plot.line(60, 60, 540, 540);
+  plot.circle(300, 300, 180);
+  drawPlotPlan(plot.plan());
 }</code></pre>
-    <p class="callout">The module runs after the page is read and before <code>load</code>, when p5 starts the sketch. All four wirings, with the timeline behind them, are in <a href="setup.html">Setup</a>.</p>
+    <p>The CDN links pin p5.js to <code>2.2.2</code>, the engine to <code>v0.3.1</code> and the adapter to <code>v0.2.1</code>. This tagged adapter uses <code>drawPlotPlan()</code>. The imports stay in <code>index.html</code>; <code>sketch.js</code> is a plain script so p5 can find <code>setup()</code>.</p>
+    <p class="callout">The remaining examples use current source. Newer aliases such as <code>drawRoute()</code> and bed preview helpers are not all present in the latest tagged releases. See <a href="setup.html">Setup</a> for the other ways to connect the files.</p>
 
-    <h2>4. Instance mode</h2>
+    <h2>2. Instance mode</h2>
     <pre><code class="language-javascript">new p5(function sketch(p) {
   p.setup = function setup() {
     p.createCanvas(800, 800);
@@ -73,7 +75,7 @@ function setup() {
   };
 });</code></pre>
 
-    <h2>5. Sampling a wave</h2>
+    <h2>3. Sampling a wave</h2>
     <p>Sample a sine wave inside a regular loop and pass plain point objects to the plotter.</p>
     <pre><code class="language-javascript">const points = [];
 for (let x = 40; x <= 760; x += 4) {
@@ -89,7 +91,7 @@ plot.polyline(points);</code></pre>
       <figcaption>A wave gives you a number; your loop decides where the line goes. Try changing the amplitude multiplier <code>80</code> above to <code>20</code>. For a different use of the same idea, open the <a href="../examples/wave_field/index.html">wave field</a> and press R for another seed.</figcaption>
     </figure>
 
-    <h2>6. Straight to the pen</h2>
+    <h2>4. Straight to the pen</h2>
     <p>Hand the core's driver to the adapter. Every supported shape call then draws on the canvas and is remembered for the plotter; <code>plot.go()</code> sends it, no SVG in between. Write it where the drawing is finished; the status line then asks you to check the machine and click the drawing, and that click starts the pen. A second click stops it. Use Chrome or Edge, and park the carriage in the home corner first.</p>
     <pre><code class="language-javascript">import * as Ebb from "../vanilla.penplotter/src/driver/ebb.js";
 installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
@@ -115,7 +117,7 @@ function draw() {
       <figcaption>Draw first, then click to plot. Click again to stop. This is an illustration of a complete drawing; machine speed and placement are schematic.</figcaption>
     </figure>
 
-    <h2>7. Shapes and fills</h2>
+    <h2>5. Shapes and fills</h2>
     <p><code>plot.…</code> has these 2D primitives, with the same arguments: <code>point</code>, <code>line</code>, <code>circle</code>, <code>ellipse</code>, <code>arc</code>, <code>rect</code>, <code>square</code>, <code>triangle</code>, <code>quad</code>, plus <code>polyline</code> and <code>polygon</code>, which take <code>[x, y]</code> pairs or <code>{ x, y }</code> objects. Angles follow <code>angleMode()</code>. A point becomes a quarter-millimetre dash, because a pen cannot dot.</p>
     <pre><code class="language-javascript">plot.square(30, 10, 40);
 plot.triangle(80, 50, 120, 10, 160, 50);
@@ -147,7 +149,7 @@ plot.stipple(square, 150, 3);    // count, seed</code></pre>
       <figcaption>Zoom in on <code>plot.point()</code>: the recorded point is a 0.24 mm dash. A row of points becomes a texture, even though every mark is a very short line.</figcaption>
     </figure>
 
-    <h2>8. Continue in vanilla.penplotter</h2>
+    <h2>6. Continue in vanilla.penplotter</h2>
     <p>The returned object is the complete core engine. Use its layers, tools, hatch fills, optimizer, planner, statistics and exports without adapter-specific alternatives. With <code>createPlot()</code>, that engine is <code>plot.engine</code>.</p>
 
     <figure class="doc-animation" id="animation-route">
@@ -165,7 +167,7 @@ plot.stipple(square, 150, 3);    // count, seed</code></pre>
       <figcaption>Ochre shows the imported geometry becoming pen strokes. Sage connectors lead from one plan to three export formats; those connectors explain the workflow and are not plotter travel. A file can be a starting point too. <code>plot.engine.importSVG()</code> reads supported SVG geometry; the engine can then export SVG, HPGL or G-code. Try the engine’s <a href="../../vanilla.penplotter/examples/svg_to_pen/index.html">SVG to pen</a> page with a simple drawing of your own.</figcaption>
     </figure>
 
-    <h2>9. Copy-paste starters</h2>
+    <h2>7. Copy-paste starters</h2>
     <p>Three plain global-mode sketches. Wire them up with the <code>index.html</code> from <a href="setup.html">Setup 1</a>; each one writes <code>plot.go()</code> when ready: click the drawing to plot and click again to request a stop.</p>
     <h3>Rings</h3>
     <pre><code class="language-javascript">let plot;

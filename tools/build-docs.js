@@ -54,6 +54,11 @@ export function renderMarkdown(markdown) {
       while (index < lines.length && !lines[index].startsWith("```")) code.push(lines[index++]);
       html.push(`<pre><code class="language-${language === "js" ? "javascript" : language === "html" ? "markup" : language || "none"}">${escapeHtml(code.join("\n"))}</code></pre>`);
       index += 1;
+    } else if (/^!\[.*\]\([^\s)]+\)$/.test(line.trim())) {
+      flush();
+      const [, caption, src] = line.trim().match(/^!\[(.*)\]\(([^\s)]+)\)$/);
+      html.push(`<figure class="doc-animation"><img src="${escapeHtml(src)}" width="600" height="400" loading="lazy" alt="${escapeHtml(caption).replaceAll('"', '&quot;')}"><figcaption>${inline(caption)}</figcaption></figure>`);
+      index += 1;
     } else if (/^#{1,3} /.test(line)) {
       flush();
       const level = line.match(/^#+/)[0].length;
@@ -101,6 +106,7 @@ export function renderPage(page, markdown) {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=20261002c">
+  <link rel="stylesheet" href="animations.css">
 </head>
 <body>
   <nav id="navbar">
