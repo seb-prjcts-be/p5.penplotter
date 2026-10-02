@@ -112,6 +112,12 @@ function draw() {
 }</code></pre>
     <p>A 400 × 250 pixel canvas with <code>createPlot({ x: 80, y: 150, width: 80 })</code> maps to an 80 × 50 mm area on the bed. The rectangle from (10, 10) to (390, 240) occupies 76 × 46 mm inside it. <code>x</code> and <code>y</code> place the canvas area in millimetres from home; they do not set its size.</p>
     <p>Paper is a separate choice: A4 is 210 × 297 mm in portrait or 297 × 210 mm in landscape. A3 is 297 × 420 mm; A2 is 420 × 594 mm. Changing the paper does not resize the drawing. The HSE/A2 bed is 594 × 432 mm, with X along the long rail. Place and orient your paper inside that area, then choose the drawing’s width and position.</p>
+    <p>Show the actual sheet separately from the canvas area:</p>
+    <pre><code class="language-javascript">// After recording the drawing; bedCanvas is a separate HTML canvas.
+plot.drawBed(bedCanvas, {
+  sheet: { x: 60, y: 100, width: 210, height: 297 } // A4 portrait, mm
+});</code></pre>
+    <p>This shades the A4 paper and draws the planned strokes at their existing position. It does not move or scale them. Without <code>sheet</code>, the shaded area is the mapped canvas. To place A4 in landscape, use width 297 and height 210; that changes the paper preview only. For quarter-turn placement of a complete job, use the core’s <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/examples/first_job/">paper and bed panel</a>. Both previews require current-source imports as described in <a href="setup.html">Setup</a>.</p>
     <p class="callout">Tested on one machine so far: an iDraw HSE / A2 with EBB firmware 3.0.2.</p>
 
     <figure class="doc-animation" id="animation-plot-go">

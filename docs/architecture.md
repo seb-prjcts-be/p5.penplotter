@@ -6,6 +6,8 @@ You draw with p5.js. The supported `plot.line()`, `plot.circle()` and other shap
 
 The adapter converts canvas coordinates to millimetres using the width and offset passed to `createPlot()`. A p5 circle takes a diameter; the core receives a radius. A point becomes a short dash on paper.
 
+Paper and canvas area can have different sizes and positions. `plot.drawBed(canvas, { sheet: { x, y, width, height } })` shows the actual sheet in millimetres alongside the planned strokes. Without `sheet`, it shades the canvas area mapped by `createPlot()`. This preview does not alter the plan or rotate the drawing; p5 screen transforms are still not captured.
+
 ## What is recorded
 
 The plot keeps the shapes recorded since the last `plot.clear()`. To record one frame, clear at its start. For a stable drawing, use `noLoop()` and redraw when you choose a new seed.

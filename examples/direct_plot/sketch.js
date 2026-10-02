@@ -14,6 +14,8 @@ try {
 
 // Where the canvas lands on the bed, in millimetres from the home corner.
 const PLACE = { x: 80, y: 150, width: 80 };
+// Actual A4 paper, independent of the 80 x 50 mm canvas area.
+const PAPER = { x: 60, y: 100, width: 210, height: 297 };
 
 let waveSeed = Math.floor(Math.random() * 34);
 
@@ -54,7 +56,7 @@ new p5(function directPlotSketch(p) {
       plot.polyline(points);
     }
     document.querySelector("#paths").textContent = String(plot.plan().stats.paths);
-    plot.drawBed(document.querySelector("#bed"));   // where the canvas lands on the paper
+    plot.drawBed(document.querySelector("#bed"), { sheet: PAPER });
     plot.go();   // ready: click the drawing to plot, click again to stop
   };
 

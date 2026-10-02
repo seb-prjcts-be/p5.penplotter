@@ -251,15 +251,15 @@ export class P5Plot {
     return this.engine.plan(options);
   }
 
-  // The bed as the machine sees it, with your canvas as the sheet on it:
-  // where it lands, how big it is, and whether it fits. canvas is an HTML
+  // The bed as the machine sees it. Supply sheet (mm) for actual paper;
+  // otherwise show the mapped canvas area. canvas is an HTML
   // canvas; it keeps the bed's proportions (594 by 432 for the iDraw).
-  drawBed(canvas) {
+  drawBed(canvas, options = {}) {
     if (typeof this.engine.drawBed !== "function") {
-      throw new Error("plot.drawBed() needs vanilla.penplotter 0.3.2 or newer.");
+      throw new Error("plot.drawBed() needs a vanilla.penplotter build with drawBed(). See Setup for current-source imports.");
     }
     const bed = this.kit?.EBB_PROFILES?.[this.profileId]?.travel || this.engine.document.page;
-    const sheet = { x: this.offset.x, y: this.offset.y, width: this.p.width * this.scale, height: this.p.height * this.scale };
+    const sheet = options.sheet ?? { x: this.offset.x, y: this.offset.y, width: this.p.width * this.scale, height: this.p.height * this.scale };
     const context = typeof canvas.getContext === "function" ? canvas.getContext("2d") : canvas;
     this.engine.drawBed(context, { bed, sheet });
     return this;

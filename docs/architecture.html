@@ -33,6 +33,7 @@
 <h2>Screen and paper</h2>
 <p>You draw with p5.js. The supported <code>plot.line()</code>, <code>plot.circle()</code> and other shape calls draw on the canvas and also record points for the pen. <code>vanilla.penplotter</code> cleans up those points, plans their route and supplies the machine driver.</p>
 <p>The adapter converts canvas coordinates to millimetres using the width and offset passed to <code>createPlot()</code>. A p5 circle takes a diameter; the core receives a radius. A point becomes a short dash on paper.</p>
+<p>Paper and canvas area can have different sizes and positions. <code>plot.drawBed(canvas, { sheet: { x, y, width, height } })</code> shows the actual sheet in millimetres alongside the planned strokes. Without <code>sheet</code>, it shades the canvas area mapped by <code>createPlot()</code>. This preview does not alter the plan or rotate the drawing; p5 screen transforms are still not captured.</p>
 <h2>What is recorded</h2>
 <p>The plot keeps the shapes recorded since the last <code>plot.clear()</code>. To record one frame, clear at its start. For a stable drawing, use <code>noLoop()</code> and redraw when you choose a new seed.</p>
 <p>Screen transforms such as <code>translate()</code> and <code>rotate()</code>, p5 fill and stroke styling, and changes to <code>rectMode()</code> or <code>ellipseMode()</code> are not recorded. The pen geometry uses corner rectangles and centred ellipses. Use explicit coordinates and the plot's engine tools and layers for paper.</p>

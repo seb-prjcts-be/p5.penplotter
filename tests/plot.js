@@ -144,6 +144,15 @@ async function testAgainstRealCore() {
   installP5Penplotter(FakeP5, PlotterEngine, { driver: Ebb });
   const plot = new FakeP5().createPlot({ x: 80, y: 70, width: 200 });
   plot.line(0, 0, 80, 0); // 80 px -> 40 mm along X
+  const beforePreview = JSON.stringify(plot.plan());
+  const rectangles = [];
+  const context = {
+    canvas: { width: 594, height: 432 }, beginPath() {}, moveTo() {}, lineTo() {}, arc() {}, fill() {}, fillText() {}, translate() {}, rotate() {}, stroke() {}, strokeRect() {}, clearRect() {}, save() {}, restore() {},
+    fillRect: (...args) => rectangles.push(args)
+  };
+  plot.drawBed(context, { sheet: { x: 60, y: 50, width: 297, height: 210 } });
+  assert.deepEqual(rectangles[1], [60, 50, 297, 210], "real core renders the separately supplied A4 sheet");
+  assert.equal(JSON.stringify(plot.plan()), beforePreview, "preview preserves the actual machine plan");
   const compiled = Ebb.compileEbbPlan(plot.plan({ strategy: "input" }), { drawSpeed: 10 });
   // One pen-down stroke, whatever the core splits it into: constant-speed SM
   // moves (core 0.2) or accelerating LM phases (core 0.3+).
@@ -232,6 +241,20 @@ function testDegrees() {
 }
 
 testDrawsAndRecords();
+// A canvas area is not the paper: show the sheet independently without
+// changing the geometry that will be sent to the core.
+{
+  installP5Penplotter(FakeP5, FakeEngine, { driver: fakeKit([]) });
+  const plot = new FakeP5().createPlot({ x: 80, y: 70, width: 200 });
+  let preview;
+  plot.engine.drawBed = (context, options) => { preview = options; };
+  const sheet = { x: 60, y: 50, width: 297, height: 210 };
+  plot.drawBed({ canvas: {} }, { sheet });
+  assert.deepEqual(preview.sheet, sheet, "actual paper has its own size and position");
+  assert.deepEqual(plot.toMm(0, 0), { x: 80, y: 70 }, "paper preview does not move the drawing");
+  plot.drawBed({ canvas: {} });
+  assert.deepEqual(preview.sheet, { x: 80, y: 70, width: 200, height: 150 }, "existing canvas-area preview stays compatible");
+}
 testShapes();
 testDegrees();
 testDefaultsToOneMillimetrePerPixel();
