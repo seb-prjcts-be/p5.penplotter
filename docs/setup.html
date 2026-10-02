@@ -18,8 +18,8 @@
       <li><a href="../index.html">Showcase</a></li>
       <li><a href="examples.html">Examples</a></li>
       <li><a href="setup.html" class="active">Setup</a></li>
-      <li><a href="architecture.html">Architecture</a></li>
       <li><a href="guide.html">Guide</a></li>
+      <li><a href="architecture.html">Architecture</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">GitHub</a></li>
     </ul>
@@ -28,7 +28,7 @@
     <header class="page-header">
       <div class="section-tag">p5.js addon library · v0.2.1</div>
       <h1>Setup</h1>
-      <p class="guide-intro">Four ways to wire the same adapter and the same engine into a sketch: a plain p5 sketch with <code>function setup()</code>, a sketch as a module, a module that publishes its globals, and import maps. Only the wiring changes. Start at 1 and stop where you are comfortable.</p>
+      <p class="guide-intro">Four ways to wire the same adapter and the same engine into a sketch: a plain p5 sketch with <code>function setup()</code>, a sketch as a module, a module that publishes its globals, and import maps. Only the wiring changes. For a first drawing, use setup 1; the other setups are alternatives, not further required steps.</p>
     </header>
 
     <figure class="doc-animation" id="animation-dependencies">
@@ -36,24 +36,17 @@
       <figcaption>Your sketch stays on top. p5.penplotter records its shapes; vanilla.penplotter plans the route and talks to the machine.</figcaption>
     </figure>
 
-    <h2>The one fact everything hinges on</h2>
-    <p><code>p5.penplotter</code> and <code>vanilla.penplotter</code> are ES modules: files that use <code>import</code> and <code>export</code>. A module has two properties that decide every setup below.</p>
+    <h2 id="choose">Choose a setup</h2>
     <ul>
-      <li><strong>A module creates no globals.</strong> A <code>function setup()</code> written inside a module is invisible to p5, because p5's global mode looks for <code>window.setup</code>.</li>
-      <li><strong>A module script is deferred.</strong> The browser runs it after the whole page has been read, but before the <code>load</code> event fires.</li>
+      <li><strong>Teaching, Web Editor, "just draw"</strong>: <a href="#global-mode">setup 1</a>. The sketch is indistinguishable from any other p5 sketch.</li>
+      <li><strong>Library work, examples, tests</strong>: <a href="#instance-mode">setup 2</a>. Explicit, self-contained, no load-order assumptions.</li>
+      <li><strong>One file, no prefix</strong>: <a href="#module-globals">setup 3</a>, and remember the <code>window.</code> lines.</li>
+      <li><strong>Working on the libraries</strong>: <a href="#import-maps">setup 4</a> on top of any of the above.</li>
     </ul>
-    <p>p5 starts a global-mode sketch on <code>load</code>. So the timeline of a page is always:</p>
-    <pre><code class="language-none">1. p5.js loads                          (classic script, runs at once)
-2. classic scripts run in order         (your sketch.js defines setup/draw)
-3. page fully read
-4. module scripts run                   (the adapter is installed here)
-5. DOMContentLoaded
-6. load  →  p5 calls window.setup()     (createPlot already exists)</code></pre>
-    <p>Everything that follows is a way of placing the three <code>import</code> lines somewhere on that timeline.</p>
-
-    <h2>1. Global mode, wiring in index.html</h2>
+    <p>None of these is a compromise. The connection is explicit in all four (a design decision, see <a href="architecture.html">Architecture</a>) and the adapter has no idea which one you picked.</p>
+    <h2 id="global-mode">1. Global mode, wiring in index.html</h2>
     <p class="callout">Start here. This is the setup for a classroom, for the p5.js Web Editor, and for anyone who wants <code>sketch.js</code> to look like every other p5 sketch.</p>
-    <p>The imports live in <code>index.html</code>, inside one inline module. <code>sketch.js</code> is a plain script with no imports at all.</p>
+    <p>The imports pin the same source commits as the <a href="guide.html#global-mode">Guide starter</a>. They live in <code>index.html</code>, inside one inline module. <code>sketch.js</code> is a plain script with no imports at all.</p>
     <h3>index.html</h3>
     <pre><code class="language-javascript">&lt;!DOCTYPE html&gt;
 &lt;html lang="en"&gt;
@@ -62,9 +55,9 @@
   &lt;title&gt;penplotter start&lt;/title&gt;
   &lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
   &lt;script type="module"&gt;
-    import { PlotterEngine } from "https://seb-prjcts-be.github.io/vanilla.penplotter/vanilla.penplotter.js";
-    import * as Ebb from "https://seb-prjcts-be.github.io/vanilla.penplotter/src/driver/ebb.js";
-    import { installP5Penplotter } from "https://seb-prjcts-be.github.io/p5.penplotter/p5.penplotter.js";
+    import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@9f19656703c94dc970c0233135cdc9a66cda3f3f/vanilla.penplotter.js";
+    import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@9f19656703c94dc970c0233135cdc9a66cda3f3f/src/driver/ebb.js";
+    import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@3e7948bda7e7b9dbd9c7873805e8dee811260169/p5.penplotter.js";
     installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
   &lt;/script&gt;
   &lt;script src="sketch.js"&gt;&lt;/script&gt;
@@ -114,15 +107,30 @@ function draw() {
       <li>An older version keeps showing up after an update: reload with Ctrl+F5 to drop the browser's cached module.</li>
     </ul>
 
-    <h2>2. Instance mode, sketch as a module</h2>
-    <p>The README's default. The three imports move into <code>sketch.js</code>, which becomes a module. Because a module creates no globals, the sketch hands itself to p5 explicitly with <code>new p5(…)</code>, and every p5 call gets a <code>p.</code> in front.</p>
+    <h2>The one fact everything hinges on</h2>
+    <p><code>p5.penplotter</code> and <code>vanilla.penplotter</code> are ES modules: files that use <code>import</code> and <code>export</code>. A module has two properties that decide every setup below.</p>
+    <ul>
+      <li><strong>A module creates no globals.</strong> A <code>function setup()</code> written inside a module is invisible to p5, because p5's global mode looks for <code>window.setup</code>.</li>
+      <li><strong>A module script is deferred.</strong> The browser runs it after the whole page has been read, but before the <code>load</code> event fires.</li>
+    </ul>
+    <p>p5 starts a global-mode sketch on <code>load</code>. So the timeline of a page is always:</p>
+    <pre><code class="language-none">1. p5.js loads                          (classic script, runs at once)
+2. classic scripts run in order         (your sketch.js defines setup/draw)
+3. page fully read
+4. module scripts run                   (the adapter is installed here)
+5. DOMContentLoaded
+6. load  →  p5 calls window.setup()     (createPlot already exists)</code></pre>
+    <p>Everything that follows is a way of placing the three <code>import</code> lines somewhere on that timeline.</p>
+
+    <h2 id="instance-mode">2. Instance mode, sketch as a module</h2>
+    <p>An alternative for a sketch with its own p5 instance. The three imports move into <code>sketch.js</code>, which becomes a module. Because a module creates no globals, the sketch hands itself to p5 explicitly with <code>new p5(…)</code>, and every p5 call gets a <code>p.</code> in front.</p>
     <h3>index.html</h3>
     <pre><code class="language-markup">&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
 &lt;script type="module" src="sketch.js"&gt;&lt;/script&gt;</code></pre>
     <h3>sketch.js</h3>
-    <pre><code class="language-javascript">import { PlotterEngine } from "https://seb-prjcts-be.github.io/vanilla.penplotter/vanilla.penplotter.js";
-import * as Ebb from "https://seb-prjcts-be.github.io/vanilla.penplotter/src/driver/ebb.js";
-import { installP5Penplotter } from "https://seb-prjcts-be.github.io/p5.penplotter/p5.penplotter.js";
+    <pre><code class="language-javascript">import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@9f19656703c94dc970c0233135cdc9a66cda3f3f/vanilla.penplotter.js";
+import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@9f19656703c94dc970c0233135cdc9a66cda3f3f/src/driver/ebb.js";
+import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@3e7948bda7e7b9dbd9c7873805e8dee811260169/p5.penplotter.js";
 
 installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
 
@@ -156,15 +164,15 @@ new p5(function sketch(p) {
     <h3>What it costs</h3>
     <p>The <code>p.</code> prefix on every p5 call, and <code>p.key</code> instead of <code>key</code>. For beginners that is a real cost; for a library author it is the honest form.</p>
 
-    <h2>3. Global mode from a module</h2>
+    <h2 id="module-globals">3. Global mode from a module</h2>
     <p>A middle road, and the clearest demonstration of what global mode actually is. The sketch stays a module with its own imports, but it publishes its functions on <code>window</code> itself.</p>
     <h3>index.html</h3>
     <pre><code class="language-markup">&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
 &lt;script type="module" src="sketch.js"&gt;&lt;/script&gt;</code></pre>
     <h3>sketch.js</h3>
-    <pre><code class="language-javascript">import { PlotterEngine } from "https://seb-prjcts-be.github.io/vanilla.penplotter/vanilla.penplotter.js";
-import * as Ebb from "https://seb-prjcts-be.github.io/vanilla.penplotter/src/driver/ebb.js";
-import { installP5Penplotter } from "https://seb-prjcts-be.github.io/p5.penplotter/p5.penplotter.js";
+    <pre><code class="language-javascript">import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@9f19656703c94dc970c0233135cdc9a66cda3f3f/vanilla.penplotter.js";
+import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@9f19656703c94dc970c0233135cdc9a66cda3f3f/src/driver/ebb.js";
+import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@3e7948bda7e7b9dbd9c7873805e8dee811260169/p5.penplotter.js";
 
 installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
 
@@ -194,7 +202,7 @@ window.draw = draw;</code></pre>
     <h3>When to use it</h3>
     <p>When you want one file and no <code>p.</code> prefix, and you are fine with the <code>window.</code> lines at the bottom. Every p5 callback you use (<code>mousePressed</code>, <code>windowResized</code>) needs its own line. Forget one and p5 silently never calls it.</p>
 
-    <h2>4. Import maps and local neighbours</h2>
+    <h2 id="import-maps">4. Import maps and local neighbours</h2>
     <p>Two refinements for development. Both change only where the modules come from, not how the sketch is written; they combine with setup 1, 2 or 3.</p>
     <h3>Local neighbours</h3>
     <p>While working on the libraries themselves, load them from sibling folders instead of GitHub Pages. This is how the repository's own examples are wired, on localhost and on the published site alike:</p>
@@ -208,9 +216,9 @@ import { installP5Penplotter } from "../p5.penplotter/p5.penplotter.js";</code><
 &lt;script type="importmap"&gt;
 {
   "imports": {
-    "vanilla.penplotter": "https://seb-prjcts-be.github.io/vanilla.penplotter/vanilla.penplotter.js",
-    "vanilla.penplotter/driver/ebb": "https://seb-prjcts-be.github.io/vanilla.penplotter/src/driver/ebb.js",
-    "p5.penplotter": "https://seb-prjcts-be.github.io/p5.penplotter/p5.penplotter.js"
+    "vanilla.penplotter": "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@9f19656703c94dc970c0233135cdc9a66cda3f3f/vanilla.penplotter.js",
+    "vanilla.penplotter/driver/ebb": "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@9f19656703c94dc970c0233135cdc9a66cda3f3f/src/driver/ebb.js",
+    "p5.penplotter": "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@3e7948bda7e7b9dbd9c7873805e8dee811260169/p5.penplotter.js"
   }
 }
 &lt;/script&gt;
@@ -266,14 +274,6 @@ installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
       <figcaption>The machine has no automatic homing. Park the carriage at the home corner by hand before plotting. A normal completed job returns home by default; stopping raises the pen and releases the motors where it is. The animation is schematic.</figcaption>
     </figure>
 
-    <h2>Choosing</h2>
-    <ul>
-      <li><strong>Teaching, Web Editor, "just draw"</strong>: setup 1. The sketch is indistinguishable from any other p5 sketch.</li>
-      <li><strong>Library work, examples, tests</strong>: setup 2. Explicit, self-contained, no load-order assumptions.</li>
-      <li><strong>One file, no prefix</strong>: setup 3, and remember the <code>window.</code> lines.</li>
-      <li><strong>Working on the libraries</strong>: setup 4 on top of any of the above.</li>
-    </ul>
-    <p>None of these is a compromise. The connection is explicit in all four (a design decision, see <a href="architecture.html">Architecture</a>) and the adapter has no idea which one you picked.</p>
   </main>
   <footer>
     <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; <a href="about.html">About</a> &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine</p>

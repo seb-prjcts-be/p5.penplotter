@@ -18,8 +18,8 @@
       <li><a href="../index.html">Showcase</a></li>
       <li><a href="examples.html" class="active">Examples</a></li>
       <li><a href="setup.html">Setup</a></li>
-      <li><a href="architecture.html">Architecture</a></li>
       <li><a href="guide.html">Guide</a></li>
+      <li><a href="architecture.html">Architecture</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">GitHub</a></li>
     </ul>
@@ -28,39 +28,8 @@
   <div class="ex-page-header">
     <div class="section-tag">p5.js addon library · v0.2.1</div>
     <h1>Examples</h1>
-    <p>The previews run the example pages. First plot and Wave plot show planned routes without a hardware control. The other examples plot with a click on the drawing and stop with another click; open the page for its controls and source. Direct plotting uses Chrome or Edge and the tested iDraw HSE / A2.</p>
+    <p>The previews run the example pages. Start with Direct plot for the draw-and-record route; drawing works before connecting hardware. First plot and Wave plot, later on this page, show the advanced core-engine route without a hardware control. The other examples plot with a click on the drawing and stop with another click; open the page for its controls and source. Direct plotting uses Chrome or Edge and the tested iDraw HSE / A2.</p>
   </div>
-  <section id="first_plot" class="section section-dark">
-    <div class="section-header">
-      <div class="section-tag">what the planner made of your sketch</div>
-      <h2>First <span class="accent">plot</span></h2>
-      <p class="section-desc">Create the core engine from a p5 canvas, build a hatched polygon and a circle, and draw the optimized plan back with p5: the same order and seams the machine would get.</p>
-    </div>
-    <div class="ex-preview">
-      <div class="ex-canvas"><iframe src="../examples/first_plot/index.html?embed" title="First plot" loading="lazy"></iframe></div>
-<pre class="ex-code-block"><code class="language-javascript">const plot = p.createPlotterEngine();
-plot.hatch(boundary, { spacing: 14, angle: Math.PI / 6 });
-plot.circle(324, 374, 126);
-p.drawRoute(plot.plan());</code></pre>
-<a class="ex-full-link" href="../examples/first_plot/index.html">-&gt; full example</a>
-    </div>
-  </section>
-
-  <section id="wave_plot" class="section">
-    <div class="section-header">
-      <div class="section-tag">twenty-four rows of one wave</div>
-      <h2>Wave <span class="accent">plot</span></h2>
-      <p class="section-desc">Sample a wave formula into 24 rows of points and inspect the planned route. The adapter passes the sampled points to the engine.</p>
-    </div>
-    <div class="ex-preview">
-      <div class="ex-canvas"><iframe src="../examples/wave_plot/index.html?embed" title="Wave plot" loading="lazy"></iframe></div>
-<pre class="ex-code-block"><code class="language-javascript">const waveY = Waves.wave(x + row * 7, { wave: waveSeed, t: 0, amplitude: 22, frequency: 0.045 });
-points.push({ x, y: 86 + row * 24 + waveY });
-plot.polyline(points);</code></pre>
-<a class="ex-full-link" href="../examples/wave_plot/index.html">-&gt; full example</a>
-    </div>
-  </section>
-
   <section id="direct_plot" class="section section-dark">
     <div class="section-header">
       <div class="section-tag">five lines, a frame, and the pen</div>
@@ -157,6 +126,37 @@ plot.go({ plan: { strategy: "drawn" } });   // in the order of the game</code></
 <a class="ex-full-link" href="../examples/chaos_game/index.html#animation-chaos-game">-&gt; watch the triangle appear</a>
     </div>
   </section>
+  <section id="first_plot" class="section section-dark">
+    <div class="section-header">
+      <div class="section-tag">what the planner made of your sketch</div>
+      <h2>First <span class="accent">plot</span></h2>
+      <p class="section-desc">Create the core engine from a p5 canvas, build a hatched polygon and a circle, and draw the optimized plan back with p5: the same order and seams the machine would get.</p>
+    </div>
+    <div class="ex-preview">
+      <div class="ex-canvas"><iframe src="../examples/first_plot/index.html?embed" title="First plot" loading="lazy"></iframe></div>
+<pre class="ex-code-block"><code class="language-javascript">const plot = p.createPlotterEngine();
+plot.hatch(boundary, { spacing: 14, angle: Math.PI / 6 });
+plot.circle(324, 374, 126);
+p.drawRoute(plot.plan());</code></pre>
+<a class="ex-full-link" href="../examples/first_plot/index.html">-&gt; full example</a>
+    </div>
+  </section>
+
+  <section id="wave_plot" class="section">
+    <div class="section-header">
+      <div class="section-tag">twenty-four rows of one wave</div>
+      <h2>Wave <span class="accent">plot</span></h2>
+      <p class="section-desc">Sample a wave formula into 24 rows of points and inspect the planned route. The adapter passes the sampled points to the engine.</p>
+    </div>
+    <div class="ex-preview">
+      <div class="ex-canvas"><iframe src="../examples/wave_plot/index.html?embed" title="Wave plot" loading="lazy"></iframe></div>
+<pre class="ex-code-block"><code class="language-javascript">const waveY = Waves.wave(x + row * 7, { wave: waveSeed, t: 0, amplitude: 22, frequency: 0.045 });
+points.push({ x, y: 86 + row * 24 + waveY });
+plot.polyline(points);</code></pre>
+<a class="ex-full-link" href="../examples/wave_plot/index.html">-&gt; full example</a>
+    </div>
+  </section>
+
   <section class="section" style="padding:3rem 2rem;">
     <div style="max-width:760px; margin:0 auto;">
       <p class="callout">The engine's own examples, without p5.js, are on the sister site: <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/examples.html">vanilla.penplotter examples</a>, and its <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/possibilities.html">Possibilities</a> page shows what a pen can do.</p>

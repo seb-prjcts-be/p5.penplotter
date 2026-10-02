@@ -116,8 +116,8 @@ export function renderPage(page, markdown) {
       <li><a href="../index.html">Showcase</a></li>
       <li><a href="examples.html">Examples</a></li>
       <li><a href="setup.html">Setup</a></li>
-      <li><a href="architecture.html"${page.target.endsWith("architecture.html") ? ' class="active"' : ""}>Architecture</a></li>
       <li><a href="guide.html">Guide</a></li>
+      <li><a href="architecture.html"${page.target.endsWith("architecture.html") ? ' class="active"' : ""}>Architecture</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">GitHub</a></li>
     </ul>

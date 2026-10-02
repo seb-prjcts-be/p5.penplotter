@@ -31,15 +31,15 @@ The site uses current source. The latest tags are core `v0.3.1` and adapter `v0.
 ```html
 <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
 <script type="module">
-  import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.3.1/vanilla.penplotter.js";
-  import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.3.1/src/driver/ebb.js";
-  import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.1/p5.penplotter.js";
+  import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@9f19656703c94dc970c0233135cdc9a66cda3f3f/vanilla.penplotter.js";
+  import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@9f19656703c94dc970c0233135cdc9a66cda3f3f/src/driver/ebb.js";
+  import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@3e7948bda7e7b9dbd9c7873805e8dee811260169/p5.penplotter.js";
   installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
 </script>
 <script src="sketch.js"></script>
 ```
 
-Pinned tags, to keep the library versions fixed. Test your sketch with the pinned pair. The GitHub Pages URLs (`https://seb-prjcts-be.github.io/…`) always serve the latest `main`; the adapter checks the engine's version at install and refuses a core below the required minimum.
+Pinned source commits, to keep the library versions fixed and include paper fitting and bed preview. Test your sketch with the pinned pair. The GitHub Pages URLs (`https://seb-prjcts-be.github.io/…`) always serve the latest `main`; the adapter checks the engine's version at install and refuses a core below the required minimum.
 
 Leave out `{ driver: Ebb }` if you only preview.
 
@@ -105,9 +105,9 @@ pinned one; the version check refuses a core below the required minimum.
 ## Instance mode
 
 ```js
-import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.3.1/vanilla.penplotter.js";
-import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@v0.3.1/src/driver/ebb.js";
-import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.1/p5.penplotter.js";
+import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@9f19656703c94dc970c0233135cdc9a66cda3f3f/vanilla.penplotter.js";
+import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@9f19656703c94dc970c0233135cdc9a66cda3f3f/src/driver/ebb.js";
+import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@3e7948bda7e7b9dbd9c7873805e8dee811260169/p5.penplotter.js";
 
 installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
 
