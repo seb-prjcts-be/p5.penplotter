@@ -58,7 +58,13 @@
 
 function setup() {
   createCanvas(400, 250);
-  plot = createPlot({ paper: "A4", margin: 12, width: 120 });
+  plot = createPlot({
+    paper: "A2",
+    paperX: 0,
+    paperY: 0,
+    margin: 12,
+    width: 120
+  });
   noLoop();
 }
 
@@ -73,7 +79,7 @@ function draw() {
     <p>Use Chrome or Edge. Connect the plotter by USB and switch it on.</p>
     <h3 id="machine-origin">Prepare the paper and pen</h3>
     <p>On my iDraw HSE / A2, the starting corner is bottom left when the long rails run away from you. With the motors off, move the carriage to that corner. The driver takes this position as zero; the machine does not find it automatically.</p>
-    <p>Place an A4 sheet in the centre of the bed, with its 297 mm side along the long rails and its 210 mm side across them. Measured from the starting corner, the nearest paper edge is 148.5 mm along the rails and 111 mm across them. Secure the paper and fit the pen.</p>
+    <p>Use the paper already on the machine. Set <code>paper</code> in the sketch to its format. Set <code>paperX</code> and <code>paperY</code> to the paper corner's distance from the machine origin, in millimetres along each axis. Both are zero when that corner is at the origin. See <a href="guide.html#paper">Paper and placement</a> for the placement options.</p>
     <p>If your machine has a different starting corner or motor direction, confirm its origin before running this test. Moving the carriage to another corner does not change the driver's directions.</p>
     <h3>Start the plot</h3>
     <ol>
