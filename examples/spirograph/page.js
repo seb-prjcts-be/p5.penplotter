@@ -2,6 +2,14 @@
 const sketchSetup = setup;
 const sketchDraw = draw;
 
+// Keyboard controls belong to the example page, outside the copied sketch.
+function keyPressed() {
+  if (key === "r" || key === "R") {
+    seed += 1;
+    redraw();
+  }
+}
+
 setup = function () {
   sketchSetup();
   document.querySelector("#sheet").textContent = `${plot.paper.format} · ${plot.paper.width} × ${plot.paper.height} mm`;

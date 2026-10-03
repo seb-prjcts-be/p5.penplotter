@@ -1,6 +1,6 @@
 // Spirograph — hypotrochoids, the oldest plotter drawing there is.
 // Three curves share one centre; the seed picks their gear ratios.
-// R for another seed; click the drawing to plot, click again to stop.
+// Change seed and run again for another drawing; click to plot, click again to stop.
 let plot;
 let bedPreview;
 let bedDrawing;
@@ -49,13 +49,6 @@ function draw() {
 
 function gcd(a, b) {
   return b === 0 ? a : gcd(b, a % b);
-}
-
-function keyPressed() {
-  if (key === "r" || key === "R") {
-    seed += 1;
-    redraw();
-  }
 }
 
 function say(text) {
