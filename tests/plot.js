@@ -142,6 +142,19 @@ async function testAgainstRealCore() {
   const { PlotterEngine } = await import(pathToFileURL(path.join(root, "vanilla.penplotter.js")));
   const Ebb = await import(pathToFileURL(path.join(root, "src", "driver", "ebb.js")));
   installP5Penplotter(FakeP5, PlotterEngine, { driver: Ebb });
+  const sequence = new FakeP5().createPlot({ paper: "A2", margin: 12, gesture: () => true, confirm: () => true, log() {} });
+  sequence.transport = Ebb.createLogTransport();
+  sequence.driver = new Ebb.EbbDriver({ transport: sequence.transport, profile: "idraw-hse-a2" });
+  const sequenceResult = await sequence.sequence(index => {
+    if (index === 3) return false;
+    sequence.point(40 + index * 20, 40);
+    return true;
+  }, { plan: { strategy: "drawn" } });
+  assert.equal(sequenceResult.batches, 3);
+  assert.equal(sequenceResult.status, "complete");
+  assert.equal(sequence.transport.log.filter(command => command === "V").length, 3);
+  assert.equal(sequence.transport.log.filter(command => command === "EM,0,0").length, 3, "each group finishes its driver job");
+  assert.equal(sequence.transport.log.filter(command => command.startsWith("ES")).length, 0);
   const a2 = new FakeP5().createPlot({ paper: "A2", margin: 12 });
   const userCanvas = new FakeP5();
   userCanvas.height = 250;
@@ -346,4 +359,57 @@ testDegrees();
 testDefaultsToOneMillimetrePerPixel();
 await testGo();
 await testAgainstRealCore();
+
+async function testSequence() {
+  installP5Penplotter(FakeP5, FakeEngine, { driver: fakeKit([]) });
+  const plot = new FakeP5().createPlot({ gesture: () => true, confirm: () => true, log() {} });
+  plot.transport = {};
+  let release;
+  let prepared = 0;
+  const jobs = [];
+  plot.driver = {
+    async run(plan, options) {
+      jobs.push(plan.engine.calls.slice());
+      assert.equal(options.confirmed, true);
+      assert.equal(options.returnHome, true);
+      await new Promise(resolve => { release = resolve; });
+      return { status: "complete" };
+    },
+    abort() { release?.(); }
+  };
+  const operation = plot.sequence(() => {
+    if (prepared === 2) return false;
+    plot.line(prepared * 10, 0, prepared * 10 + 5, 0);
+    prepared++;
+    return true;
+  });
+  while (!release) await new Promise(resolve => setTimeout(resolve, 0));
+  assert.equal(prepared, 1, "next group is not calculated while the machine is drawing");
+  assert.equal((await plot.sequence(() => true)).status, "busy");
+  release(); release = null;
+  while (!release) await new Promise(resolve => setTimeout(resolve, 0));
+  assert.equal(prepared, 2);
+  assert.equal(jobs[1].length, 1, "clear prevents replotting the first group");
+  release();
+  assert.deepEqual(await operation, { status: "complete", batches: 2 });
+  assert.equal(plot.pending, null);
+  assert.equal(plot.busy, false);
+
+  prepared = 0;
+  plot.driver.run = async () => { plot.stop(); return { status: "aborted" }; };
+  const stopped = await plot.sequence(() => { prepared++; plot.line(0, 0, 5, 5); return true; });
+  assert.equal(stopped.status, "aborted");
+  assert.equal(prepared, 1, "stop prevents the next calculation");
+  plot.options.confirm = () => false;
+  assert.equal((await plot.sequence(() => { throw Error("must not prepare"); })).status, "cancelled");
+  assert.equal(plot.pending, null);
+  plot.options.confirm = () => true;
+  let safelyStopped = false;
+  plot.driver.safeStop = async () => { safelyStopped = true; };
+  await assert.rejects(plot.sequence(() => { throw Error("calculation failed"); }), /calculation failed/);
+  assert(safelyStopped);
+  assert.equal(plot.busy, false);
+  await assert.rejects(plot.sequence(() => true, { returnHome: false }), /return home/);
+}
+await testSequence();
 console.log("p5.penplotter plot: ok");

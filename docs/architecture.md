@@ -2,7 +2,7 @@
 
 ## Two ways to work
 
-Draw everything and call `plot.go()`. Or plot one object, wait until it finishes, clear the recording with `plot.clear()` and draw the next. Clear does not erase the screen or paper. Without clear, earlier objects are plotted again. Live streaming is not implemented yet. See the [Guide](guide.html#werkwijzen).
+Draw everything and call `plot.go()`. Or plot one object, wait until it finishes, clear the recording with `plot.clear()` and draw the next. Clear does not erase the screen or paper. Without clear, earlier objects are plotted again. `plot.sequence(prepare)` handles successive jobs with one initial click. It clears the recording, asks for the next group, plans and runs it, waits for completion, then repeats. Returning `false` ends the sequence; stop, cancellation or failure prevents further groups. Each job returns home, so this is not a continuous driver session. Live streaming is not implemented yet. See the [Guide](guide.html#werkwijzen).
 
 ## Screen and paper
 

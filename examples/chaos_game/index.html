@@ -39,7 +39,7 @@
     <div class="demo-header">
       <div class="demo-number">Chaos game · time is the order</div>
       <h1>Chaos game</h1>
-      <p>One point, three corners. At each step the point jumps halfway to a randomly chosen corner and leaves a dot. A Sierpinski triangle emerges. The sketch prepares all 1,500 points before plotting and preserves their order, so you can watch the pattern appear on paper. The duration depends on the machine settings. <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/live.html">Live streaming</a> is a separate proposal and is not implemented.</p>
+      <p>One point, three corners. At each step the point jumps halfway to a randomly chosen corner and leaves a dot. A Sierpinski triangle emerges. Calculate 25 dots, plot them, then calculate the next 25. One click starts the sequence. Each group finishes and returns home before the next is calculated. Try the screen demo, or click the drawing to use your plotter.</p>
     </div>
     <div class="demo-layout">
       <div class="demo-code">
@@ -49,13 +49,14 @@
       <div class="demo-right">
         <div class="demo-canvas" id="p5-preview"></div>
       <dl>
-      <div><dt>Dots</dt><dd id="dots">—</dd></div>
-      <div><dt>On paper</dt><dd id="time">—</dd></div>
+      <div><dt>Calculated</dt><dd id="dots">—</dd></div>
+      <div><dt>Completed</dt><dd id="time">—</dd></div>
       <div><dt>Paper</dt><dd id="sheet">—</dd></div>
       <div><dt>Paper position</dt><dd id="sheet-position">—</dd></div>
       </dl>
       <canvas id="bed" class="bed" width="594" height="432" aria-label="The bed as the machine sees it, with your canvas as the sheet on it"></canvas>
-      <p id="status" role="status">When the 1 500 dots are there: click the drawing to plot, in the order of the game. Click again to stop.</p>      <div class="demo-code cdn-setup">
+      <div class="demo-controls"><button id="demo" class="secondary">Run screen demo</button></div>
+      <p id="status" role="status">Click the drawing to start plotting; click again to stop.</p>      <div class="demo-code cdn-setup">
         <div class="code-label">index.html</div>
         <pre><code class="language-markup">&lt;script type="module"&gt;
   import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@9f19656703c94dc970c0233135cdc9a66cda3f3f/vanilla.penplotter.js";

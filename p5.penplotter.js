@@ -446,7 +446,63 @@ export class P5Plot {
     }
   }
 
+  // One click starts successive complete jobs. Prepare only after the previous
+  // job finishes; each job returns home before the next recording is cleared.
+  async sequence(prepare, options = {}) {
+    if (typeof prepare !== "function") throw new TypeError("plot.sequence() needs a drawing function.");
+    if (options.returnHome === false) throw new Error("A sequence must return home between jobs.");
+    this.requireKit();
+    if (this.busy || this.pending) return { status: "busy" };
+    this.sequenceStopped = false;
+    const operation = async () => {
+      let batches = 0;
+      const target = this.clickTarget();
+      const stopOnClick = () => this.stop();
+      try {
+        if (!this.hasGesture()) {
+          this.say("Ready to plot. Click the drawing to start the sequence; click again to stop.");
+          await this.nextClick();
+        } else {
+          const confirm = this.options.confirm || ((text) => globalThis.confirm(text));
+          if (!confirm("Start the sequence? Carriage at home, paper in place, hands clear?")) return { status: "cancelled", batches };
+        }
+        if (this.sequenceStopped) return { status: "aborted", batches };
+        this.busy = true;
+        if (target) target.addEventListener("click", stopOnClick);
+        await this.connect();
+        while (!this.sequenceStopped) {
+          this.clear();
+          if (await prepare(batches) === false) break;
+          if (this.sequenceStopped) break;
+          const plan = this.plan(options.plan);
+          this.say(`Plotting batch ${batches + 1}… click the drawing to stop.`);
+          const result = await this.driver.run(plan, { ...options, confirmed: true, returnHome: true });
+          if (result.status !== "complete") {
+            this.say(`Sequence ${result.status}: ${batches} batches.`);
+            return { ...result, batches };
+          }
+          batches++;
+          if (options.onBatch) await options.onBatch(batches, result);
+        }
+        const status = this.sequenceStopped ? "aborted" : "complete";
+        this.say(`Sequence ${status}: ${batches} batches.`);
+        return { status, batches };
+      } catch (error) {
+        if (this.driver?.safeStop) await this.driver.safeStop();
+        this.say(`Sequence stopped: ${error.message}`);
+        throw error;
+      } finally {
+        if (target) target.removeEventListener("click", stopOnClick);
+        this.busy = false;
+        this.pending = null;
+      }
+    };
+    this.pending = Promise.resolve().then(operation);
+    return this.pending;
+  }
+
   stop() {
+    this.sequenceStopped = true;
     if (this.driver) this.driver.abort();
     this.say("stop requested");
     return this;

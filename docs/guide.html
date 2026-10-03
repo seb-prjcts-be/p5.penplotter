@@ -59,6 +59,15 @@ if (first.status === "complete") {
   await plot.go();
 }</code></pre>
     <p>These fragments use an existing <code>plot</code> with a driver. From <code>setup()</code> or <code>draw()</code>, <code>go()</code> waits for a click. From a user action, the adapter asks for confirmation. Add the next object only after <code>status: "complete"</code>; a cancelled, stopped or failed job has not completed the object. Keep paper and placement settings consistent between jobs.</p>
+    <h3>A sequence of small jobs</h3>
+    <p><code>plot.sequence(prepare)</code> starts with one click. It clears the recording before each call to your function, plots that group and waits before calling again. Return <code>false</code> when finished. Each group returns home. <a href="../examples/chaos_game/index.html">Chaos game</a> shows this with 25 dots at a time and includes a screen demo.</p>
+    <pre><code class="language-javascript">let group = 0;
+plot.sequence(() =&gt; {
+  if (group === 5) return false;
+  plot.circle(50 + group * 60, 100, 30);
+  group++;
+  return true;
+}).catch(console.error);</code></pre>
     <h2 id="global-mode">1. Draw on screen</h2>
     <p>Put these two files in the same folder, or use the matching files in the p5.js Web Editor. Open the folder through a web server. The sketch draws a rectangle and a circle; it needs no plotter connection.</p>
     <p>The imports load the libraries; <code>installP5Penplotter()</code> connects them to p5.js.</p>
@@ -297,6 +306,7 @@ function draw() {
       <tr><td><code>createPlot(options)</code></td><td>Returns a <code>P5Plot</code>. Shape coordinates are canvas pixels. <code>width</code>, <code>x</code> and <code>y</code> are millimetres; without paper or scale options, one pixel maps to one millimetre.</td></tr>
       <tr><td><code>paper, margin, orientation</code></td><td>A0–A6; default margin 12 mm and orientation <code>auto</code>. Fits and centres the canvas. <code>width</code> or <code>mmPerPixel</code> overrides fitting; <code>paperX/paperY</code> move the sheet.</td></tr>
       <tr><td><code>clear(), plan(options)</code></td><td>Clear starts an empty recording. Plan returns the core PlotPlan and checks selected paper margins. <code>strategy: "drawn"</code> preserves drawing order.</td></tr>
+      <tr><td><code>sequence(prepare, options)</code></td><td>One click starts successive jobs. Clears before preparing each group and waits for completion. Return false to finish. Options include plan and onBatch.</td></tr>
       <tr><td><code>showBed([canvas])</code></td><td>Shows the bed and paper with a red origin cross. Creates and reuses a separate preview when no canvas is supplied. Call after recording the drawing.</td></tr>
       <tr><td><code>drawBed(canvas, { sheet })</code></td><td>Uses a separate HTML canvas or 2D context. Sheet position and size are millimetres; defaults to selected paper, then mapped canvas.</td></tr>
       <tr><td><code>go(), stop()</code></td><td>Go from setup/draw waits for a click and needs the installed driver. Stop requests an abort; neither is a preview method.</td></tr>

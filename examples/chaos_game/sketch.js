@@ -1,26 +1,30 @@
-// Chaos game. One point and three corners. Every step the point jumps halfway
-// to a corner chosen at random, and leaves a dot. After a few hundred dots
-// the Sierpinski triangle is there; nobody drew it.
-// The plan keeps the order of the game, so on paper the triangle appears the
-// way it appears here: dot by dot, out of nothing. That is the point.
+// Chaos game: calculate a group of dots, plot it, then calculate the next.
 let plot;
 let corners;
 let p;
 let dots = 0;
-const DOTS = 1500;   // about half an hour on the iDraw
+const DOTS = 1500;
+const BATCH = 25;
 
 function setup() {
   createCanvas(600, 520);
-  plot = createPlot({ paper: "A2", margin: 12, width: 300, log: say });   // 300 mm wide on A2 paper
+  plot = createPlot({ paper: "A2", margin: 12, width: 300, log: say });
   corners = [[300, 35], [40, 485], [560, 485]];
   p = { x: 300, y: 35 };
-  background(255);
-  stroke(0);
-  strokeWeight(2);
+  noLoop();
 }
 
 function draw() {
-  for (let i = 0; i < 10 && dots < DOTS; i++) {
+  background(255);
+  stroke(0);
+  strokeWeight(2);
+  plot.showBed();
+  plot.sequence(nextDots, { plan: { strategy: "drawn" } }).catch(error => say(error.message));
+}
+
+function nextDots() {
+  if (dots >= DOTS) return false;
+  for (let i = 0; i < BATCH && dots < DOTS; i++) {
     const c = random(corners);
     p.x = (p.x + c[0]) / 2;
     p.y = (p.y + c[1]) / 2;
@@ -28,10 +32,7 @@ function draw() {
     dots++;
   }
   plot.showBed();
-  if (dots >= DOTS) {
-    noLoop();
-    plot.go({ plan: { strategy: "drawn" } });   // in the order of the game; click the drawing to start
-  }
+  return true;
 }
 
 function say(text) {
