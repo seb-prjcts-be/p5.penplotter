@@ -114,8 +114,8 @@ export function renderPage(page, markdown) {
     <button class="nav-hamburger" aria-label="Toggle menu" onclick="this.closest('nav').classList.toggle('nav-open')"><span></span><span></span><span></span></button>
     <ul class="nav-links">
       <li><a href="../index.html">Home</a></li>
-      <li><a href="examples.html">Examples</a></li>
       <li><a href="setup.html">Setup</a></li>
+      <li><a href="examples.html">Examples</a></li>
       <li><a href="guide.html">Guide</a></li>
       <li><a href="architecture.html"${page.target.endsWith("architecture.html") ? ' class="active"' : ""}>Architecture</a></li>
       <li><a href="about.html">About</a></li>
