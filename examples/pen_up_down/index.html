@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pen up and down - p5.penplotter</title>
+  <style>body { font: 16px/1.5 system-ui; max-width: 700px; margin: 32px auto; padding: 0 20px; } canvas { display: block; max-width: 100%; }</style>
+  <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
+</head>
+<body>
+  <h1>Pen up and down</h1>
+  <p>Click the sketch, then press U to raise the pen or D to lower it. The browser asks for a port on the first keypress. Use Chrome or Edge on localhost or HTTPS.</p>
+  <p>This sketch sends no XY moves and keeps the board's existing servo calibration. D leaves the pen down: press U promptly when testing over paper. If U does not lift it, switch the plotter off.</p>
+  <p><a href="sketch.js">Copy sketch.js</a> · <a href="../../docs/setup.html">Setup</a></p>
+  <script type="module">
+    import { PlotterEngine } from "../../../vanilla.penplotter/vanilla.penplotter.js";
+    import * as Ebb from "../../../vanilla.penplotter/src/driver/ebb.js";
+    import { installP5Penplotter } from "../../p5.penplotter.js";
+    installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
+  </script>
+  <script src="sketch.js"></script>
+</body>
+</html>

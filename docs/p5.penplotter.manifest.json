@@ -14,6 +14,7 @@
     "direct_plot",
     "first_plot",
     "molnar_grid",
+    "pen_up_down",
     "spirograph",
     "wave_field",
     "wave_plot"

@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-03",
+  "machine": "iDraw HSE / A2",
+  "environment": "User's p5 sketch and connected plotter",
+  "status": "user-confirmed-pen-up-down",
+  "commands": ["SP,1,300", "SP,0,300"],
+  "servoCalibration": "Existing board settings; no SC commands in the successful U/D sketch",
+  "xyMovement": false,
+  "visualConfirmation": "After receiving the U/D sketch, the user reported 'lukt' on 2026-10-03.",
+  "adapterInEarlierError": "3e7948bda7e7b9dbd9c7873805e8dee811260169",
+  "limits": "The exact core, adapter and firmware versions of the successful U/D run were not captured. This confirms manual up/down operation only; it does not resolve the reported pause before lifting at the end of a stroke or validate new servo calibration values.",
+  "followUp": "Keep the existing servo calibration for the next drawing test. Earlier proposed penLift trials also wrote up/down heights and were not a comparison of lift speed alone. Use one driver session to retain carriage position between objects, with a single home return at the end."
+}
