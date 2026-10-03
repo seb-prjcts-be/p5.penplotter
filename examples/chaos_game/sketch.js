@@ -11,7 +11,7 @@ const DOTS = 1500;   // about half an hour on the iDraw
 
 function setup() {
   createCanvas(600, 520);
-  plot = createPlot({ x: 147, y: 100, width: 300, log: say });   // 300 mm wide on the A2 bed
+  plot = createPlot({ paper: "A2", margin: 12, width: 300, log: say });   // 300 mm wide on A2 paper
   corners = [[300, 35], [40, 485], [560, 485]];
   p = { x: 300, y: 35 };
   background(255);

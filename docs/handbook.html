@@ -133,16 +133,19 @@ installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
     <p>The <a href="setup.html">Setup</a> page shows all four in full, with what breaks and how the error reads. Whichever you pick, plotting for real needs the same three things: the driver handed in at install, Chrome or Edge on <code>localhost</code> or https (Web Serial exists nowhere else; not in Firefox, not in Safari, not from a <code>file://</code> URL; the p5.js Web Editor does work, plotted from it on 2026-10-01), and one click on the drawing, because a browser shows its port list only after a click; <code>plot.go()</code> itself is written at the end of the drawing and waits for that click.</p>
 
     <h2 id="c4"><span class="num">4</span>createPlot(): one object for screen and paper</h2>
-    <p><code>createPlot(options)</code> returns a <code>P5Plot</code>. Its constructor decides one thing that everything else depends on: the scale between canvas pixels and millimetres on the bed.</p>
-    <pre><code class="language-none">plot = createPlot({ x: 147, y: 66, width: 300 });
-// the canvas lands with its top-left corner 147 mm right and 66 mm down from the home corner,
-// and is 300 mm wide on the bed; the scale is 300 / width (of the canvas) mm per pixel</code></pre>
+    <p><code>createPlot(options)</code> returns a <code>P5Plot</code>. Start with a paper format and margin. The canvas is fitted and centred on the sheet; use <code>width</code> when the drawing needs a fixed size in millimetres.</p>
+    <pre><code class="language-none">plot = createPlot({ paper: "A2", margin: 12, width: 300 });
+// a 300 mm wide drawing, centred on A2 paper
+// the scale is 300 / width (of the canvas) mm per pixel</code></pre>
     <table>
       <thead><tr><th>option</th><th>meaning</th><th>default</th></tr></thead>
       <tbody>
-        <tr><td><code>x</code>, <code>y</code></td><td>where the canvas's top-left corner lands, in millimetres from the home corner</td><td>0, 0</td></tr>
+        <tr><td><code>paper</code>, <code>margin</code></td><td>choose an A0–A6 sheet and its drawing margin</td><td>no sheet unless selected; margin 12 mm</td></tr>
+        <tr><td><code>orientation</code></td><td>portrait, landscape or automatic orientation that fits the bed</td><td><code>auto</code></td></tr>
+        <tr><td><code>paperX</code>, <code>paperY</code></td><td>paper corner in millimetres from home</td><td>centred on the installed bed</td></tr>
+        <tr><td><code>x</code>, <code>y</code></td><td>drawing corner in millimetres from home</td><td>centred on selected paper; otherwise 0, 0</td></tr>
         <tr><td><code>width</code></td><td>how many millimetres wide the canvas is on the bed; sets the scale</td><td>none</td></tr>
-        <tr><td><code>mmPerPixel</code></td><td>the scale directly, when <code>width</code> is not given</td><td>1 (one millimetre per pixel)</td></tr>
+        <tr><td><code>mmPerPixel</code></td><td>the scale directly, when <code>width</code> is not given</td><td>fit inside selected paper margins; otherwise 1</td></tr>
         <tr><td><code>profile</code></td><td>the engine's machine profile</td><td><code>idraw-hse-a2</code></td></tr>
         <tr><td><code>confirm</code></td><td>a function that asks the user before plotting</td><td><code>window.confirm</code></td></tr>
         <tr><td><code>log</code></td><td>a function that receives status messages</td><td><code>console.log</code> with a <code>[plot]</code> prefix</td></tr>
@@ -152,7 +155,7 @@ installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
     <p><code>clear()</code> replaces the engine with an empty one. That is how a frame starts: every <code>draw()</code> that wants a fresh job calls <code>plot.clear()</code> first, exactly where it calls <code>background()</code>. <code>plan(options)</code> asks the engine for its plan and returns it; <code>engine</code> is the engine itself, for layers, pens and exports the adapter does not wrap.</p>
 
     <h3>Paper, drawing and bed</h3>
-    <p>The canvas size is in pixels; <code>width</code> sets its mapped width in millimetres. A 400 × 250 pixel canvas with <code>createPlot({ x: 80, y: 150, width: 80 })</code> occupies an 80 × 50 mm area on the bed. A rectangle at (10, 10) with width 380 and height 230 occupies 76 × 46 mm inside it. The paper can be larger and have its own position.</p>
+    <p>The canvas size is in pixels; <code>width</code> sets its mapped width in millimetres. A 400 × 250 pixel canvas with <code>createPlot({ paper: "A4", margin: 12, width: 80 })</code> occupies an 80 × 50 mm area centred on A4 paper. A rectangle at (10, 10) with width 380 and height 230 occupies 76 × 46 mm inside it. The paper can be larger and have its own position.</p>
     <table>
       <thead><tr><th>paper</th><th>portrait, mm</th><th>landscape, mm</th></tr></thead>
       <tbody>
@@ -271,7 +274,7 @@ plot.polyline(points);</code></pre>
 }</code></pre>
     <h3>A frame you can measure</h3>
     <pre><code class="language-javascript">// 300 px wide canvas, 300 mm on the bed: one pixel is one millimetre, so a 40 px square is 40 mm on paper
-plot = createPlot({ x: 147, y: 66, width: 300 });
+plot = createPlot({ paper: "A2", margin: 12, width: 300 });
 plot.square(20, 20, 40);</code></pre>
     <h3>Two pens from a sketch</h3>
     <pre><code class="language-javascript">const engine = plot.engine;                 // the vanilla.penplotter engine behind the plot

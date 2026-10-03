@@ -8,7 +8,7 @@ Teken alles en roep `plot.go()` aan. Of plot één object, wacht tot het klaar i
 
 You draw with p5.js. The supported `plot.line()`, `plot.circle()` and other shape calls draw on the canvas and also record points for the pen. `vanilla.penplotter` cleans up those points, plans their route and supplies the machine driver.
 
-The adapter converts canvas coordinates to millimetres using the width and offset passed to `createPlot()`. A p5 circle takes a diameter; the core receives a radius. A point becomes a short dash on paper.
+Choose paper and a margin with `createPlot()`. The adapter fits and centres the canvas on the sheet, then converts its coordinates to millimetres. An explicit width keeps the drawing at that size; paper and drawing positions can be set separately. A p5 circle takes a diameter; the core receives a radius. A point becomes a short dash on paper.
 
 Paper and canvas area can have different sizes and positions. `plot.drawBed(canvas, { sheet: { x, y, width, height } })` shows the actual sheet in millimetres alongside the planned strokes. Without `sheet`, it uses selected `plot.paper` or, when no paper was selected, the mapped canvas area. Preview does not alter the plan or rotate the drawing; p5 screen transforms are still not captured.
 

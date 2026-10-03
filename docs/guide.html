@@ -84,7 +84,7 @@ if (eerste.status === "complete") {
 
 function setup() {
   createCanvas(400, 250);
-  plot = createPlot({ x: 80, y: 150, width: 80 });
+  plot = createPlot({ paper: "A4", margin: 12, width: 80 });
   noLoop();
 }
 
@@ -116,8 +116,8 @@ plot.polyline(points);</code></pre>
     </figure>
 
     <h2 id="paper">3. Drawing size and paper</h2>
-    <p>A 400 × 250 pixel canvas with <code>createPlot({ x: 80, y: 150, width: 80 })</code> maps to an 80 × 50 mm area on the bed. The rectangle from (10, 10) to (390, 240) occupies 76 × 46 mm inside it. <code>x</code> and <code>y</code> place the canvas area in millimetres from home; they do not set its size.</p>
-    <p>Paper is a separate choice: A4 is 210 × 297 mm in portrait or 297 × 210 mm in landscape. A3 is 297 × 420 mm; A2 is 420 × 594 mm. With explicit <code>width</code>, the drawing keeps that width. The <code>paper</code> option below instead fits the canvas automatically unless you override its scale. The HSE/A2 bed is 594 × 432 mm, with X along the long rail. Place and orient your paper inside that area, then choose the drawing’s width and position.</p>
+    <p>A 400 × 250 pixel canvas with <code>createPlot({ paper: "A4", margin: 12, width: 80 })</code> maps to an 80 × 50 mm area centred on A4 paper. The rectangle from (10, 10) to (390, 240) occupies 76 × 46 mm inside it. Choose the paper and margin first. Use <code>paperX</code>/<code>paperY</code> to move the sheet; <code>x</code>/<code>y</code> place the canvas area in millimetres from home.</p>
+    <p>A4 is 210 × 297 mm in portrait or 297 × 210 mm in landscape. A3 is 297 × 420 mm; A2 is 420 × 594 mm. With explicit <code>width</code>, the drawing keeps that width. Without <code>width</code>, the <code>paper</code> option fits the canvas automatically inside the margins. The HSE/A2 bed is 594 × 432 mm, with X along the long rail. Place and orient your paper inside that area, then choose the drawing’s width and position.</p>
     <h3>Choose A2 directly</h3>
     <pre><code class="language-javascript">let plot;
 
@@ -137,6 +137,17 @@ function draw() {
 }</code></pre>
     <p>The canvas fits proportionally inside a 12 mm margin on A2. On the HSE/A2, paper is 594 × 420 mm at X = 0, Y = 6 mm. This canvas maps to 570 × 356.25 mm, centred on it. This is a full-sheet drawing, larger than the first 80 mm test. Put the real paper at that position. <code>plot.drawBed(bedCanvas)</code> uses the selected sheet automatically.</p>
     <p><code>paper</code> accepts A0–A6. Default <code>orientation: "auto"</code> follows the canvas aspect ratio and tries the other orientation if needed to fit the bed. Explicit <code>"portrait"</code> or <code>"landscape"</code> is honoured or refused. <code>margin</code> defaults to 12 mm. <code>paperX</code>/<code>paperY</code> move the sheet; <code>x</code>/<code>y</code> locate the canvas. <code>width</code> or <code>mmPerPixel</code> overrides fitting. <code>plot.paper</code> reports the resolved sheet. Invalid paper placement or strokes outside the margins are refused before plotting. This requires current source in both libraries; older pins do not include it.</p>
+    <h3>Move the paper</h3>
+    <pre><code class="language-javascript">plot = createPlot({
+  paper: "A4",
+  orientation: "portrait",
+  margin: 12,
+  paperX: 60,
+  paperY: 100,
+  width: 120
+});</code></pre>
+    <p>The sheet starts 60 mm right and 100 mm down from home. The drawing stays 120 mm wide and is centred on that sheet. Add <code>x</code>/<code>y</code> when the drawing needs another position within the paper margins. Put the real paper at the same position.</p>
+    <h3>Preview a separate sheet</h3>
     <p>For a sketch without the paper option, show the actual sheet separately from the canvas area:</p>
     <pre><code class="language-javascript">// After recording the drawing; bedCanvas is a separate HTML canvas.
 plot.drawBed(bedCanvas, {
@@ -195,7 +206,7 @@ plot.stipple(square, 150, 3);    // count, seed</code></pre>
 
 function setup() {
   createCanvas(600, 600);
-  plot = createPlot({ x: 147, y: 66, width: 300 });   // 300 mm wide, centred on A2
+  plot = createPlot({ paper: "A2", margin: 12, width: 300 });   // 300 mm wide, centred on A2
   noLoop();
 }
 
@@ -211,7 +222,7 @@ function draw() {
 
 function setup() {
   createCanvas(600, 600);
-  plot = createPlot({ x: 147, y: 66, width: 300 });
+  plot = createPlot({ paper: "A2", margin: 12, width: 300 });
   noLoop();
 }
 
@@ -233,7 +244,7 @@ function draw() {
 
 function setup() {
   createCanvas(600, 600);
-  plot = createPlot({ x: 147, y: 66, width: 300 });
+  plot = createPlot({ paper: "A2", margin: 12, width: 300 });
   noLoop();
 }
 
@@ -275,7 +286,7 @@ function draw() {
     p.createCanvas(400, 250);
     p.noFill();
     p.noLoop();
-    const plot = p.createPlot({ x: 80, y: 150, width: 80 });
+    const plot = p.createPlot({ paper: "A4", margin: 12, width: 80 });
     plot.circle(400, 400, 180);
     p.drawRoute(plot.plan());
   };

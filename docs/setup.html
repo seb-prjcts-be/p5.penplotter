@@ -58,7 +58,7 @@
 
 function setup() {
   createCanvas(400, 250);
-  plot = createPlot({ x: 80, y: 150, width: 120 });
+  plot = createPlot({ paper: "A4", margin: 12, width: 120 });
   noLoop();
 }
 
@@ -96,26 +96,22 @@ function draw() {
     </ul>
 
     <h2 id="canvas-on-paper">2. Your canvas on the paper</h2>
-    <p>For the sketch above, <code>createPlot({ x: 80, y: 150, width: 120 })</code> places the canvas 80 mm right and 150 mm down from the machine's home corner, where you park the carriage by hand. A 400 × 250 canvas becomes a 120 × 75 mm drawing area. <code>width</code> sets the drawing width in millimetres; the height follows the canvas proportions.</p>
-    <p>Without <code>paper</code>, omitted <code>x</code> and <code>y</code> default to zero. Without <code>width</code> or <code>mmPerPixel</code>, one pixel is one millimetre. With <code>createPlot({ paper: "A2", margin: 12 })</code>, the canvas instead fits proportionally inside the paper margins and is centred by default. See <a href="guide.html">the guide</a> for paper sizes and placement.</p>
+    <p>The starter uses <code>createPlot({ paper: "A4", margin: 12, width: 120 })</code>. The 400 × 250 pixel canvas becomes a 120 × 75 mm drawing area, centred on A4 paper. The paper is centred on the machine bed. Put the real sheet at the position shown in the paper preview.</p>
+    <p>Start with <code>paper</code> and <code>margin</code>. Without <code>width</code>, the canvas fits proportionally inside the margins. A0–A6 are supported when they fit the machine bed. <code>orientation</code> selects portrait or landscape; the default is <code>"auto"</code>. Use <code>paperX</code>/<code>paperY</code> to move the sheet and <code>x</code>/<code>y</code> to move the drawing within it. Positions and widths are millimetres. See <a href="guide.html#paper">the guide</a> for placement and margin checks.</p>
     <div class="canvas-placement-figures">
     <figure class="canvas-placement-diagram">
 
-    <svg class="bed-figure" viewBox="0 0 320 240" width="320" height="240" role="img" aria-label="A 120 by 75 millimetre canvas area at X 80, Y 150 on the 594 by 432 millimetre machine bed">
-      <rect x="10" y="10" width="297" height="216" fill="#fff" stroke="#000" stroke-width="1"/>
+    <svg class="bed-figure" viewBox="0 0 320 240" width="320" height="240" role="img" aria-label="A 120 by 75 millimetre drawing centred on A4 landscape paper, centred on the 594 by 432 millimetre machine bed">
+      <rect x="10" y="10" width="297" height="216" fill="#fff" stroke="#000"/>
       <circle cx="10" cy="10" r="4" fill="#000"/>
       <text x="18" y="24" font-family="Inter, Arial, sans-serif" font-size="10">home corner</text>
-      <rect x="50" y="85" width="60" height="37.5" fill="rgba(0,0,0,.05)" stroke="#000" stroke-width="1"/>
-      <text x="52" y="110" font-family="Inter, Arial, sans-serif" font-size="9">your canvas</text>
-      <line x1="10" y1="140" x2="50" y2="140" stroke="#000" stroke-width="1" stroke-dasharray="3 2"/>
-      <text x="22" y="152" font-family="Courier New, monospace" font-size="10">x</text>
-      <line x1="140" y1="10" x2="140" y2="85" stroke="#000" stroke-width="1" stroke-dasharray="3 2"/>
-      <text x="144" y="50" font-family="Courier New, monospace" font-size="10">y</text>
-      <line x1="50" y1="130" x2="110" y2="130" stroke="#000" stroke-width="1"/>
-      <text x="66" y="142" font-family="Courier New, monospace" font-size="10">width</text>
-      <text x="200" y="220" font-family="Inter, Arial, sans-serif" font-size="9">the bed, 594 by 432 mm</text>
+      <rect x="84.25" y="65.5" width="148.5" height="105" fill="rgba(0,0,0,.03)" stroke="#000"/>
+      <text x="90" y="80" font-family="Inter, Arial, sans-serif" font-size="10">A4 paper</text>
+      <rect x="128.5" y="99.25" width="60" height="37.5" fill="rgba(0,0,0,.08)" stroke="#000"/>
+      <text x="132" y="121" font-family="Inter, Arial, sans-serif" font-size="9">your canvas</text>
+      <text x="190" y="220" font-family="Inter, Arial, sans-serif" font-size="9">the bed, 594 by 432 mm</text>
     </svg>
-      <figcaption>The example above: a 120 × 75 mm canvas area on the HSE/A2 bed. The canvas area is not the paper outline.</figcaption>
+      <figcaption>The starter: a 120 × 75 mm drawing on A4 landscape paper, centred on the HSE/A2 bed.</figcaption>
     </figure>
     <figure class="doc-animation" id="animation-draw-bed">
       <img src="images/animations/draw-bed.gif" width="600" height="400" loading="lazy" alt="The canvas is placed within a 594 by 432 millimetre bed and checked with plot.drawBed.">
@@ -158,7 +154,7 @@ new p5(function sketch(p) {
 
   p.setup = function () {
     p.createCanvas(400, 250);
-    plot = p.createPlot({ x: 80, y: 150, width: 120 });
+    plot = p.createPlot({ paper: "A4", margin: 12, width: 120 });
     p.noLoop();
   };
 
@@ -198,7 +194,7 @@ let plot;
 
 function setup() {
   createCanvas(400, 250);
-  plot = createPlot({ x: 80, y: 150, width: 120 });
+  plot = createPlot({ paper: "A4", margin: 12, width: 120 });
   noLoop();
 }
 

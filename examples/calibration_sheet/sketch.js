@@ -5,8 +5,8 @@ let plot;
 
 function setup() {
   createCanvas(400, 560);
-  // 200 x 280 mm, centred on the A2 bed
-  plot = createPlot({ x: 197, y: 76, width: 200, log: say });
+  // 200 x 280 mm, centred on A2 paper
+  plot = createPlot({ paper: "A2", margin: 12, width: 200, log: say });
   noLoop();
 }
 

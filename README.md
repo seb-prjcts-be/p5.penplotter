@@ -58,8 +58,8 @@ let plot;
 
 function setup() {
   createCanvas(400, 250);
-  // where the canvas lands on the bed, in mm from the home corner, and how wide
-  plot = createPlot({ x: 80, y: 150, width: 80 });
+  // an 80 mm wide drawing, centred on A4 paper
+  plot = createPlot({ paper: "A4", margin: 12, width: 80 });
   noLoop();
 }
 
@@ -119,7 +119,7 @@ new p5(function sketch(p) {
   let plot;
   p.setup = function setup() {
     p.createCanvas(600, 600);
-    plot = p.createPlot({ x: 147, y: 66, width: 300 });
+    plot = p.createPlot({ paper: "A2", margin: 12, width: 300 });
     plot.circle(300, 300, 400);
     plot.go();   // click the drawing to plot
     p.noLoop();
@@ -197,7 +197,7 @@ Each one is a standalone page under `examples/`; the [examples page](https://seb
 - `plot.drawBed(canvas, { sheet })`: draws the planned strokes on the bed. Optional `sheet` describes actual paper with `x`, `y`, `width` and `height` in millimetres. By default it uses `plot.paper` when paper was selected, otherwise the mapped canvas area. Preview never scales or moves the drawing.
 - `drawPlanWithP5(p, plan, options)`: the same renderer without the prototype helper.
 
-`createPlot()` options: `x`, `y`, `width` (mm on the bed) or `mmPerPixel`, `profile`, `confirm`, `log`. Use `clear()`, `plan()`, `connect()`, `go()` and `stop()` to control the job.
+`createPlot()` options: `paper`, `margin`, `orientation`, `paperX`, `paperY`, `width` or `mmPerPixel`, `x`, `y`, `profile`, `confirm`, `log`. Start with a paper format and margin; add a width when the drawing needs a fixed physical size. Use `clear()`, `plan()`, `connect()`, `go()` and `stop()` to control the job.
 
 Choose paper directly with `createPlot({ paper: "A2", margin: 12 })`. A0–A6 dimensions come from the core's `PlotterEngine.paperSize()`. The canvas fits proportionally inside the paper margins and is centred on the sheet; the sheet is centred on the installed machine's bed. Default `orientation: "auto"` follows the canvas aspect ratio and tries the other orientation if needed to fit the bed. On the HSE/A2, A2 is 594 × 420 mm at X = 0, Y = 6 mm. Explicit `"portrait"` or `"landscape"` never flips silently. `paperX`/`paperY` move the sheet; `x`/`y` still locate the canvas. Positions and margins are millimetres; the default margin is 12. `width` or `mmPerPixel` overrides automatic fitting.
 

@@ -9,8 +9,8 @@ async function setup() {
   // Load the wave sampler used by this sketch.
   await import("https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.waves@v3.4.0/p5.waves.min.js");
   createCanvas(600, 600);
-  // 300 x 300 mm, centred on the A2 bed
-  plot = createPlot({ x: 147, y: 66, width: 300, log: say });
+  // 300 x 300 mm, centred on A2 paper
+  plot = createPlot({ paper: "A2", margin: 12, width: 300, log: say });
   noLoop();
 }
 
