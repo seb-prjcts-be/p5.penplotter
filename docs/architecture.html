@@ -17,8 +17,8 @@
     <ul class="nav-links">
       <li><a href="../index.html">Home</a></li>
       <li><a href="setup.html">Setup</a></li>
-      <li><a href="examples.html">Examples</a></li>
       <li><a href="guide.html">Guide</a></li>
+      <li><a href="examples.html">Examples</a></li>
       <li><a href="architecture.html" class="active">Architecture</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">GitHub</a></li>
@@ -30,23 +30,42 @@
       <h1>How p5.penplotter works</h1>
       <p class="guide-intro">How a supported p5 shape becomes recorded geometry for the pen.</p>
     </header>
-<h2>Recording geometry</h2>
+<h2 id="recording-geometry">Recording geometry</h2>
 <p>Each supported shape call has two outputs: a p5 drawing on the canvas and geometry in the core engine. The adapter converts canvas pixels to millimetres using an offset and scale. It converts a circle's diameter to a radius; a point becomes a 0.24 mm dash. Core fills are converted back to pixels for display.</p>
 <p>The recording contains the shapes added since the last <code>plot.clear()</code>. Clear replaces the geometry engine, while keeping the driver and open connection. Planning takes a snapshot of that recording; later changes to the canvas do not add strokes to an active job.</p>
-<h2>Paper and coordinates</h2>
+<h2 id="paper-and-coordinates">Paper and coordinates</h2>
 <p>Paper dimensions come from <code>PlotterEngine.paperSize()</code>. The adapter resolves the sheet's orientation and position, then calculates the drawing's scale and offset. <code>plan()</code> checks the recorded strokes against the selected paper margins before connecting. The driver checks machine travel separately.</p>
 <p>A bed preview displays the resolved sheet and plan. It does not change either. Paper placement does not establish a machine origin or reverse motor directions. See <a href="setup.html#machine-origin">Setup</a> for the physical origin and <a href="guide.html#paper">Guide</a> for placement examples.</p>
-<h2>Jobs and the driver</h2>
+<h2 id="jobs-and-the-driver">Jobs and the driver</h2>
 <p>The adapter supplies a complete PlotPlan to the core's driver. The driver compiles its movements into motor and pen commands and sends them through Web Serial. For the iDraw profile, EBB means EiBotBoard, the controller connected over USB.</p>
 <p><code>plot.sequence()</code> clears the recording, asks your function to draw one object, plots it and waits for physical idle before asking for the next. The driver keeps its position and motor steps between objects. After the last object it returns home and releases the motors. The <a href="guide.html#werkwijzen">Guide</a> shows how to use it.</p>
 <p>The underlying driver session was tested on 2026-10-03 with three successive lines on the iDraw HSE / A2 and EBB 3.0.2, followed by one return home. Stop and fault cases were tested with simulated connections only. Adding geometry while the machine draws remains unimplemented.</p>
 <figure class="doc-animation"><img src="images/animations/ebb.gif" width="600" height="400" loading="lazy" alt="The JavaScript driver connects the plan to the EBB controller; the connectors show data flow."><figcaption>The JavaScript driver connects the plan to the EBB controller; the connectors show data flow.</figcaption></figure>
-<h2>Recording limits</h2>
+<h2 id="recording-limits">Recording limits</h2>
 <p>The adapter records shape arguments, without reading p5's drawing state. <code>translate()</code>, <code>rotate()</code> and <code>scale()</code> do not transform recorded geometry. Rectangles use corner coordinates; ellipses use centre coordinates, regardless of screen modes. Colours, stroke weight and ordinary p5 fills stay on screen.</p>
 <p>Text, general Bézier curves and arbitrary p5 sketches are not captured. For transformed shapes, calculate the coordinates before passing them to the plot. The <a href="guide.html#reference">Guide</a> lists the available calls.</p>
-<h2>Library boundaries</h2>
+<h2 id="library-boundaries">Library boundaries</h2>
 <p><code>p5.penplotter</code> installs helpers on the p5 prototype and owns the canvas-to-millimetre mapping. <code>vanilla.penplotter</code> owns geometry, SVG import, cleanup, route planning, file exports, machine profiles and drivers. See the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/architecture.html">core architecture</a> for those parts.</p>
 <p>Installation checks the minimum dependencies; it does not verify every version combination. <a href="setup.html">Setup</a> supplies the pinned imports and explains their load order.</p>
+<h2 id="library-development">Library development</h2>
+<h3 id="local-neighbours">Local neighbours</h3>
+<p>While working on the libraries themselves, load them from sibling folders instead of GitHub Pages. This is how the repository's own examples are wired, on localhost and on the published site alike:</p>
+<pre><code class="language-javascript">import { PlotterEngine } from "../vanilla.penplotter/vanilla.penplotter.js";
+import * as Ebb from "../vanilla.penplotter/src/driver/ebb.js";
+import { installP5Penplotter } from "../p5.penplotter/p5.penplotter.js";</code></pre>
+<p>Relative imports resolve against the importing file. <code>vanilla.penplotter.js</code> re-exports from its own <code>src/</code> folder, so the whole repository has to be present, not the single file.</p>
+<h3 id="module-load-order">Module load order</h3>
+<p><code>p5.penplotter</code> and <code>vanilla.penplotter</code> are ES modules: files that use <code>import</code> and <code>export</code>. A module has two properties that decide these setups.</p>
+<ul><li><strong>A module creates no globals.</strong> A <code>function setup()</code> written inside a module is invisible to p5, because p5's global mode looks for <code>window.setup</code>.</li></ul>
+<ul><li><strong>A module script is deferred.</strong> The browser runs it after the whole page has been read, but before the <code>load</code> event fires.</li></ul>
+<p>p5 starts a global-mode sketch on <code>load</code>. For the editor setup, the load order is:</p>
+<pre><code class="language-text">1. p5.js loads                          (classic script, runs at once)
+2. classic scripts run in order         (your sketch.js defines setup/draw)
+3. page fully read
+4. module scripts run                   (the adapter is installed here)
+5. DOMContentLoaded
+6. load  →  p5 calls window.setup()     (createPlot already exists)</code></pre>
+<p>Keep the imports in a module and the global sketch in a normal script.</p>
   </main>
   <footer>
     <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; Sebastien Vanblaere &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine</p>

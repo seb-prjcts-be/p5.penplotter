@@ -33,3 +33,38 @@ Text, general Bézier curves and arbitrary p5 sketches are not captured. For tra
 `p5.penplotter` installs helpers on the p5 prototype and owns the canvas-to-millimetre mapping. `vanilla.penplotter` owns geometry, SVG import, cleanup, route planning, file exports, machine profiles and drivers. See the [core architecture](https://seb-prjcts-be.github.io/vanilla.penplotter/docs/architecture.html) for those parts.
 
 Installation checks the minimum dependencies; it does not verify every version combination. [Setup](setup.html) supplies the pinned imports and explains their load order.
+
+## Library development
+
+### Local neighbours
+
+While working on the libraries themselves, load them from sibling folders instead of GitHub Pages. This is how the repository's own examples are wired, on localhost and on the published site alike:
+
+```javascript
+import { PlotterEngine } from "../vanilla.penplotter/vanilla.penplotter.js";
+import * as Ebb from "../vanilla.penplotter/src/driver/ebb.js";
+import { installP5Penplotter } from "../p5.penplotter/p5.penplotter.js";
+```
+
+Relative imports resolve against the importing file. `vanilla.penplotter.js` re-exports from its own `src/` folder, so the whole repository has to be present, not the single file.
+
+### Module load order
+
+`p5.penplotter` and `vanilla.penplotter` are ES modules: files that use `import` and `export`. A module has two properties that decide these setups.
+
+- **A module creates no globals.** A `function setup()` written inside a module is invisible to p5, because p5's global mode looks for `window.setup`.
+
+- **A module script is deferred.** The browser runs it after the whole page has been read, but before the `load` event fires.
+
+p5 starts a global-mode sketch on `load`. For the editor setup, the load order is:
+
+```text
+1. p5.js loads                          (classic script, runs at once)
+2. classic scripts run in order         (your sketch.js defines setup/draw)
+3. page fully read
+4. module scripts run                   (the adapter is installed here)
+5. DOMContentLoaded
+6. load  →  p5 calls window.setup()     (createPlot already exists)
+```
+
+Keep the imports in a module and the global sketch in a normal script.

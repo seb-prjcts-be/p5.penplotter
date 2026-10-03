@@ -7,7 +7,7 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20261002c">
+  <link rel="stylesheet" href="style.css?v=20261003-learning">
   <link rel="stylesheet" href="animations.css">
 </head>
 <body>
@@ -17,8 +17,8 @@
     <ul class="nav-links">
       <li><a href="../index.html">Home</a></li>
       <li><a href="setup.html">Setup</a></li>
-      <li><a href="examples.html">Examples</a></li>
       <li><a href="guide.html" class="active">Guide</a></li>
+      <li><a href="examples.html">Examples</a></li>
       <li><a href="architecture.html">Architecture</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">GitHub</a></li>
@@ -28,13 +28,13 @@
     <header class="page-header">
       <div class="section-tag">p5.js addon library</div>
       <h1>Guide</h1>
-      <p class="guide-intro">Change the drawing, place it on paper and choose how to plot it.</p>
+      <p class="guide-intro">Start with one line, place it on paper, then choose how to plot the drawing.</p>
     </header>
 
-    <nav aria-label="On this page"><p><a href="#global-mode">Start</a> · <a href="#change-drawing">Change</a> · <a href="#paper">Paper</a> · <a href="#plotting">Plot</a> · <a href="#werkwijzen">Two ways to work</a> · <a href="#shapes">Shapes</a> · <a href="#starters">Starters</a> · <a href="#core-access">Core</a> · <a href="#instance-mode">Instance mode</a> · <a href="#reference">Reference</a></p></nav>
+    <nav aria-label="On this page"><p><a href="#global-mode">Line</a> · <a href="#paper">Paper</a> · <a href="#plotting">Plot</a> · <a href="#werkwijzen">Two ways to work</a> · <a href="#change-drawing">Change</a> · <a href="#shapes">Shapes</a> · <a href="#core-access">Core</a> · <a href="#advanced-setups">Modules</a> · <a href="#reference">Reference</a></p></nav>
 
-    <h2 id="global-mode">1. Draw on screen</h2>
-    <p>Copy <code>index.html</code> from <a href="setup.html#global-mode">Setup</a>, then use this <code>sketch.js</code>. It draws a rectangle and a circle without opening a plotter connection.</p>
+    <h2 id="global-mode">1. Draw one line</h2>
+    <p>Copy <code>index.html</code> from <a href="setup.html#global-mode">Setup</a>, then use this <code>sketch.js</code>. It draws one line without opening a plotter connection.</p>
     <h3>sketch.js</h3>
     <pre><code class="language-javascript">let plot;
 
@@ -48,30 +48,14 @@ function draw() {
   background(255);
   noFill();
   plot.clear();
-  plot.rect(10, 10, 380, 230);
-  plot.circle(200, 125, 80);
+  plot.line(40, 125, 360, 125);
 }</code></pre>
 
+    <p><code>plot.line(40, 125, 360, 125)</code> joins two points in canvas pixels. The same line is drawn on screen and recorded for paper.</p>
     <p><code>background()</code> clears the screen; <code>plot.clear()</code> starts a new recording. <code>noLoop()</code> keeps this drawing still. Use explicit coordinates; screen transforms and styling are not recorded. See the <a href="architecture.html">recording limits</a>.</p>
 
-    <h2 id="change-drawing">2. Change the drawing</h2>
-    <p>Replace the two shape calls in <code>draw()</code> with this loop. Keep <code>setup()</code>, <code>background()</code>, <code>noFill()</code> and <code>plot.clear()</code>.</p>
-    <pre><code class="language-javascript">const points = [];
-for (let x = 40; x &lt;= 360; x += 4) {
-  points.push({
-    x,
-    y: 125 + 40 * Math.sin(x * 0.04)
-  });
-}
-plot.polyline(points);</code></pre>
-
-    <figure class="doc-animation" id="animation-waves">
-      <img src="images/animations/waves.svg" width="600" height="400" loading="lazy" alt="Different wave shapes are sampled and recorded as pen lines.">
-      <figcaption>A wave gives you a number; your loop decides where the line goes. Try changing the amplitude multiplier <code>40</code> above to <code>10</code>. For a different use of the same idea, open the <a href="../examples/wave_field/index.html">wave field</a> and press R for another seed.</figcaption>
-    </figure>
-
-    <h2 id="paper">3. Drawing size and paper</h2>
-    <p>A 400 × 250 pixel canvas with <code>createPlot({ paper: "A4", margin: 12, width: 80 })</code> maps to an 80 × 50 mm area centred on A4 paper. The rectangle from (10, 10) to (390, 240) occupies 76 × 46 mm inside it. Choose the paper and margin first. Use <code>paperX</code>/<code>paperY</code> to move the sheet; <code>x</code>/<code>y</code> place the canvas area in millimetres from home.</p>
+    <h2 id="paper">2. Drawing size and paper</h2>
+    <p>A 400 × 250 pixel canvas with <code>createPlot({ paper: "A4", margin: 12, width: 80 })</code> maps to an 80 × 50 mm area centred on A4 paper. The line from (40, 125) to (360, 125) is 64 mm long on paper. Choose the paper and margin first. Use <code>paperX</code>/<code>paperY</code> to move the sheet; <code>x</code>/<code>y</code> place the canvas area in millimetres from home.</p>
     <figure class="canvas-placement-diagram">
 
     <svg class="bed-figure" viewBox="0 0 320 240" width="320" height="240" role="img" aria-label="A 80 by 50 millimetre drawing centred on A4 landscape paper, centred on the 594 by 432 millimetre machine bed">
@@ -104,7 +88,7 @@ function draw() {
   plot.line(30, 125, 370, 125);
   plot.go();
 }</code></pre>
-    <p>Use the <code>index.html</code> from <a href="setup.html#global-mode">Setup</a> and replace its <code>sketch.js</code> with the code above. The canvas fits proportionally inside a 12 mm margin on A2. On the HSE/A2, paper is 594 × 420 mm at X = 0, Y = 6 mm. This canvas maps to 570 × 356.25 mm, centred on it. This is a full-sheet drawing, larger than the first 80 mm test. Put the real paper at that position. Add <code>plot.showBed()</code> after recording the shapes to see the selected paper and placement.</p>
+    <p>Use the <code>index.html</code> from <a href="setup.html#global-mode">Setup</a> and replace its <code>sketch.js</code> with the code above. The canvas fits proportionally inside a 12 mm margin on A2. On the HSE/A2, paper is 594 × 420 mm at X = 0, Y = 6 mm. This canvas maps to 570 × 356.25 mm, centred on it. This is a full-sheet drawing, larger than the first 80 mm canvas area. Put the real paper at that position. Add <code>plot.showBed()</code> after recording the shapes to see the selected paper and placement.</p>
     <p><code>paper</code> accepts A0–A6. Default <code>orientation: "auto"</code> follows the canvas aspect ratio and tries the other orientation if needed to fit the bed. Explicit <code>"portrait"</code> or <code>"landscape"</code> is honoured or refused. <code>margin</code> defaults to 12 mm. <code>paperX</code>/<code>paperY</code> move the sheet; <code>x</code>/<code>y</code> locate the canvas. <code>width</code> or <code>mmPerPixel</code> overrides fitting. <code>plot.paper</code> reports the resolved sheet. Invalid paper placement or strokes outside the margins are refused before plotting.</p>
     <h3>Move the paper</h3>
     <pre><code class="language-javascript">plot = createPlot({
@@ -124,7 +108,7 @@ plot.drawBed(bedCanvas, {
 });</code></pre>
     <p>This shades the A4 paper and draws the planned strokes at their existing position. It does not move or scale them. Without <code>sheet</code>, the preview uses selected <code>plot.paper</code>, or the mapped canvas when no paper was selected. To place A4 in landscape, use width 297 and height 210; that changes the paper preview only. For quarter-turn placement of a complete job, use the core’s <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/examples/first_job/">paper and bed panel</a>.</p>
 
-    <h2 id="plotting">4. Start a plot</h2>
+    <h2 id="plotting">3. Plot the line</h2>
     <p>Add <code>plot.go()</code> at the end of <code>draw()</code>, after recording every shape. It waits for your click; it does not start a machine while the page loads. Check the <a href="setup.html#direct-plotting">connection requirements</a> before the first plot. Park the carriage at the <a href="setup.html#machine-origin">physical origin that matches the driver</a>, place the paper to match the preview, then click the drawing and choose the serial port. The click confirms the plot. Another click requests a stop.</p>
     <p>After a stop or error, check the machine and park the carriage at home before starting another job.</p>
     <figure class="doc-animation" id="animation-plot-go">
@@ -132,27 +116,25 @@ plot.drawBed(bedCanvas, {
       <figcaption>Draw first, then click to plot. Click again to stop. This is an illustration of a complete drawing; machine speed and placement are schematic.</figcaption>
     </figure>
 
-    <h2 id="werkwijzen">Two ways to work</h2>
-    <p>Draw everything and plot once. Or draw and plot one object, wait until it finishes, then make the next.</p>
-    <h3>Draw everything, then plot</h3>
-    <p>Draw all the shapes and start one plot. Choose <code>strategy: "drawn"</code> to keep the drawing order.</p>
-    <h3>Draw and plot one object, then the next</h3>
-    <p>Keep the same <code>plot</code> and paper settings. Plot one object, wait until it finishes, clear the recording with <code>plot.clear()</code>, then draw the next. With separate <code>go()</code> calls, the planner orders the current object and the carriage returns home after each plot. <code>sequence()</code> below keeps the position between objects and returns home after the last one.</p>
-    <p><strong><code>go()</code> keeps the recording.</strong> Without <code>clear()</code>, earlier objects are plotted again. That can be a deliberate second pass. <code>clear()</code> does not remove ink.</p>
-    <p>Wait until an object finishes before adding the next. A sequence uses one pen; sending new lines while the machine draws is not supported yet.</p>
-    <pre><code class="language-javascript">// Call from a button or key handler, using the existing plot.
-async function plotTwoObjects() {
-  plot.clear();
-  plot.rect(10, 10, 100, 80);
-  const first = await plot.go();
-  if (first.status !== "complete") return;
-  plot.clear();
-  plot.circle(200, 125, 60);
-  await plot.go();
-}</code></pre>
-    <p>Call <code>plotTwoObjects()</code> from a button or key handler after creating <code>plot</code> with the starter setup. Each <code>go()</code> can ask for confirmation or wait for another click. For one initial click to plot successive objects, use <code>sequence()</code> below. Add the next object only after <code>status: "complete"</code>; a cancelled, stopped or failed job has not completed the object. Keep paper and placement settings consistent between jobs.</p>
-    <h4>One click with sequence()</h4>
-    <p>Keep the starter’s <code>setup()</code> and replace <code>draw()</code> with the code below. <code>plot.sequence(prepare)</code> starts with one click. It clears the recording before each call to your function, plots that object and waits before calling again. The index starts at zero and increases after each completed object. Return <code>false</code> when finished. The carriage returns home after the last object. <a href="../examples/chaos_game/index.html">Chaos game</a> shows this with one point at a time and includes a screen demo.</p>
+    <h2 id="werkwijzen">4. Two ways to work</h2>
+  <div class="workflow-pair" aria-label="Two ways to plot">
+    <figure>
+      <img src="images/animations/workflow-draw-then-plot.gif" width="600" height="400" alt="All three objects appear on the p5 canvas before the plotter draws them on paper. It returns home after the drawing.">
+      <figcaption>
+        <h3 id="draw-then-plot"><a href="../examples/direct_plot/index.html">Draw everything, then plot</a></h3>
+        <p>Use <code>plot.go()</code> after drawing all the objects. Click the drawing to start plotting.</p>
+      </figcaption>
+    </figure>
+    <figure>
+      <img src="images/animations/workflow-object-by-object.gif" width="600" height="400" alt="The sketch draws one object, plots it and waits before drawing the next. The plotter keeps its position between objects and returns home after the last one.">
+      <figcaption>
+        <h3 id="object-by-object"><a href="../examples/chaos_game/index.html">Draw one object, plot it, then the next</a></h3>
+        <p>Use <code>plot.sequence()</code> to draw and plot one object at a time. It waits until each object finishes before preparing the next.</p>
+      </figcaption>
+    </figure>
+  </div>
+    <p><code>go()</code> keeps the recording. <code>sequence()</code> clears it automatically before asking for the next object. Clearing changes the recording; it does not remove ink or clear the p5 canvas.</p>
+    <p>For a sequence, keep the first sketch's <code>setup()</code> and replace <code>draw()</code> below. The function receives an index starting at zero. It draws one object, waits for it to finish, then receives the next index. Return <code>false</code> to finish. The carriage returns home after the last object.</p>
     <pre><code class="language-javascript">function draw() {
   background(255);
   noFill();
@@ -162,6 +144,39 @@ async function plotTwoObjects() {
     return true;
   }).catch(console.error);
 }</code></pre>
+    <p>A sequence uses one pen. New lines arriving while the machine is drawing are not supported. With <code>go()</code>, use <code>plot.go({ plan: { strategy: "drawn" } })</code> to keep the drawing order.</p>
+    <details>
+      <summary>Separate plots with go()</summary>
+      <p>Keep the same plot and paper settings. Wait for each <code>go()</code> to complete, clear the recording, then draw the next object. Each separate plot returns home and can ask for another click.</p>
+      <pre><code class="language-javascript">// Call from a button or key handler, using the existing plot.
+async function plotTwoObjects() {
+  plot.clear();
+  plot.rect(10, 10, 100, 80);
+  const first = await plot.go();
+  if (first.status !== "complete") return;
+  plot.clear();
+  plot.circle(200, 125, 60);
+  await plot.go();
+}</code></pre>
+      <p>Call <code>plotTwoObjects()</code> from a button or key handler after creating <code>plot</code>. Check <code>status: "complete"</code> before continuing.</p>
+    </details>
+
+    <h2 id="change-drawing">5. Change the drawing</h2>
+    <p>Replace <code>plot.line()</code> in <code>draw()</code> with this loop. Keep <code>setup()</code>, <code>background()</code>, <code>noFill()</code> and <code>plot.clear()</code>.</p>
+    <pre><code class="language-javascript">const points = [];
+for (let x = 40; x &lt;= 360; x += 4) {
+  points.push({
+    x,
+    y: 125 + 40 * Math.sin(x * 0.04)
+  });
+}
+plot.polyline(points);</code></pre>
+
+    <figure class="doc-animation" id="animation-waves">
+      <img src="images/animations/waves.svg" width="600" height="400" loading="lazy" alt="Different wave shapes are sampled and recorded as pen lines.">
+      <figcaption>A wave gives you a number; your loop decides where the line goes. Try changing the amplitude multiplier <code>40</code> above to <code>10</code>. For a different use of the same idea, open the <a href="../examples/wave_field/index.html">wave field</a> and press R for another seed.</figcaption>
+    </figure>
+
     <h2 id="shapes">Shapes and fills</h2>
     <p><code>plot.…</code> records these 2D shapes: <code>point</code>, <code>line</code>, <code>circle</code>, <code>ellipse</code>, <code>arc</code>, <code>rect</code>, <code>square</code>, <code>triangle</code>, <code>quad</code>, plus <code>polyline</code> and <code>polygon</code>, which take <code>[x, y]</code> pairs or <code>{ x, y }</code> objects. Angles follow <code>angleMode()</code>. A point is recorded as a 0.24 mm dash. Rectangles use corner coordinates; ellipse and arc coordinates refer to their centre. Rounded rectangles and screen transforms are not recorded.</p>
     <pre><code class="language-javascript">plot.square(30, 10, 40);
@@ -189,68 +204,7 @@ plot.stipple(square, 150, 3);    // count, seed</code></pre>
       <figcaption>Zoom in on <code>plot.point()</code>: the recorded point is a 0.24 mm dash. A row of points becomes a texture, even though every mark is a very short line.</figcaption>
     </figure>
 
-    <h2 id="starters">Complete drawing starters</h2>
-    <p>Three p5 sketches using the <code>index.html</code> from <a href="setup.html#global-mode">Setup</a>. Replace <code>sketch.js</code> with one of them.</p>
-    <h3>Rings</h3>
-    <pre><code class="language-javascript">let plot;
-
-function setup() {
-  createCanvas(600, 600);
-  plot = createPlot({ paper: "A2", margin: 12, width: 300 });   // 300 mm wide, centred on A2
-  noLoop();
-}
-
-function draw() {
-  background("#ffffff");
-  noFill();
-  plot.clear();
-  for (let d = 40; d &lt;= 560; d += 20) plot.circle(300, 300, d);
-  plot.go();   // click the drawing to plot
-}</code></pre>
-    <h3>A wave, twenty times</h3>
-    <pre><code class="language-javascript">let plot;
-
-function setup() {
-  createCanvas(600, 600);
-  plot = createPlot({ paper: "A2", margin: 12, width: 300 });
-  noLoop();
-}
-
-function draw() {
-  background("#ffffff");
-  noFill();
-  plot.clear();
-  for (let row = 0; row &lt; 20; row += 1) {
-    let points = [];
-    for (let x = 40; x &lt;= 560; x += 4) {
-      points.push([x, 60 + row * 25 + 10 * Math.sin((x + row * 9) * 0.03)]);
-    }
-    plot.polyline(points);
-  }
-  plot.go();
-}</code></pre>
-    <h3>Tone from lines</h3>
-    <pre><code class="language-javascript">let plot;
-
-function setup() {
-  createCanvas(600, 600);
-  plot = createPlot({ paper: "A2", margin: 12, width: 300 });
-  noLoop();
-}
-
-function draw() {
-  background("#ffffff");
-  noFill();
-  plot.clear();
-  for (let i = 0; i &lt; 8; i += 1) {
-    let x = 40 + i * 65;
-    let cell = [[x, 250], [x + 55, 250], [x + 55, 305], [x, 305]];
-    plot.hatch(cell, 6 - i * 0.65, QUARTER_PI);   // spacing in mm on the bed
-    plot.polygon(cell);
-  }
-  plot.go();
-}</code></pre>
-    <p>Finished versions of these, and more, are on <a href="examples.html">Examples</a>; what a plotter can do beyond them is on the engine's <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/possibilities.html">Possibilities</a> page.</p>
+    <p>For complete sketches to copy and change, open <a href="examples.html">Examples</a>.</p>
     <h2 id="core-access">Core access and route planning</h2>
     <p><code>plot.engine</code> gives you the core: layers, pens, cleanup, route planning and exports. <code>createPlotterEngine()</code> creates a core engine directly; its shapes are recorded but not drawn on screen.</p>
 
@@ -269,8 +223,112 @@ function draw() {
       <figcaption>Ochre shows the imported geometry becoming pen strokes. Sage connectors lead from one plan to three export formats; those connectors explain the workflow and are not plotter travel. A file can be a starting point too. <code>plot.engine.importSVG()</code> reads supported SVG geometry; the engine can then export SVG, HPGL or G-code. Try the engine’s <a href="../../vanilla.penplotter/examples/svg_to_pen/index.html">SVG to pen</a> page with a simple drawing of your own.</figcaption>
     </figure>
 
-    <h2 id="instance-mode">Instance mode</h2>
-    <p>For several sketches on one page, use the <a href="setup.html#instance-mode">instance-mode setup</a>.</p>
+    <details class="module-setups">
+      <summary>Using JavaScript modules</summary>
+    <h2 id="advanced-setups">Using JavaScript modules</h2>
+    <p>Use these alternatives when your sketch needs JavaScript modules. The regular editor setup is on <a href="setup.html">Setup</a>.</p>
+
+    <h3 id="instance-mode">Instance mode, sketch as a module</h3>
+    <p>Put the imports in <code>sketch.js</code> and load it as a module. Create the sketch with <code>new p5(…)</code>; p5 calls use the <code>p.</code> prefix.</p>
+    <h4>index.html</h4>
+    <pre><code class="language-markup">&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
+&lt;script type="module" src="sketch.js"&gt;&lt;/script&gt;</code></pre>
+    <h4>sketch.js</h4>
+    <pre><code class="language-javascript">import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@4880b41b911ede36b391e2924a4949b27bdb2378/vanilla.penplotter.js";
+import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@4880b41b911ede36b391e2924a4949b27bdb2378/src/driver/ebb.js";
+import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@b495d269a0f38d8e5fd83b3368a483d0fe50d006/p5.penplotter.js";
+
+installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
+
+new p5(function sketch(p) {
+  let plot;
+
+  p.setup = function () {
+    p.createCanvas(400, 250);
+    plot = p.createPlot({ paper: "A4", margin: 12, width: 120 });
+    p.noLoop();
+  };
+
+  p.draw = function () {
+    p.background("#ffffff");
+    p.stroke("#111111");
+    p.noFill();
+
+    plot.clear();
+    plot.rect(10, 10, 380, 230);
+    plot.circle(200, 125, 120);
+    plot.go();   // ready: click the drawing to plot, click again to stop
+  };
+});</code></pre>
+    <h4>Why choose it</h4>
+    <ul>
+      <li>One file holds everything: what is imported, which version, and the sketch. No hidden wiring in <code>index.html</code>.</li>
+      <li>Imports finish before the sketch is created.</li>
+      <li>Several sketches on one page, each with its own <code>plot</code>.</li>
+      <li>The same file runs under a bundler or in a test without changes.</li>
+    </ul>
+
+
+    <h3 id="module-globals">Global mode from a module</h3>
+    <p>Keep the imports in the sketch module and assign each p5 callback to <code>window</code>.</p>
+    <h4>index.html</h4>
+    <pre><code class="language-markup">&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
+&lt;script type="module" src="sketch.js"&gt;&lt;/script&gt;</code></pre>
+    <h4>sketch.js</h4>
+    <pre><code class="language-javascript">import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@4880b41b911ede36b391e2924a4949b27bdb2378/vanilla.penplotter.js";
+import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@4880b41b911ede36b391e2924a4949b27bdb2378/src/driver/ebb.js";
+import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@b495d269a0f38d8e5fd83b3368a483d0fe50d006/p5.penplotter.js";
+
+installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
+
+let plot;
+
+function setup() {
+  createCanvas(400, 250);
+  plot = createPlot({ paper: "A4", margin: 12, width: 120 });
+  noLoop();
+}
+
+function draw() {
+  background("#ffffff");
+  stroke("#111111");
+  noFill();
+
+  plot.clear();
+  plot.rect(10, 10, 380, 230);
+  plot.circle(200, 125, 120);
+  plot.go();   // ready: click the drawing to plot, click again to stop
+}
+
+window.setup = setup;
+window.draw = draw;</code></pre>
+    <h4>Why it works</h4>
+    <p>The module runs at <a href="architecture.html#module-load-order">step 4 of the load sequence</a>, connects the adapter, and puts <code>setup</code> and <code>draw</code> on <code>window</code>. At step 6 p5 finds them there, exactly as it would find a classic script's functions. Inside the functions, <code>createCanvas</code> and <code>key</code> resolve because p5 in global mode copies its API onto <code>window</code> before calling <code>setup()</code>.</p>
+    <h4>When to use it</h4>
+    <p>When you want one file and no <code>p.</code> prefix, and you are fine with the <code>window.</code> lines at the bottom. Every p5 callback you use (<code>mousePressed</code>, <code>windowResized</code>) needs its own line. A callback that is not assigned to <code>window</code> will not be called by p5.</p>
+
+    <h3 id="import-maps">Import maps</h3>
+    <p>An import map assigns a name to each module URL in <code>index.html</code>. The sketch imports by that name.</p>
+    <pre><code class="language-markup">&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
+&lt;script type="importmap"&gt;
+{
+  "imports": {
+    "vanilla.penplotter": "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@4880b41b911ede36b391e2924a4949b27bdb2378/vanilla.penplotter.js",
+    "vanilla.penplotter/driver/ebb": "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@4880b41b911ede36b391e2924a4949b27bdb2378/src/driver/ebb.js",
+    "p5.penplotter": "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@b495d269a0f38d8e5fd83b3368a483d0fe50d006/p5.penplotter.js"
+  }
+}
+&lt;/script&gt;
+&lt;script type="module" src="sketch.js"&gt;&lt;/script&gt;</code></pre>
+    <pre><code class="language-javascript">import { PlotterEngine } from "vanilla.penplotter";
+import * as Ebb from "vanilla.penplotter/driver/ebb";
+import { installP5Penplotter } from "p5.penplotter";
+
+installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
+    <p>The import map must appear before the first module script. Bare names like <code>"p5.penplotter"</code> are what a package manager would resolve; the import map does the same job in the browser, without one.</p>
+    <p>The adapter refuses a core below its required minimum; it does not verify every change between versions. For a project you want to keep, pin both versions or keep tested local copies of both repositories.</p>
+
+    </details>
 
     <h2 id="reference">Adapter reference</h2>
     <table><thead><tr><th>Call or option</th><th>Units and behaviour</th></tr></thead><tbody>

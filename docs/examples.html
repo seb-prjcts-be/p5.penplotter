@@ -17,8 +17,8 @@
     <ul class="nav-links">
       <li><a href="../index.html">Home</a></li>
       <li><a href="setup.html">Setup</a></li>
-      <li><a href="examples.html" class="active">Examples</a></li>
       <li><a href="guide.html">Guide</a></li>
+      <li><a href="examples.html" class="active">Examples</a></li>
       <li><a href="architecture.html">Architecture</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">GitHub</a></li>
@@ -28,37 +28,16 @@
   <div class="ex-page-header">
     <div class="section-tag">p5.js addon library · v0.2.1</div>
     <h1>Examples</h1>
-    <p>Choose how you want to work, then try a different drawing. Each example has a copyable sketch. Use the <code>index.html</code> from <a href="setup.html#global-mode">Setup</a>.</p>
-  </div>
-  <div class="workflow-pair" aria-label="Two ways to plot">
-    <figure>
-      <img src="images/animations/workflow-draw-then-plot.gif" width="600" height="400" alt="All three objects appear on the p5 canvas before the plotter draws them on paper. It returns home after the drawing.">
-      <figcaption>
-        <h2><a href="#direct_plot">Draw everything, then plot</a></h2>
-        <p>Use <code>plot.go()</code> after drawing all the objects. Click the drawing to start plotting.</p>
-      </figcaption>
-    </figure>
-    <figure>
-      <img src="images/animations/workflow-object-by-object.gif" width="600" height="400" alt="The sketch draws one object, plots it and waits before drawing the next. The plotter keeps its position between objects and returns home after the last one.">
-      <figcaption>
-        <h2><a href="#chaos_game">Draw one object, plot it, then the next</a></h2>
-        <p>Use <code>plot.sequence()</code> to draw and plot one object at a time. It waits until each object finishes before preparing the next.</p>
-      </figcaption>
-    </figure>
+    <p>Open a drawing, copy its sketch and try changing it. Keep the <code>index.html</code> from <a href="setup.html">Setup</a>. The <a href="guide.html#werkwijzen">Guide</a> explains the two ways to plot.</p>
   </div>
   <section id="direct_plot" class="section section-dark">
     <div class="section-header">
       <div class="section-tag">five lines, a frame, and the pen</div>
-      <h2>Direct <span class="accent">plot</span></h2>
-      <p class="section-desc">Five wave lines inside a frame demonstrate the first way to work: draw everything, call plot.go(), then click the drawing to plot it.</p>
+      <h2>Wave <span class="accent">lines</span></h2>
+      <p class="section-desc">Five wave lines inside a frame. Uses <code>plot.go()</code>.</p>
     </div>
     <div class="ex-preview">
-      <div class="ex-canvas"><iframe src="../examples/direct_plot/index.html?embed" title="Direct plot" loading="lazy"></iframe></div>
-<pre class="ex-code-block"><code class="language-javascript">plot = createPlot({ paper: "A2", margin: 12 });
-plot.rect(10, 10, 380, 230);
-plot.polyline(points);
-plot.drawBed(bedCanvas); // uses the chosen A2 paper
-plot.go();   // click the drawing to plot</code></pre>
+      <div class="ex-canvas"><iframe src="../examples/direct_plot/index.html?embed" title="Wave lines" loading="lazy"></iframe></div>
 <a class="ex-full-link" href="../examples/direct_plot/index.html">-&gt; full example</a>
     </div>
   </section>
@@ -67,41 +46,26 @@ plot.go();   // click the drawing to plot</code></pre>
     <div class="section-header">
       <div class="section-tag">one point at a time</div>
       <h2>Chaos <span class="accent">game</span></h2>
-      <p class="section-desc">The same halfway rule, repeated patiently, produces a Sierpinski triangle. This example calculates one point, plots it and waits before calculating the next. Try the screen demo or open the sketch to plot it on paper.</p>
+      <p class="section-desc">The same halfway rule, repeated patiently, produces a Sierpinski triangle. Uses <code>plot.sequence()</code>, one point at a time.</p>
     </div>
     <div class="ex-preview">
       <div class="ex-canvas"><iframe src="../examples/chaos_game/index.html?embed" title="Chaos game" loading="lazy"></iframe></div>
-<pre class="ex-code-block"><code class="language-javascript">function nextPoint() {
-  if (dots &gt;= DOTS) return false;
-  const c = random(corners);
-  p.x = (p.x + c[0]) / 2;
-  p.y = (p.y + c[1]) / 2;
-  plot.point(p.x, p.y);
-  dots++;
-  plot.showBed();
-  return true;
-}
-
-plot.sequence(nextPoint);</code></pre>
 <a class="ex-full-link" href="../examples/chaos_game/index.html">-&gt; full example</a>
 <a class="ex-full-link" href="../examples/chaos_game/index.html#animation-chaos-game">-&gt; watch the triangle appear</a>
     </div>
   </section>
   <div class="ex-page-header">
     <h2>Other drawings</h2>
-    <p>These sketches draw everything first and use <code>plot.go()</code>. Change the drawing while keeping the same way of plotting.</p>
+    <p>These drawings use <code>plot.go()</code>.</p>
   </div>
   <section id="molnar_grid" class="section">
     <div class="section-header">
       <div class="section-tag">let the grid come apart</div>
       <h2>Molnár <span class="accent">grid</span></h2>
-      <p class="section-desc">Ten rows of nested squares. The top row is exact; each row down, the squares drift and turn a little more, until the bottom row has come apart. Try another seed to change the arrangement. Keep the drawing in sketch.js and the library imports in index.html.</p>
+      <p class="section-desc">Ten rows of nested squares. The top row is exact; each row down, the squares drift and turn a little more, until the bottom row has come apart. Uses <code>plot.go()</code>.</p>
     </div>
     <div class="ex-preview">
       <div class="ex-canvas"><iframe src="../examples/molnar_grid/index.html?embed" title="Molnár grid" loading="lazy"></iframe></div>
-<pre class="ex-code-block"><code class="language-javascript">let disorder = row / (n - 1);
-let angle = random(-1, 1) * disorder * QUARTER_PI;
-plot.polygon(corners(cx + dx, cy + dy, radius, angle));</code></pre>
 <a class="ex-full-link" href="../examples/molnar_grid/index.html">-&gt; full example</a>
     </div>
   </section>
@@ -110,13 +74,10 @@ plot.polygon(corners(cx + dx, cy + dy, radius, angle));</code></pre>
     <div class="section-header">
       <div class="section-tag">what your pen does on your paper</div>
       <h2>Calibration <span class="accent">sheet</span></h2>
-      <p class="section-desc">What your pen does on your paper: a 100 mm ruler, hatch and cross-hatch scales down to 0.8 mm, stipple densities, circles from 2 to 40 mm and line pairs from 0.3 mm apart. Plot it once per pen and keep the sheet.</p>
+      <p class="section-desc">What your pen does on your paper: a 100 mm ruler, hatch and cross-hatch scales down to 0.8 mm, stipple densities, circles from 2 to 40 mm and line pairs from 0.3 mm apart. Plot it once per pen and keep the sheet. Uses <code>plot.go()</code>.</p>
     </div>
     <div class="ex-preview">
       <div class="ex-canvas"><iframe src="../examples/calibration_sheet/index.html?embed" title="Calibration sheet" loading="lazy"></iframe></div>
-<pre class="ex-code-block"><code class="language-javascript">[6, 4, 3, 2, 1.5, 1.2, 1, 0.8].forEach((spacing, i) => {
-plot.hatch(cellAt(20 + i * 22, 45, 18), spacing, QUARTER_PI);
-});</code></pre>
 <a class="ex-full-link" href="../examples/calibration_sheet/index.html">-&gt; full example</a>
     </div>
   </section>
@@ -125,14 +86,10 @@ plot.hatch(cellAt(20 + i * 22, 45, 18), spacing, QUARTER_PI);
     <div class="section-header">
       <div class="section-tag">a seed chooses the field</div>
       <h2>Wave <span class="accent">field</span></h2>
-      <p class="section-desc">Two waves, one per axis, give every point a direction; sixty lines follow it until they leave the frame. The seed picks the wave shape: different fields from different seeds.</p>
+      <p class="section-desc">Two waves, one per axis, give every point a direction; sixty lines follow it until they leave the frame. The seed picks the wave shape: different fields from different seeds. Uses <code>plot.go()</code>.</p>
     </div>
     <div class="ex-preview">
       <div class="ex-canvas"><iframe src="../examples/wave_field/index.html?embed" title="Wave field" loading="lazy"></iframe></div>
-<pre class="ex-code-block"><code class="language-javascript">const angle = (Waves.wave(x * 0.012, { wave: shape, t: 0 })
-+ Waves.wave(y * 0.012 + 3, { wave: shape, t: 0 })) * PI;
-x += cos(angle) * 2.4;
-y += sin(angle) * 2.4;</code></pre>
 <a class="ex-full-link" href="../examples/wave_field/index.html">-&gt; full example</a>
     </div>
   </section>
@@ -141,22 +98,20 @@ y += sin(angle) * 2.4;</code></pre>
     <div class="section-header">
       <div class="section-tag">three wheels, one unbroken line</div>
       <h2>Spirograph</h2>
-      <p class="section-desc">Three hypotrochoids around one centre; the seed picks the gear ratios. Each curve is one unbroken polyline, with no pen lift within the curve.</p>
+      <p class="section-desc">Three hypotrochoids around one centre; the seed picks the gear ratios. Each curve is one unbroken polyline, with no pen lift within the curve. Uses <code>plot.go()</code>.</p>
     </div>
     <div class="ex-preview">
       <div class="ex-canvas"><iframe src="../examples/spirograph/index.html?embed" title="Spirograph" loading="lazy"></iframe></div>
-<pre class="ex-code-block"><code class="language-javascript">const t = (i / steps) * TWO_PI * turns;
-points.push([cx + (R - r) * cos(t) + d * cos(((R - r) / r) * t),
-cy + (R - r) * sin(t) - d * sin(((R - r) / r) * t)]);
-plot.polyline(points);</code></pre>
 <a class="ex-full-link" href="../examples/spirograph/index.html">-&gt; full example</a>
     </div>
   </section>
+
 
   <div class="ex-page-header">
     <h2>Inspect the planned route</h2>
     <p>These two examples show the core engine's plan on screen. They do not connect to a plotter.</p>
   </div>
+
   <section id="first_plot" class="section section-dark">
     <div class="section-header">
       <div class="section-tag">what the planner made of your sketch</div>
@@ -165,10 +120,6 @@ plot.polyline(points);</code></pre>
     </div>
     <div class="ex-preview">
       <div class="ex-canvas"><iframe src="../examples/first_plot/index.html?embed" title="Plot preview" loading="lazy"></iframe></div>
-<pre class="ex-code-block"><code class="language-javascript">const plot = createPlotterEngine();
-plot.hatch(boundary, { spacing: 14, angle: Math.PI / 6 });
-plot.circle(324, 374, 126);
-drawRoute(plot.plan());</code></pre>
 <a class="ex-full-link" href="../examples/first_plot/index.html">-&gt; full example</a>
     </div>
   </section>
@@ -181,9 +132,6 @@ drawRoute(plot.plan());</code></pre>
     </div>
     <div class="ex-preview">
       <div class="ex-canvas"><iframe src="../examples/wave_plot/index.html?embed" title="Wave plot preview" loading="lazy"></iframe></div>
-<pre class="ex-code-block"><code class="language-javascript">const waveY = Waves.wave(x + row * 7, { wave: waveSeed, t: 0, amplitude: 22, frequency: 0.045 });
-points.push({ x, y: 86 + row * 24 + waveY });
-plot.polyline(points);</code></pre>
 <a class="ex-full-link" href="../examples/wave_plot/index.html">-&gt; full example</a>
     </div>
   </section>
@@ -193,6 +141,69 @@ plot.polyline(points);</code></pre>
       <p class="reading-note">The engine's own examples, without p5.js, are on the sister site: <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/examples.html">vanilla.penplotter examples</a>, and its <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/possibilities.html">Possibilities</a> page shows what a pen can do.</p>
     </div>
   </section>
+  <details class="page">
+    <summary id="starters">More sketches to copy</summary>
+    <p>Three p5 sketches using the <code>index.html</code> from <a href="setup.html#global-mode">Setup</a>. Replace <code>sketch.js</code> with one of them.</p>
+    <h3>Rings</h3>
+    <pre><code class="language-javascript">let plot;
+
+function setup() {
+  createCanvas(600, 600);
+  plot = createPlot({ paper: "A2", margin: 12, width: 300 });   // 300 mm wide, centred on A2
+  noLoop();
+}
+
+function draw() {
+  background("#ffffff");
+  noFill();
+  plot.clear();
+  for (let d = 40; d &lt;= 560; d += 20) plot.circle(300, 300, d);
+  plot.go();   // click the drawing to plot
+}</code></pre>
+    <h3>A wave, twenty times</h3>
+    <pre><code class="language-javascript">let plot;
+
+function setup() {
+  createCanvas(600, 600);
+  plot = createPlot({ paper: "A2", margin: 12, width: 300 });
+  noLoop();
+}
+
+function draw() {
+  background("#ffffff");
+  noFill();
+  plot.clear();
+  for (let row = 0; row &lt; 20; row += 1) {
+    let points = [];
+    for (let x = 40; x &lt;= 560; x += 4) {
+      points.push([x, 60 + row * 25 + 10 * Math.sin((x + row * 9) * 0.03)]);
+    }
+    plot.polyline(points);
+  }
+  plot.go();
+}</code></pre>
+    <h3>Tone from lines</h3>
+    <pre><code class="language-javascript">let plot;
+
+function setup() {
+  createCanvas(600, 600);
+  plot = createPlot({ paper: "A2", margin: 12, width: 300 });
+  noLoop();
+}
+
+function draw() {
+  background("#ffffff");
+  noFill();
+  plot.clear();
+  for (let i = 0; i &lt; 8; i += 1) {
+    let x = 40 + i * 65;
+    let cell = [[x, 250], [x + 55, 250], [x + 55, 305], [x, 305]];
+    plot.hatch(cell, 6 - i * 0.65, QUARTER_PI);   // spacing in mm on the bed
+    plot.polygon(cell);
+  }
+  plot.go();
+}</code></pre>
+  </details>
   </main>
   <footer>
     <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; Sebastien Vanblaere &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine</p>

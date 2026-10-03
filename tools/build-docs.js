@@ -62,7 +62,9 @@ export function renderMarkdown(markdown) {
     } else if (/^#{1,3} /.test(line)) {
       flush();
       const level = line.match(/^#+/)[0].length;
-      html.push(`<h${level}>${inline(line.slice(level + 1))}</h${level}>`);
+      const text = line.slice(level + 1);
+      const id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      html.push(`<h${level}${level > 1 ? ` id="${id}"` : ""}>${inline(text)}</h${level}>`);
       index += 1;
     } else if (line.startsWith("|")) {
       flush();
@@ -115,8 +117,8 @@ export function renderPage(page, markdown) {
     <ul class="nav-links">
       <li><a href="../index.html">Home</a></li>
       <li><a href="setup.html">Setup</a></li>
-      <li><a href="examples.html">Examples</a></li>
       <li><a href="guide.html">Guide</a></li>
+      <li><a href="examples.html">Examples</a></li>
       <li><a href="architecture.html"${page.target.endsWith("architecture.html") ? ' class="active"' : ""}>Architecture</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">GitHub</a></li>
