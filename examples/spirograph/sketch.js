@@ -47,6 +47,7 @@ function draw() {
   plot.go();   // ready: click the drawing to plot, click again to stop
 }
 
+// Thank you mister Euclid!
 function gcd(a, b) {
   return b === 0 ? a : gcd(b, a % b);
 }
