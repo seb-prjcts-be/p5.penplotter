@@ -167,14 +167,22 @@ plot.polyline(points);
 
 Each one is a standalone page under `examples/`; the [examples page](https://seb-prjcts-be.github.io/p5.penplotter/docs/examples.html) shows them live.
 
-- `direct_plot` - draw with `plot.…`, click the drawing, and the sketch goes to the plotter
-- `first_plot` - create the engine from a p5 canvas and draw what the planner made of it
-- `wave_plot` - 24 rows sampled from a wave formula
-- `molnar_grid` - nested squares that drift and turn a little more with every row; a plain global-mode sketch
+Start with the two ways to work:
+
+- `direct_plot` - draw everything, then click to plot with `plot.go()`
+- `chaos_game` - calculate one point, plot it and wait before the next with `plot.sequence()`
+
+Then vary the drawing:
+
+- `molnar_grid` - nested squares that drift and turn a little more with every row
 - `calibration_sheet` - ruler, tone scales, circles and line spacing: what your pen does on your paper
 - `wave_field` - streamlines through a sampled direction field; a seed chooses the field
-- `spirograph` - three hypotrochoids, each one unbroken polyline: with no pen lift within each curve
-- `chaos_game` - 1 500 dots; calculate one point, plot it, wait, then calculate the next
+- `spirograph` - three hypotrochoids, each one unbroken polyline
+
+To inspect a planned route on screen, without connecting a plotter:
+
+- `first_plot` (Plot preview) - a hatched polygon and a circle
+- `wave_plot` (Wave plot preview) - 24 rows sampled from a wave formula
 
 ## Related work
 

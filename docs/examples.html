@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Examples - p5.penplotter</title>
-  <meta name="description" content="Seven p5.js sketches that plan for a pen plotter: from a first plot to a calibration sheet, a wave field and a spirograph.">
+  <meta name="description" content="Two ways to plot from p5.js, drawing variations and examples for inspecting a planned route.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -28,13 +28,14 @@
   <div class="ex-page-header">
     <div class="section-tag">p5.js addon library · v0.2.1</div>
     <h1>Examples</h1>
-    <p>Open an example for its drawing and copyable sketch. Use the <code>index.html</code> from <a href="setup.html#global-mode">Setup</a>. The wave examples load their sampler themselves. First plot and Wave plot preview the core engine without a hardware control.</p>
+    <p>Choose how you want to work, then try a different drawing. Each example has a copyable sketch. Use the <code>index.html</code> from <a href="setup.html#global-mode">Setup</a>.</p>
+    <p><a href="#direct_plot">Draw everything, then plot</a> with <code>plot.go()</code>, or <a href="#chaos_game">draw one object, plot it and wait before the next</a> with <code>plot.sequence()</code>.</p>
   </div>
   <section id="direct_plot" class="section section-dark">
     <div class="section-header">
       <div class="section-tag">five lines, a frame, and the pen</div>
       <h2>Direct <span class="accent">plot</span></h2>
-      <p class="section-desc">Five wave lines inside a frame. Open the example to plot the complete drawing.</p>
+      <p class="section-desc">Five wave lines inside a frame demonstrate the first way to work: draw everything, call plot.go(), then click the drawing to plot it.</p>
     </div>
     <div class="ex-preview">
       <div class="ex-canvas"><iframe src="../examples/direct_plot/index.html?embed" title="Direct plot" loading="lazy"></iframe></div>
@@ -47,6 +48,34 @@ plot.go();   // click the drawing to plot</code></pre>
     </div>
   </section>
 
+  <section id="chaos_game" class="section">
+    <div class="section-header">
+      <div class="section-tag">one point at a time</div>
+      <h2>Chaos <span class="accent">game</span></h2>
+      <p class="section-desc">The same halfway rule, repeated patiently, produces a Sierpinski triangle. This example calculates one point, plots it and waits before calculating the next. Try the screen demo or open the sketch to plot it on paper.</p>
+    </div>
+    <div class="ex-preview">
+      <div class="ex-canvas"><iframe src="../examples/chaos_game/index.html?embed" title="Chaos game" loading="lazy"></iframe></div>
+<pre class="ex-code-block"><code class="language-javascript">function nextPoint() {
+  if (dots &gt;= DOTS) return false;
+  const c = random(corners);
+  p.x = (p.x + c[0]) / 2;
+  p.y = (p.y + c[1]) / 2;
+  plot.point(p.x, p.y);
+  dots++;
+  plot.showBed();
+  return true;
+}
+
+plot.sequence(nextPoint);</code></pre>
+<a class="ex-full-link" href="../examples/chaos_game/index.html">-&gt; full example</a>
+<a class="ex-full-link" href="../examples/chaos_game/index.html#animation-chaos-game">-&gt; watch the triangle appear</a>
+    </div>
+  </section>
+  <div class="ex-page-header">
+    <h2>Other drawings</h2>
+    <p>These sketches draw everything first and use <code>plot.go()</code>. Change the drawing while keeping the same way of plotting.</p>
+  </div>
   <section id="molnar_grid" class="section">
     <div class="section-header">
       <div class="section-tag">let the grid come apart</div>
@@ -109,38 +138,18 @@ plot.polyline(points);</code></pre>
     </div>
   </section>
 
-  <section id="chaos_game" class="section">
-    <div class="section-header">
-      <div class="section-tag">one point at a time</div>
-      <h2>Chaos <span class="accent">game</span></h2>
-      <p class="section-desc">The same halfway rule, repeated patiently, produces a Sierpinski triangle. This example calculates one point, plots it and waits before calculating the next. Try the screen demo or open the sketch to plot it on paper.</p>
-    </div>
-    <div class="ex-preview">
-      <div class="ex-canvas"><iframe src="../examples/chaos_game/index.html?embed" title="Chaos game" loading="lazy"></iframe></div>
-<pre class="ex-code-block"><code class="language-javascript">function nextPoint() {
-  if (dots &gt;= DOTS) return false;
-  const c = random(corners);
-  p.x = (p.x + c[0]) / 2;
-  p.y = (p.y + c[1]) / 2;
-  plot.point(p.x, p.y);
-  dots++;
-  plot.showBed();
-  return true;
-}
-
-plot.sequence(nextPoint);</code></pre>
-<a class="ex-full-link" href="../examples/chaos_game/index.html">-&gt; full example</a>
-<a class="ex-full-link" href="../examples/chaos_game/index.html#animation-chaos-game">-&gt; watch the triangle appear</a>
-    </div>
-  </section>
+  <div class="ex-page-header">
+    <h2>Inspect the planned route</h2>
+    <p>These two examples show the core engine's plan on screen. They do not connect to a plotter.</p>
+  </div>
   <section id="first_plot" class="section section-dark">
     <div class="section-header">
       <div class="section-tag">what the planner made of your sketch</div>
-      <h2>First <span class="accent">plot</span></h2>
+      <h2>Plot <span class="accent">preview</span></h2>
       <p class="section-desc">Create the core engine from a p5 canvas, build a hatched polygon and a circle, and draw the optimized plan back with p5: the same order and seams the machine would get.</p>
     </div>
     <div class="ex-preview">
-      <div class="ex-canvas"><iframe src="../examples/first_plot/index.html?embed" title="First plot" loading="lazy"></iframe></div>
+      <div class="ex-canvas"><iframe src="../examples/first_plot/index.html?embed" title="Plot preview" loading="lazy"></iframe></div>
 <pre class="ex-code-block"><code class="language-javascript">const plot = createPlotterEngine();
 plot.hatch(boundary, { spacing: 14, angle: Math.PI / 6 });
 plot.circle(324, 374, 126);
@@ -152,11 +161,11 @@ drawRoute(plot.plan());</code></pre>
   <section id="wave_plot" class="section">
     <div class="section-header">
       <div class="section-tag">twenty-four rows of one wave</div>
-      <h2>Wave <span class="accent">plot</span></h2>
+      <h2>Wave plot <span class="accent">preview</span></h2>
       <p class="section-desc">Sample a wave formula into 24 rows of points and inspect the planned route. The adapter passes the sampled points to the engine.</p>
     </div>
     <div class="ex-preview">
-      <div class="ex-canvas"><iframe src="../examples/wave_plot/index.html?embed" title="Wave plot" loading="lazy"></iframe></div>
+      <div class="ex-canvas"><iframe src="../examples/wave_plot/index.html?embed" title="Wave plot preview" loading="lazy"></iframe></div>
 <pre class="ex-code-block"><code class="language-javascript">const waveY = Waves.wave(x + row * 7, { wave: waveSeed, t: 0, amplitude: 22, frequency: 0.045 });
 points.push({ x, y: 86 + row * 24 + waveY });
 plot.polyline(points);</code></pre>
