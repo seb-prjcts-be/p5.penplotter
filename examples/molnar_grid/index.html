@@ -43,7 +43,6 @@
     <div class="demo-layout">
       <div class="demo-code">
         <div class="code-label">sketch.js</div>
-        <p>Use the <a href="../../docs/setup.html#global-mode">global-mode index.html</a> from Setup and copy this sketch into the p5.js Web Editor.</p>
         <pre><code class="language-javascript" data-src="sketch.js">// loading sketch.js …</code></pre>
       </div>
       <div class="demo-right">
@@ -56,9 +55,24 @@
       <canvas id="bed" class="bed" width="594" height="432" aria-label="The bed as the machine sees it, with your canvas as the sheet on it"></canvas>
       <p id="status" role="status">R for another seed. Click the drawing to plot, click again to stop.</p>
       <div class="demo-code cdn-setup">
-        <div class="code-label">index_cdn.html</div>
-        <p class="demo-note">Copy this into index.html in the p5.js Web Editor, alongside sketch.js.</p>
-        <pre><code class="language-markup" data-src="index_cdn.html">&lt;!-- loading index_cdn.html --&gt;</code></pre>
+        <div class="code-label">index.html</div>
+        <pre><code class="language-markup">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;title&gt;penplotter start&lt;/title&gt;
+  &lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
+  &lt;script type="module"&gt;
+    import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@9f19656703c94dc970c0233135cdc9a66cda3f3f/vanilla.penplotter.js";
+    import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@9f19656703c94dc970c0233135cdc9a66cda3f3f/src/driver/ebb.js";
+    import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@3e7948bda7e7b9dbd9c7873805e8dee811260169/p5.penplotter.js";
+    installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
+  &lt;/script&gt;
+  &lt;script src="sketch.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
       </div>
       </div>
     </div>
