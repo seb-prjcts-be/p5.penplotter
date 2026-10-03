@@ -51,7 +51,7 @@
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
 
-    <h2 id="editor">2. Check the installation</h2>
+    <h2 id="editor">2. Draw a line on screen</h2>
     <p>Replace <code>sketch.js</code> with this small test and press Run.</p>
     <h3>sketch.js</h3>
     <pre><code class="language-javascript">let plot;
@@ -67,17 +67,22 @@ function draw() {
   stroke(0);
   plot.line(80, 125, 320, 125);
 }</code></pre>
-    <p>A horizontal line should appear without an error in the console. This checks p5.js and the adapter. It does not open a USB connection.</p>
+    <p>You should see a horizontal line. The plotter does not move yet.</p>
 
-    <h2 id="direct-plotting">3. Check the plotter connection</h2>
-    <p>For direct plotting, use Chrome or Edge with the editor, HTTPS or localhost. Connect the plotter by USB.</p>
-    <h3 id="machine-origin">Park the carriage at the physical origin</h3>
-    <p>In my setup, viewed as in the diagram below, the carriage starts at the bottom-left corner. Positive X runs up the long rail (594 mm); positive Y runs to the right across the bed (432 mm). The paper preview turns those axes into a coordinate view: (0,0) at top left, X to the right and Y down. These are two views of the same bed.</p>
-    <figure><img src="images/machine-origin.svg" width="600" height="400" style="max-width:100%;height:auto" alt="The physical start at bottom left in Seb’s setup and the same origin at top left in the coordinate preview."><figcaption>Use the physical starting corner that matches the driver’s motor directions. Left and right depend on where you stand.</figcaption></figure>
-    <p>The machine does not detect its position. The driver assumes that the carriage starts at (0,0). Moving it to another corner changes the physical starting point, but does not reverse the motor directions. Positive coordinates can then send the carriage towards the wrong edge. <code>paperX</code>/<code>paperY</code> move paper within the existing coordinates; they do not change the machine origin. The bounds check verifies the plan, not the physical carriage position.</p>
-
-    <p>For this test, place A4 paper in landscape at X = 148.5 mm, Y = 111 mm in the bed coordinates. The 120 × 75 mm canvas area is centred on that sheet. The <a href="guide.html#paper">Guide</a> explains paper size and placement.</p>
-    <p>Add <code>plot.go();</code> after <code>plot.line()</code> in the test. Run the sketch, then click the drawing and choose the plotter in the port list. It should draw one 72 mm line and return home. Click again to request a stop. After a stop or error, park the carriage at the physical origin before another plot.</p>
+    <h2 id="direct-plotting">3. Plot the same line on paper</h2>
+    <p>Use Chrome or Edge. Connect the plotter by USB and switch it on.</p>
+    <h3 id="machine-origin">Prepare the paper and pen</h3>
+    <p>On my iDraw HSE / A2, the starting corner is bottom left when the long rails run away from you. With the motors off, move the carriage to that corner. The driver takes this position as zero; the machine does not find it automatically.</p>
+    <p>Place an A4 sheet in the centre of the bed, with its 297 mm side along the long rails and its 210 mm side across them. Measured from the starting corner, the nearest paper edge is 148.5 mm along the rails and 111 mm across them. Secure the paper and fit the pen.</p>
+    <p>If your machine has a different starting corner or motor direction, confirm its origin before running this test. Moving the carriage to another corner does not change the driver's directions.</p>
+    <h3>Start the plot</h3>
+    <ol>
+      <li>Add <code>plot.go();</code> immediately after <code>plot.line(80, 125, 320, 125);</code> in the sketch above.</li>
+      <li>Press Run. The line appears on screen again.</li>
+      <li>Click the drawing. Select the plotter in the browser's port list and click Connect.</li>
+    </ol>
+    <p>The pen should draw a 72 mm line through the centre of the sheet, then return to the starting corner.</p>
+    <p>Click the drawing again to stop. After a stop or error, switch off the motors and return the carriage to the starting corner before trying again.</p>
 
     <h2 id="troubleshooting">If the installation fails</h2>
     <ul>
