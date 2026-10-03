@@ -313,6 +313,35 @@ testDrawsAndRecords();
   assert.deepEqual(preview.sheet, { x: 80, y: 70, width: 200, height: 150 }, "existing canvas-area preview stays compatible");
 }
 testShapes();
+{
+  installP5Penplotter(FakeP5, FakeEngine, { driver: fakeKit([]) });
+  const added = [];
+  const calls = [];
+  const context = Object.fromEntries(["clearRect", "drawImage", "beginPath", "moveTo", "lineTo", "stroke"].map(name => [name, (...args) => calls.push([name, ...args])]));
+  const document = {
+    createElement() { return { style: {}, setAttribute() {}, getContext() { return context; } }; },
+    body: { appendChild(canvas) { added.push(canvas); } }
+  };
+  const p = new FakeP5();
+  p.canvas = { ownerDocument: document, parentNode: document.body };
+  const plot = p.createPlot({ x: 80, y: 70, width: 200 });
+  plot.engine.drawBed = () => {};
+  assert.equal(plot.showBed(), plot);
+  const preview = plot.bedPreview;
+  plot.showBed();
+  assert.equal(added.length, 1, "redraw reuses the automatic preview");
+  assert.equal(plot.bedPreview, preview);
+  assert.equal(context.strokeStyle, "#d32f2f");
+  assert(calls.some(([name, x, y]) => name === "moveTo" && x === 6 && y === 6));
+  const supplied = document.createElement("canvas");
+  supplied.width = 594;
+  supplied.height = 432;
+  plot.showBed(supplied);
+  plot.showBed();
+  assert.equal(plot.bedPreview, supplied, "a page can supply its own preview canvas");
+  assert.equal(added.length, 1);
+  assert.deepEqual(plot.toMm(0, 0), { x: 80, y: 70 }, "preview leaves plot placement unchanged");
+}
 testDegrees();
 testDefaultsToOneMillimetrePerPixel();
 await testGo();

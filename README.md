@@ -196,6 +196,7 @@ Each one is a standalone page under `examples/`; the [examples page](https://seb
 - `createPlot(options)`: creates a `P5Plot` that draws supported shapes on screen and records them in millimetres. Its `engine` is the underlying `PlotterEngine`.
 - `createPlotterEngine(options)`: creates a bare engine with, by default, the current canvas size and `px` as unit.
 - `drawRoute(plan, options)`: draws the route: the plan as the machine will draw it, via p5.js. Also `drawPlotPlan()`.
+- `plot.showBed([canvas])`: shows the bed, paper and planned strokes with a small red cross at the origin. Without a canvas, it creates a separate preview and reuses it on redraw. Call it after recording the drawing.
 - `plot.drawBed(canvas, { sheet })`: draws the planned strokes on the bed. Optional `sheet` describes actual paper with `x`, `y`, `width` and `height` in millimetres. By default it uses `plot.paper` when paper was selected, otherwise the mapped canvas area. Preview never scales or moves the drawing.
 - `drawPlanWithP5(p, plan, options)`: the same renderer without the prototype helper.
 

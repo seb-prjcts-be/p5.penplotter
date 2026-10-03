@@ -4,6 +4,7 @@ const sketchDraw = draw;
 
 setup = async function () {
   await sketchSetup();
+  plot.showBed(document.querySelector("#bed"));
   document.querySelector("#p5-preview").appendChild(document.querySelector("canvas.p5Canvas"));
   document.querySelector("#size").textContent = `${(width * plot.scale).toFixed(1)} × ${(height * plot.scale).toFixed(1)} mm`;
   document.querySelector("#place").textContent = `${plot.offset.x.toFixed(1)} / ${plot.offset.y.toFixed(1)} mm`;

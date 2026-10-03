@@ -307,6 +307,39 @@ export class P5Plot {
     return this;
   }
 
+  // Create a separate preview when no canvas is supplied; reuse it on redraw.
+  showBed(canvas = this.bedPreview) {
+    const document = this.p.canvas?.ownerDocument || globalThis.document;
+    if (!document) throw new Error("plot.showBed() needs a browser document.");
+    if (!canvas) {
+      const bed = this.kit?.EBB_PROFILES?.[this.profileId]?.travel || this.engine.document.page;
+      canvas = document.createElement("canvas");
+      canvas.width = Math.ceil(bed.width) + 20;
+      canvas.height = Math.ceil(bed.height) + 20;
+      canvas.style.cssText = "display:block;width:420px;max-width:100%;height:auto";
+      canvas.setAttribute("aria-label", "Bed coordinates: red cross marks the machine origin");
+      const parent = this.p.canvas?.parentNode || document.body;
+      parent.appendChild(canvas);
+    }
+    this.bedPreview = canvas;
+    const drawing = this._bedDrawing || (this._bedDrawing = document.createElement("canvas"));
+    drawing.width = Math.max(1, canvas.width - 20);
+    drawing.height = Math.max(1, canvas.height - 20);
+    this.drawBed(drawing);
+    const context = canvas.getContext("2d");
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(drawing, 10, 10);
+    context.strokeStyle = "#d32f2f";
+    context.lineWidth = 2;
+    context.beginPath();
+    context.moveTo(6, 6);
+    context.lineTo(14, 14);
+    context.moveTo(6, 14);
+    context.lineTo(14, 6);
+    context.stroke();
+    return this;
+  }
+
   say(message) {
     this.status = message;
     if (this.options.log) this.options.log(message);

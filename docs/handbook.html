@@ -174,6 +174,7 @@ installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
 plot.drawBed(bedCanvas, {
   sheet: { x: 60, y: 100, width: 210, height: 297 }
 });</code></pre>
+    <p>Call <code>plot.showBed()</code> after recording the drawing for a separate bed preview with a small red cross at the origin. The library creates the preview and reuses it on redraw. No extra script is needed. You can also pass an existing canvas.</p>
     <p><code>sheet</code> gives the actual paper's X/Y position and width/height in millimetres. Without it, <code>drawBed()</code> uses selected <code>plot.paper</code> or, when no paper was selected, the mapped canvas area. The preview draws the existing planned strokes; it does not move, scale or rotate them. Swap the preview sheet's width and height to preview landscape paper. That changes the outline only. Screen <code>rotate()</code> still does not rotate the recorded geometry.</p>
     <p>For quarter-turn placement of a complete job, use the core's <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/examples/first_job/">paper and bed panel</a>. It turns the drawing with the sheet and checks both against their bounds. These bed helpers require current source in both libraries; use the imports on <a href="setup.html">Setup</a>, rather than assuming the tagged builds include them.</p>
 

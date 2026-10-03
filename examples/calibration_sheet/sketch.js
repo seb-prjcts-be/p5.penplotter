@@ -2,8 +2,6 @@
 // A ruler, tone scales and circles: only physical variables, nothing a screen
 // could fake. Plot it once per pen and keep the sheet.
 let plot;
-let bedPreview;
-let bedDrawing;
 
 function setup() {
   createCanvas(400, 560);
@@ -63,7 +61,7 @@ function draw() {
   // ── 7 · frame, so the sheet can be measured ──
   plot.rect(10 * mm, 10 * mm, 180 * mm, 260 * mm);
 
-  showBed();
+  plot.showBed();
   plot.go();   // the sheet is ready: click the drawing to plot, click again to stop
 }
 
@@ -74,36 +72,4 @@ function cellAt(x, y, size) {
 
 function say(text) {
   console.log(text);
-}
-
-// A separate bed preview; the red cross marks the machine origin, not the drawing corner.
-function showBed() {
-  if (!bedPreview) {
-    bedPreview = select("#bed");
-    if (!bedPreview) {
-      createP("Bed coordinates: red x = machine (0,0). Match the axes to your physical setup.");
-      bedPreview = createElement("canvas");
-      bedPreview.style("display", "block");
-      bedPreview.style("width", "420px");
-      bedPreview.style("max-width", "100%");
-      bedPreview.style("height", "auto");
-    }
-    bedPreview.elt.width = 614;
-    bedPreview.elt.height = 452;
-    bedDrawing = document.createElement("canvas");
-    bedDrawing.width = 594;
-    bedDrawing.height = 432;
-  }
-  plot.drawBed(bedDrawing);
-  const context = bedPreview.elt.getContext("2d");
-  context.clearRect(0, 0, 614, 452);
-  context.drawImage(bedDrawing, 10, 10);
-  context.strokeStyle = "#d32f2f";
-  context.lineWidth = 2;
-  context.beginPath();
-  context.moveTo(6, 6);
-  context.lineTo(14, 14);
-  context.moveTo(6, 14);
-  context.lineTo(14, 6);
-  context.stroke();
 }
