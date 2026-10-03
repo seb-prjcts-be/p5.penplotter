@@ -30,6 +30,8 @@ When `plot.go()` is called from `setup()` or `draw()`, it waits for a click on t
 
 The driver comes from `vanilla.penplotter`; this adapter contains no machine protocol. Direct plotting has been physically tested on an iDraw HSE / A2 with EBB firmware 3.0.2. The same core can preview and export a drawing without a connected plotter.
 
+The driver assumes that the carriage starts at the machine origin; it cannot measure the physical starting position. The bed preview is a coordinate view, with X right and Y down. Match those axes to the actual machine before plotting. See [the physical and coordinate views](setup.html#machine-origin). Paper placement does not change the motor directions or establish a new machine origin.
+
 ## Connecting the adapter
 
 ```js

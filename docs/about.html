@@ -36,7 +36,7 @@
     <p>I wanted to use my plotter from a p5 sketch. Supported <code>plot.line()</code>, <code>plot.circle()</code> and other shape calls draw on the canvas and record geometry in millimetres. <code>plot.go()</code> plans that recording when you start the plot. Clear at the start of a frame to replace earlier geometry, or leave it to accumulate.</p>
 
     <figure class="doc-animation" id="animation-last-frame">
-      <img src="images/animations/last-frame.gif" width="600" height="400" loading="lazy" alt="A running sketch produces changing frames, then one recorded drawing is plotted.">
+      <img src="images/animations/last-frame.svg" width="600" height="400" loading="lazy" alt="A running sketch produces changing frames, then one recorded drawing is plotted.">
       <figcaption>An animated sketch can keep changing while a plot takes time. With <code>plot.clear()</code> at the beginning of <code>draw()</code>, each frame replaces the recorded geometry. The click plots that recording. Without clearing it, the lines accumulate. Use <code>noLoop()</code> when you want to keep one drawing still.</figcaption>
     </figure>
 
@@ -48,7 +48,7 @@
     <p><a href="https://github.com/golanlevin/p5.plotSvg">p5.plotSvg</a> by Golan Levin records a p5 sketch as SVG and covers a wider drawing API. This adapter records a smaller set of explicit shape calls and can pass them to the EBB driver. SVG import and export are also available through the core; imported files must fit its supported subset.</p>
 
     <h2>The machine</h2>
-    <p>Physical tests use my iDraw HSE / A2 with EBB firmware 3.0.2. Park the carriage at home by hand. You can write <code>plot.go()</code> at the end of <code>draw()</code>; it waits for a click to open the connection and start plotting. Other machines have not been physically tested here.</p>
+    <p>Physical tests use my iDraw HSE / A2 with EBB firmware 3.0.2. Park the carriage at the <a href="setup.html#machine-origin">physical origin used by the driver</a>. You can write <code>plot.go()</code> at the end of <code>draw()</code>; it waits for a click to open the connection and start plotting. Other machines have not been physically tested here.</p>
 
     <figure class="doc-animation" id="animation-readme">
       <img src="images/animations/readme.gif" width="600" height="400" loading="lazy" alt="A pixel-written summary explains that the same line is drawn and recorded, with no intermediate SVG required.">

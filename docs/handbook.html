@@ -164,7 +164,7 @@ installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
         <tr><td>A2</td><td>420 × 594</td><td>594 × 420</td></tr>
       </tbody>
     </table>
-    <p>The HSE/A2 bed is 594 × 432 mm, with X along the long rail. A2 fits with its 594 mm edge along X; centred paper has its nearest corner at X = 0, Y = 6 mm. A machine's model name does not set the drawing size.</p>
+    <p>The HSE/A2 bed is 594 × 432 mm, with X along the long rail. A2 fits with its 594 mm edge along X; centred paper has its nearest corner at X = 0, Y = 6 mm. A machine's model name does not set the drawing size. In my photographed setup, the physical origin is bottom left, X runs up the long rail and Y runs right. The coordinate preview shows the same origin at top left, X right and Y down. The driver assumes the starting position; it cannot detect a carriage parked at another corner.</p>
     <h3>Choose an A format</h3>
     <pre><code class="language-javascript">plot = createPlot({ paper: "A2", margin: 12 });</code></pre>
     <p><code>paper</code> accepts A0–A6 through the core's <code>PlotterEngine.paperSize()</code>. The canvas fits proportionally inside paper margins, default 12 mm, and is centred on the sheet. Paper is centred on the installed machine profile's bed; without a profile it starts at X/Y = 0. Default <code>orientation: "auto"</code> follows the canvas aspect ratio and tries the other orientation if needed to fit the bed. Explicit <code>"portrait"</code> or <code>"landscape"</code> is honoured or refused. A2 on the HSE/A2 is 594 × 420 mm at X = 0, Y = 6 mm. A 400 × 250 canvas with a 12 mm margin maps to 570 × 356.25 mm.</p>

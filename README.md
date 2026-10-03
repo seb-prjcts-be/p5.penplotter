@@ -82,6 +82,8 @@ function draw() {
 
 Park the carriage in the home corner by hand first; the machine has no home position of its own.
 
+In my photographed setup, the starting corner is bottom left: positive X runs up the long rail and positive Y runs right. The paper preview shows the same coordinates with (0,0) at top left, X right and Y down. Moving the carriage to another corner does not reverse the motor directions. The driver assumes the starting position; its bounds check cannot detect a wrong physical origin. See [the two views in Setup](https://seb-prjcts-be.github.io/p5.penplotter/docs/setup.html#machine-origin).
+
 The plot contains the shape calls recorded since the last `plot.clear()`. Clear at the start of `draw()` to replace each frame, and use `noLoop()` for a stable drawing. Screen transforms and styling are not recorded.
 
 Tested on one machine: iDraw HSE / A2 (EBB firmware 3.0.2) on 2026-09-21. Plotted from the p5.js Web Editor on 2026-10-01.

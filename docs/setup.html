@@ -103,35 +103,39 @@ function draw() {
 
     <svg class="bed-figure" viewBox="0 0 320 240" width="320" height="240" role="img" aria-label="A 120 by 75 millimetre drawing centred on A4 landscape paper, centred on the 594 by 432 millimetre machine bed">
       <rect x="10" y="10" width="297" height="216" fill="#fff" stroke="#000"/>
-      <circle cx="10" cy="10" r="4" fill="#000"/>
-      <text x="18" y="24" font-family="Inter, Arial, sans-serif" font-size="10">home corner</text>
+      <path d="M6 6 l8 8 m-8 0 l8 -8" fill="none" stroke="#d32f2f" stroke-width="2"/>
+      <text x="18" y="24" font-family="Inter, Arial, sans-serif" font-size="10">(0,0) in the preview</text>
       <rect x="84.25" y="65.5" width="148.5" height="105" fill="rgba(0,0,0,.03)" stroke="#000"/>
       <text x="90" y="80" font-family="Inter, Arial, sans-serif" font-size="10">A4 paper</text>
       <rect x="128.5" y="99.25" width="60" height="37.5" fill="rgba(0,0,0,.08)" stroke="#000"/>
       <text x="132" y="121" font-family="Inter, Arial, sans-serif" font-size="9">your canvas</text>
       <text x="190" y="220" font-family="Inter, Arial, sans-serif" font-size="9">the bed, 594 by 432 mm</text>
     </svg>
-      <figcaption>The starter: a 120 × 75 mm drawing on A4 landscape paper, centred on the HSE/A2 bed.</figcaption>
+      <figcaption>The starter: a 120 × 75 mm drawing on A4 landscape paper, centred on the HSE/A2 bed. This is a coordinate view; the physical starting corner is shown below.</figcaption>
     </figure>
     <figure class="doc-animation" id="animation-draw-bed">
-      <img src="images/animations/draw-bed.gif" width="600" height="400" loading="lazy" alt="The canvas is placed within a 594 by 432 millimetre bed and checked with plot.drawBed.">
+      <img src="images/animations/draw-bed.svg" width="600" height="400" loading="lazy" alt="The canvas is placed within a 594 by 432 millimetre bed and checked with plot.drawBed.">
       <figcaption><code>plot.drawBed(bedCanvas)</code> previews the planned strokes and selected paper; without a paper selection, it uses the mapped canvas area. Pass a separate HTML canvas for the preview. This animation is schematic, not to scale, and shows no automatic homing.</figcaption>
     </figure>
 
     </div>
 
     <h2 id="direct-plotting">3. Direct plotting</h2>
+    <h3 id="machine-origin">The physical starting corner</h3>
+    <p>In my setup, viewed as in the diagram below, the carriage starts at the bottom-left corner. Positive X runs up the long rail (594 mm); positive Y runs to the right across the bed (432 mm). The paper preview turns those axes into a coordinate view: (0,0) at top left, X to the right and Y down. These are two views of the same bed.</p>
+    <figure><img src="images/machine-origin.svg" width="600" height="400" style="max-width:100%;height:auto" alt="The physical start at bottom left in Seb’s setup and the same origin at top left in the coordinate preview."><figcaption>Use the physical starting corner that matches the driver’s motor directions. Left and right depend on where you stand.</figcaption></figure>
+    <p>The machine does not detect its position. The driver assumes that the carriage starts at (0,0). Moving it to another corner changes the physical starting point, but does not reverse the motor directions. Positive coordinates can then send the carriage towards the wrong edge. <code>paperX</code>/<code>paperY</code> move paper within the existing coordinates; they do not change the machine origin. The bounds check verifies the plan, not the physical carriage position.</p>
     <p>Whichever wiring you pick, direct plotting needs the same three things:</p>
     <ul>
       <li>The driver handed in at install: <code>installP5Penplotter(p5, PlotterEngine, { driver: Ebb })</code>. Without it, <code>plot.go()</code> throws and everything else still works.</li>
       <li>Chrome or Edge, on <code>localhost</code> or <code>https</code>. Web Serial exists nowhere else. A folder under XAMPP's <code>htdocs</code> opened as <code>http://localhost/…</code> qualifies; a file opened as <code>file://</code> does not. The p5.js Web Editor does; plotted from it on 2026-10-01.</li>
       <li>A click on the drawing. <code>plot.go()</code> is written at the end of the drawing; the browser shows its port list only after a click, so the status line asks you to check the machine and click. That click is the confirmation. A second click stops.</li>
     </ul>
-    <p>Park the carriage in the home corner by hand before the first plot; the machine has no homing. The driver refuses any point outside the profile's travel with an explicit error instead of moving.</p>
+    <p>Park the carriage in the home corner by hand before the first plot; the machine has no homing. The driver refuses plan coordinates outside the profile's travel. That check cannot detect a carriage parked at the wrong physical origin.</p>
 
     <figure class="doc-animation" id="animation-home-and-stop">
-      <img src="images/animations/home-and-stop.gif" width="600" height="400" loading="lazy" alt="The home corner, a completed route and a stop in the middle of a drawing.">
-      <figcaption>The machine has no automatic homing. Park the carriage at the home corner by hand before plotting. A normal completed job returns home by default; stopping requests a pen lift and motor release at the current position. Delivery needs a working connection. The animation is schematic.</figcaption>
+      <img src="images/animations/home-and-stop.svg" width="600" height="400" loading="lazy" alt="The home corner, a completed route and a stop in the middle of a drawing.">
+      <figcaption>The machine has no automatic homing. Park the carriage at the home corner by hand before plotting. A normal completed job returns home by default; stopping requests a pen lift and motor release at the current position. Delivery needs a working connection. This is a bed-coordinate view; use the physical starting corner described above.</figcaption>
     </figure>
 
     <h2 id="advanced-setups">Advanced setups</h2>

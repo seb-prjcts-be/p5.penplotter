@@ -44,7 +44,8 @@
     <div class="hero-overlay">
       <div class="hero-text">
         <figure class="home-overview">
-          <img src="docs/images/animations/overview.gif" width="600" height="400" alt="A p5.js sketch is drawn on screen, then plotted on paper after a click.">
+          <img src="docs/images/animations/overview.svg" width="600" height="400" alt="A p5.js sketch is drawn on screen, then plotted on paper after a click.">
+        <figcaption>The animation shows bed coordinates. Match its axes to the <a href="docs/setup.html#machine-origin">physical starting corner</a>.</figcaption>
         </figure>
         <div class="hero-badge">p5.penplotter &middot; p5.js &middot; v0.2.1</div>
         <h1>Plot from <span class="accent">the p5.js editor</span></h1>
@@ -95,7 +96,7 @@
 
 function setup() {
   createCanvas(400, 250);
-  plot = createPlot({ x: 60, y: 60, width: 120 });   // 120 mm wide, 60 mm from the corner
+  plot = createPlot({ paper: "A4", margin: 12, width: 120 });   // centred on A4 paper
   plot.rect(10, 10, 380, 230);
   plot.circle(200, 125, 120);
   plot.go();                                          // ready: click the drawing
@@ -131,7 +132,7 @@ function setup() {
     </div>
     <ol class="pipeline-list">
       <li><span>01</span><strong>Chrome or Edge</strong><p>Connect the plotter by USB. These examples use Web Serial in Chrome or Edge on localhost or HTTPS.</p></li>
-      <li><span>02</span><strong>Home corner</strong><p>Slide the carriage to the home corner by hand, and put the paper down.</p></li>
+      <li><span>02</span><strong>Home corner</strong><p>In my photographed setup, start at the bottom-left corner: X runs up the long rail, Y to the right. The preview shows these coordinates turned to put (0,0) at top left. <a href="docs/setup.html#machine-origin">See the two views</a>.</p></li>
       <li><span>03</span><strong>Click your drawing</strong><p>Choose the plotter in the port list when the browser asks for it.</p></li>
       <li><span>04</span><strong>Click again to stop</strong><p>The driver requests a stop, pen lift and motor release. Those commands need a working connection.</p></li>
     </ol>

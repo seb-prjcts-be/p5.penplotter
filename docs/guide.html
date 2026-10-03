@@ -111,7 +111,7 @@ for (let x = 40; x &lt;= 360; x += 4) {
 plot.polyline(points);</code></pre>
 
     <figure class="doc-animation" id="animation-waves">
-      <img src="images/animations/waves.gif" width="600" height="400" loading="lazy" alt="Different wave shapes are sampled and recorded as pen lines.">
+      <img src="images/animations/waves.svg" width="600" height="400" loading="lazy" alt="Different wave shapes are sampled and recorded as pen lines.">
       <figcaption>A wave gives you a number; your loop decides where the line goes. Try changing the amplitude multiplier <code>40</code> above to <code>10</code>. For a different use of the same idea, open the <a href="../examples/wave_field/index.html">wave field</a> and press R for another seed.</figcaption>
     </figure>
 
@@ -146,7 +146,7 @@ function draw() {
   paperY: 100,
   width: 120
 });</code></pre>
-    <p>The sheet starts 60 mm right and 100 mm down from home. The drawing stays 120 mm wide and is centred on that sheet. Add <code>x</code>/<code>y</code> when the drawing needs another position within the paper margins. Put the real paper at the same position.</p>
+    <p>The sheet starts 60 mm along positive X and 100 mm along positive Y from home. The drawing stays 120 mm wide and is centred on that sheet. Add <code>x</code>/<code>y</code> when the drawing needs another position within the paper margins. Put the real paper at the same position.</p>
     <h3>Preview a separate sheet</h3>
     <p>For a sketch without the paper option, show the actual sheet separately from the canvas area:</p>
     <pre><code class="language-javascript">// After recording the drawing; bedCanvas is a separate HTML canvas.
@@ -160,10 +160,10 @@ plot.drawBed(bedCanvas, {
     <p>In the module block in <code>index.html</code>, add the driver import and replace the installation line:</p>
     <pre><code class="language-javascript">import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@9f19656703c94dc970c0233135cdc9a66cda3f3f/src/driver/ebb.js";
 installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
-    <p>Add <code>plot.go()</code> at the end of <code>draw()</code>, after recording every shape. It waits for your click; it does not start a machine while the page loads. Use Chrome or Edge on localhost or HTTPS. First check a small job in the core's <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/examples/direct_plot/">40 × 25 mm dry-run example</a>. Park the carriage at home by hand, place the paper to match the preview, then click the drawing and choose the serial port. The click confirms the plot. Another click requests a stop.</p>
+    <p>Add <code>plot.go()</code> at the end of <code>draw()</code>, after recording every shape. It waits for your click; it does not start a machine while the page loads. Use Chrome or Edge on localhost or HTTPS. First check a small job in the core's <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/examples/direct_plot/">40 × 25 mm dry-run example</a>. Park the carriage at the <a href="setup.html#machine-origin">physical origin that matches the driver</a>, place the paper to match the preview, then click the drawing and choose the serial port. The click confirms the plot. Another click requests a stop.</p>
     <p>Direct plotting is physically tested on the iDraw HSE / A2 with EBB firmware 3.0.2. A stop requests pen lift and motor release; delivery requires a working connection.</p>
     <figure class="doc-animation" id="animation-plot-go">
-      <img src="images/animations/plot-go.gif" width="600" height="400" loading="lazy" alt="A p5 drawing is prepared on screen and then drawn by a plotter.">
+      <img src="images/animations/plot-go.svg" width="600" height="400" loading="lazy" alt="A p5 drawing is prepared on screen and then drawn by a plotter.">
       <figcaption>Draw first, then click to plot. Click again to stop. This is an illustration of a complete drawing; machine speed and placement are schematic.</figcaption>
     </figure>
 
@@ -174,7 +174,7 @@ plot.triangle(80, 50, 120, 10, 160, 50);
 plot.arc(330, 30, 40, 40, 0, HALF_PI, PIE);
 plot.polygon([[0, 0], [40, 0], [40, 40]]);</code></pre>
     <figure class="doc-animation" id="animation-shapes">
-      <img src="images/animations/shapes.gif" width="600" height="400" loading="lazy" alt="Lines, circles, rectangles and other p5 shapes are drawn on screen and paper.">
+      <img src="images/animations/shapes.svg" width="600" height="400" loading="lazy" alt="Lines, circles, rectangles and other p5 shapes are drawn on screen and paper.">
       <figcaption>The familiar shapes also leave a record for the pen. Try replacing a circle with a triangle. Keep the coordinates; change what joins them.</figcaption>
     </figure>
 
@@ -185,7 +185,7 @@ plot.crossHatch(square, 4);      // second direction at right angles
 plot.stipple(square, 150, 3);    // count, seed</code></pre>
 
     <figure class="doc-animation" id="animation-fills">
-      <img src="images/animations/fills.gif" width="600" height="400" loading="lazy" alt="Hatch, cross-hatch and stipple appear on the p5 canvas and on paper.">
+      <img src="images/animations/fills.svg" width="600" height="400" loading="lazy" alt="Hatch, cross-hatch and stipple appear on the p5 canvas and on paper.">
       <figcaption>The pen has no paint bucket. Try doubling the hatch spacing above: the same shape uses fewer lines and reads lighter. A fixed stipple seed puts the same tiny marks in the same places.</figcaption>
     </figure>
 
