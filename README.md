@@ -18,7 +18,7 @@ Draw everything and plot once. Or draw and plot one object, wait until it finish
 
 **[vanilla.penplotter](https://github.com/seb-prjcts-be/vanilla.penplotter)** is the engine. Use it for your own JavaScript, arrays of points or supported SVG geometry. It has no dependencies and works without p5.js.
 
-Each job is prepared before plotting. `plot.sequence()` calculates and plots successive small jobs, waiting for each to finish before preparing the next. Live streaming is not implemented; [live drawing notes](https://seb-prjcts-be.github.io/vanilla.penplotter/docs/live.html) describe the proposed direction.
+Each job is prepared before plotting. `plot.sequence()` calculates one object, plots it and waits before preparing the next. Live streaming is not implemented; [live drawing notes](https://seb-prjcts-be.github.io/vanilla.penplotter/docs/live.html) describe the proposed direction.
 
 ## Install
 
@@ -27,8 +27,8 @@ The site uses current source. The latest tags are core `v0.3.1` and adapter `v0.
 ```html
 <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
 <script type="module">
-  import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@9f19656703c94dc970c0233135cdc9a66cda3f3f/vanilla.penplotter.js";
-  import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@9f19656703c94dc970c0233135cdc9a66cda3f3f/src/driver/ebb.js";
+  import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@4880b41b911ede36b391e2924a4949b27bdb2378/vanilla.penplotter.js";
+  import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@4880b41b911ede36b391e2924a4949b27bdb2378/src/driver/ebb.js";
   import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@d5655385d8c3ce68f3d61eb1ff80a60c9ee2613e/p5.penplotter.js";
   installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
 </script>
@@ -103,8 +103,8 @@ pinned one; the version check refuses a core below the required minimum.
 ## Instance mode
 
 ```js
-import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@9f19656703c94dc970c0233135cdc9a66cda3f3f/vanilla.penplotter.js";
-import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@9f19656703c94dc970c0233135cdc9a66cda3f3f/src/driver/ebb.js";
+import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@4880b41b911ede36b391e2924a4949b27bdb2378/vanilla.penplotter.js";
+import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@4880b41b911ede36b391e2924a4949b27bdb2378/src/driver/ebb.js";
 import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@d5655385d8c3ce68f3d61eb1ff80a60c9ee2613e/p5.penplotter.js";
 
 installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
@@ -174,7 +174,7 @@ Each one is a standalone page under `examples/`; the [examples page](https://seb
 - `calibration_sheet` - ruler, tone scales, circles and line spacing: what your pen does on your paper
 - `wave_field` - streamlines through a sampled direction field; a seed chooses the field
 - `spirograph` - three hypotrochoids, each one unbroken polyline: with no pen lift within each curve
-- `chaos_game` - 1 500 dots, calculated and plotted in groups of 25; the next group is calculated only after the previous plot finishes
+- `chaos_game` - 1 500 dots; calculate one point, plot it, wait, then calculate the next
 
 ## Related work
 
@@ -186,7 +186,7 @@ See [About](https://seb-prjcts-be.github.io/p5.penplotter/docs/about.html#relate
 - `createPlot(options)`: creates a `P5Plot` that draws supported shapes on screen and records them in millimetres. Its `engine` is the underlying `PlotterEngine`.
 - `createPlotterEngine(options)`: creates a bare engine with, by default, the current canvas size and `px` as unit.
 - `drawRoute(plan, options)`: draws the route: the plan as the machine will draw it, via p5.js. Also `drawPlotPlan()`.
-- `plot.sequence(prepare, options)`: one click starts successive jobs. Before each job, clears the recording and calls `prepare(batchIndex)`. Draw the next group and return `true`; return `false` when finished. Each job returns home. A click while running stops the sequence.
+- `plot.sequence(prepare, options)`: one click starts successive jobs. Before each job, clears the recording and calls `prepare(index)`. Draw one object and return `true`; return `false` when finished. The carriage returns home after the last object. A click while running stops the sequence.
 - `plot.showBed([canvas])`: shows the bed, paper and planned strokes with a small red cross at the origin. Without a canvas, it creates a separate preview and reuses it on redraw. Call it after recording the drawing.
 - `plot.drawBed(canvas, { sheet })`: draws the planned strokes on the bed. Optional `sheet` describes actual paper with `x`, `y`, `width` and `height` in millimetres. By default it uses `plot.paper` when paper was selected, otherwise the mapped canvas area. Preview never scales or moves the drawing.
 - `drawPlanWithP5(p, plan, options)`: the same renderer without the prototype helper.

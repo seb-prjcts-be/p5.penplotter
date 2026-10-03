@@ -446,11 +446,10 @@ export class P5Plot {
     }
   }
 
-  // One click starts successive complete jobs. Prepare only after the previous
-  // job finishes; each job returns home before the next recording is cleared.
+  // Prepare the next object only after physical idle; return home once at the end.
   async sequence(prepare, options = {}) {
     if (typeof prepare !== "function") throw new TypeError("plot.sequence() needs a drawing function.");
-    if (options.returnHome === false) throw new Error("A sequence must return home between jobs.");
+    if (options.returnHome === false) throw new Error("A sequence must return home after its final object.");
     this.requireKit();
     if (this.busy || this.pending) return { status: "busy" };
     this.sequenceStopped = false;
@@ -470,25 +469,34 @@ export class P5Plot {
         this.busy = true;
         if (target) target.addEventListener("click", stopOnClick);
         await this.connect();
-        while (!this.sequenceStopped) {
-          this.clear();
-          if (await prepare(batches) === false) break;
-          if (this.sequenceStopped) break;
-          const plan = this.plan(options.plan);
-          this.say(`Plotting batch ${batches + 1}… click the drawing to stop.`);
-          const result = await this.driver.run(plan, { ...options, confirmed: true, returnHome: true });
-          if (result.status !== "complete") {
-            this.say(`Sequence ${result.status}: ${batches} batches.`);
-            return { ...result, batches };
-          }
-          batches++;
-          if (options.onBatch) await options.onBatch(batches, result);
+        if (typeof this.driver.session !== "function") {
+          throw new Error("plot.sequence() needs a core driver with session(). Update both imports from Setup.");
         }
+        await this.driver.session(async session => {
+          while (!this.sequenceStopped) {
+            this.clear();
+            if (await prepare(batches) === false) break;
+            if (this.sequenceStopped) break;
+            const plan = this.plan({ ...options.plan, origin: session.position });
+            this.say(`Plotting object ${batches + 1}… click the drawing to stop.`);
+            const result = await session.run(plan, options);
+            if (result.status !== "complete") {
+              this.sequenceStopped = true;
+              break;
+            }
+            batches++;
+            if (options.onBatch) await options.onBatch(batches, result);
+          }
+        }, { ...options, confirmed: true });
         const status = this.sequenceStopped ? "aborted" : "complete";
-        this.say(`Sequence ${status}: ${batches} batches.`);
+        this.say(`Sequence ${status}: ${batches} objects.`);
         return { status, batches };
       } catch (error) {
         if (this.driver?.safeStop) await this.driver.safeStop();
+        if (this.sequenceStopped) {
+          this.say(`Sequence aborted: ${batches} objects.`);
+          return { status: "aborted", batches };
+        }
         this.say(`Sequence stopped: ${error.message}`);
         throw error;
       } finally {

@@ -16,9 +16,9 @@ A bed preview displays the resolved sheet and plan. It does not change either. P
 
 The adapter supplies a complete PlotPlan to the core's driver. The driver compiles its movements into motor and pen commands and sends them through Web Serial. For the iDraw profile, EBB means EiBotBoard, the controller connected over USB.
 
-`plot.sequence()` prepares and runs one complete job at a time. It waits for completion before asking for the next group. In the current p5 adapter, each group returns home and releases the motors. The [Guide](guide.html#werkwijzen) shows how to use it.
+`plot.sequence()` clears the recording, asks your function to draw one object, plots it and waits for physical idle before asking for the next. The driver keeps its position and motor steps between objects. After the last object it returns home and releases the motors. The [Guide](guide.html#werkwijzen) shows how to use it.
 
-An experimental [core driver session](https://github.com/seb-prjcts-be/vanilla.penplotter/pull/1) retains position and motor steps between jobs. On 2026-10-03, three successive lines were plotted on the iDraw HSE / A2 with EBB 3.0.2, followed by one return home. Stop and fault cases were tested with simulated connections only. This session is not yet connected to the p5 sequence or included in the site's pinned imports. Adding geometry while the machine draws remains unimplemented.
+The underlying driver session was tested on 2026-10-03 with three successive lines on the iDraw HSE / A2 and EBB 3.0.2, followed by one return home. Stop and fault cases were tested with simulated connections only. Adding geometry while the machine draws remains unimplemented.
 
 ![The JavaScript driver connects the plan to the EBB controller; the connectors show data flow.](images/animations/ebb.gif)
 

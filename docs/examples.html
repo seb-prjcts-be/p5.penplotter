@@ -113,7 +113,7 @@ plot.polyline(points);</code></pre>
     <div class="section-header">
       <div class="section-tag">a triangle nobody drew, dot by dot</div>
       <h2>Chaos <span class="accent">game</span></h2>
-      <p class="section-desc">One point jumps halfway to a random corner and leaves a dot; after a few hundred dots the Sierpinski triangle is there. Calculate 25 dots, plot them and wait, then calculate the next group. Each job returns home. The screen demo shows the sequence without a machine.</p>
+      <p class="section-desc">One point jumps halfway to a random corner and leaves a dot; after a few hundred dots the Sierpinski triangle is there. Calculate one point, plot it and wait, then calculate the next. The carriage returns home after the last point. The screen demo shows the sequence without a machine.</p>
     </div>
     <div class="ex-preview">
       <div class="ex-canvas"><iframe src="../examples/chaos_game/index.html?embed" title="Chaos game" loading="lazy"></iframe></div>
@@ -121,8 +121,8 @@ plot.polyline(points);</code></pre>
 p.x = (p.x + c[0]) / 2;
 p.y = (p.y + c[1]) / 2;
 plot.point(p.x, p.y);
-// nextDots records 25 dots and returns false when finished.
-plot.sequence(nextDots, { plan: { strategy: "drawn" } });</code></pre>
+// nextPoint records one point and returns false when finished.
+plot.sequence(nextPoint, { plan: { strategy: "drawn" } });</code></pre>
 <a class="ex-full-link" href="../examples/chaos_game/index.html">-&gt; full example</a>
 <a class="ex-full-link" href="../examples/chaos_game/index.html#animation-chaos-game">-&gt; watch the triangle appear</a>
     </div>

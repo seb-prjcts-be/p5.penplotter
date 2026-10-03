@@ -1,6 +1,6 @@
 // Layout and a screen demonstration, separate from the copyable sketch.
 const sketchSetup = setup;
-const sketchNextDots = nextDots;
+const sketchNextPoint = nextPoint;
 let completedDots = 0;
 let demo = false;
 
@@ -14,9 +14,9 @@ setup = function () {
   document.querySelector("#time").textContent = "0 dots";
 };
 
-nextDots = function () {
+nextPoint = function () {
   if (dots > 0) completedDots = dots;
-  const more = sketchNextDots();
+  const more = sketchNextPoint();
   document.querySelector("#dots").textContent = dots + " / " + DOTS;
   document.querySelector("#time").textContent = completedDots + " dots";
   return more;
@@ -33,8 +33,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // No serial port is opened. Waiting models a slower pen for this demo.
     plot.transport = {};
     plot.driver = {
+      async session(prepare) {
+        await prepare({ position: { x: 0, y: 0 }, run: () => this.run() });
+        return { status: plot.sequenceStopped ? "aborted" : "complete" };
+      },
       async run() {
-        await new Promise(resolve => setTimeout(resolve, 120));
+        await new Promise(resolve => setTimeout(resolve, 8));
         return { status: plot.sequenceStopped ? "aborted" : "complete" };
       },
       abort() {}

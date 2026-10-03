@@ -137,7 +137,7 @@ plot.drawBed(bedCanvas, {
     <h3>Draw everything, then plot</h3>
     <p>Draw all the shapes and start one plot. Choose <code>strategy: "drawn"</code> to keep the drawing order.</p>
     <h3>Draw and plot one object, then the next</h3>
-    <p>Keep the same <code>plot</code> and paper settings. Plot one object, wait until it finishes, clear the recording with <code>plot.clear()</code>, then draw the next. An object can also be a group of shapes. The planner orders only the current job; each completed job returns home.</p>
+    <p>Keep the same <code>plot</code> and paper settings. Plot one object, wait until it finishes, clear the recording with <code>plot.clear()</code>, then draw the next. The planner orders only the current job; each completed job returns home.</p>
     <p><strong>Plotting does not clear the recording.</strong> Without <code>clear()</code>, earlier objects are plotted again. That can be a deliberate second pass. <code>clear()</code> does not remove ink.</p>
     <p>Wait between jobs. Sending new lines while the machine draws is not supported yet.</p>
     <pre><code class="language-javascript">// Call from a button or key handler, using the existing plot.
@@ -150,18 +150,15 @@ async function plotTwoObjects() {
   plot.circle(200, 125, 60);
   await plot.go();
 }</code></pre>
-    <p>Call <code>plotTwoObjects()</code> from a button or key handler after creating <code>plot</code> with the starter setup. Each <code>go()</code> can ask for confirmation or wait for another click. For one initial click to run all groups, use <code>sequence()</code> below. Add the next object only after <code>status: "complete"</code>; a cancelled, stopped or failed job has not completed the object. Keep paper and placement settings consistent between jobs.</p>
-    <h3>A sequence of small jobs</h3>
-    <p>Keep the starter’s <code>setup()</code> and replace <code>draw()</code> with the code below. <code>plot.sequence(prepare)</code> starts with one click. It clears the recording before each call to your function, plots that group and waits before calling again. Return <code>false</code> when finished. Each group returns home. <a href="../examples/chaos_game/index.html">Chaos game</a> shows this with 25 dots at a time and includes a screen demo.</p>
-    <pre><code class="language-javascript">let group = 0;
-
-function draw() {
+    <p>Call <code>plotTwoObjects()</code> from a button or key handler after creating <code>plot</code> with the starter setup. Each <code>go()</code> can ask for confirmation or wait for another click. For one initial click to plot successive objects, use <code>sequence()</code> below. Add the next object only after <code>status: "complete"</code>; a cancelled, stopped or failed job has not completed the object. Keep paper and placement settings consistent between jobs.</p>
+    <h3>Plot one object, then the next</h3>
+    <p>Keep the starter’s <code>setup()</code> and replace <code>draw()</code> with the code below. <code>plot.sequence(prepare)</code> starts with one click. It clears the recording before each call to your function, plots that object and waits before calling again. Return <code>false</code> when finished. The carriage returns home after the last object. <a href="../examples/chaos_game/index.html">Chaos game</a> shows this with one point at a time and includes a screen demo.</p>
+    <pre><code class="language-javascript">function draw() {
   background(255);
   noFill();
-  plot.sequence(() =&gt; {
-    if (group === 5) return false;
-    plot.circle(50 + group * 60, 100, 30);
-    group++;
+  plot.sequence(index =&gt; {
+    if (index === 5) return false;
+    plot.circle(50 + index * 60, 100, 30);
     return true;
   }).catch(console.error);
 }</code></pre>
@@ -280,7 +277,7 @@ function draw() {
       <tr><td><code>createPlot(options)</code></td><td>Returns a <code>P5Plot</code>. Shape coordinates are canvas pixels. <code>width</code>, <code>x</code> and <code>y</code> are millimetres; without paper or scale options, one pixel maps to one millimetre.</td></tr>
       <tr><td><code>paper, margin, orientation</code></td><td>A0–A6; default margin 12 mm and orientation <code>auto</code>. Fits and centres the canvas. <code>width</code> or <code>mmPerPixel</code> overrides fitting; <code>paperX/paperY</code> move the sheet.</td></tr>
       <tr><td><code>clear(), plan(options)</code></td><td>Clear starts an empty recording. Plan returns the core PlotPlan and checks selected paper margins. <code>strategy: "drawn"</code> preserves drawing order.</td></tr>
-      <tr><td><code>sequence(prepare, options)</code></td><td>One click starts successive jobs. Clears before preparing each group and waits for completion. Return false to finish. Options include plan and onBatch.</td></tr>
+      <tr><td><code>sequence(prepare, options)</code></td><td>One click starts the sequence. Clears before preparing each object and waits for completion. Return false to finish. Use plan to choose drawing order.</td></tr>
       <tr><td><code>showBed([canvas])</code></td><td>Shows the bed and paper with a red origin cross. Creates and reuses a separate preview when no canvas is supplied. Call after recording the drawing.</td></tr>
       <tr><td><code>drawBed(canvas, { sheet })</code></td><td>Uses a separate HTML canvas or 2D context. Sheet position and size are millimetres; defaults to selected paper, then mapped canvas.</td></tr>
       <tr><td><code>go(), stop()</code></td><td>Go from setup/draw waits for a click and needs the installed driver. Stop requests an abort; neither is a preview method.</td></tr>

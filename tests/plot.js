@@ -145,15 +145,23 @@ async function testAgainstRealCore() {
   const sequence = new FakeP5().createPlot({ paper: "A2", margin: 12, gesture: () => true, confirm: () => true, log() {} });
   sequence.transport = Ebb.createLogTransport();
   sequence.driver = new Ebb.EbbDriver({ transport: sequence.transport, profile: "idraw-hse-a2" });
+  const origins = [];
+  const sequencePlan = sequence.plan.bind(sequence);
+  sequence.plan = options => { origins.push(options.origin); return sequencePlan(options); };
   const sequenceResult = await sequence.sequence(index => {
     if (index === 3) return false;
     sequence.point(40 + index * 20, 40);
     return true;
   }, { plan: { strategy: "drawn" } });
   assert.equal(sequenceResult.batches, 3);
+  assert.deepEqual(origins[0], { x: 0, y: 0 });
+  assert(origins[1].x > 0 && origins[1].y > 0, "the next object starts from the previous position");
+  assert(origins[2].x > origins[1].x, "position carries through the sequence");
   assert.equal(sequenceResult.status, "complete");
-  assert.equal(sequence.transport.log.filter(command => command === "V").length, 3);
-  assert.equal(sequence.transport.log.filter(command => command === "EM,0,0").length, 3, "each group finishes its driver job");
+  assert.equal(sequence.transport.log.filter(command => command === "V").length, 4);
+  assert.equal(sequence.transport.log.filter(command => command === "EM,1,1").length, 1);
+  assert.equal(sequence.transport.log.filter(command => command === "EM,0,0").length, 1, "only the completed sequence releases the motors");
+  assert.equal(sequence.transport.log.filter(command => command.startsWith("SP,0,")).length, 3, "each object records only its new point");
   assert.equal(sequence.transport.log.filter(command => command.startsWith("ES")).length, 0);
   const a2 = new FakeP5().createPlot({ paper: "A2", margin: 12 });
   const userCanvas = new FakeP5();
@@ -368,10 +376,14 @@ async function testSequence() {
   let prepared = 0;
   const jobs = [];
   plot.driver = {
+    async session(prepare, options) {
+      assert.equal(options.confirmed, true);
+      await prepare({ position: { x: 0, y: 0 }, run: (plan, jobOptions) => this.run(plan, jobOptions) });
+      return { status: "complete" };
+    },
     async run(plan, options) {
       jobs.push(plan.engine.calls.slice());
-      assert.equal(options.confirmed, true);
-      assert.equal(options.returnHome, true);
+      assert.deepEqual(plan.planOptions.origin, { x: 0, y: 0 });
       await new Promise(resolve => { release = resolve; });
       return { status: "complete" };
     },
@@ -410,6 +422,8 @@ async function testSequence() {
   assert(safelyStopped);
   assert.equal(plot.busy, false);
   await assert.rejects(plot.sequence(() => true, { returnHome: false }), /return home/);
+  delete plot.driver.session;
+  await assert.rejects(plot.sequence(() => { throw Error("must not prepare"); }), /core driver with session/);
 }
 await testSequence();
 console.log("p5.penplotter plot: ok");
