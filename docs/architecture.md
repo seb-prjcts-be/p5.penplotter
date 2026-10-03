@@ -1,8 +1,8 @@
 # How p5.penplotter works
 
-## Twee werkwijzen
+## Two ways to work
 
-Teken alles en roep `plot.go()` aan. Of plot één object, wacht tot het klaar is, wis de opname met `plot.clear()` en teken het volgende. Clear wist het scherm en papier niet. Zonder clear plot je vorige objecten opnieuw. Live streaming is nog niet geïmplementeerd. Zie de [Guide](guide.html#werkwijzen).
+Draw everything and call `plot.go()`. Or plot one object, wait until it finishes, clear the recording with `plot.clear()` and draw the next. Clear does not erase the screen or paper. Without clear, earlier objects are plotted again. Live streaming is not implemented yet. See the [Guide](guide.html#werkwijzen).
 
 ## Screen and paper
 

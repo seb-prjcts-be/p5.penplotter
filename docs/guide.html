@@ -31,34 +31,34 @@
       <p class="guide-intro">Draw on screen, choose a size on paper and click to plot. Start with the two files below.</p>
     </header>
 
-    <nav aria-label="On this page"><p><a href="#werkwijzen">Twee werkwijzen</a> · <a href="#global-mode">Start</a> · <a href="#change-drawing">Change</a> · <a href="#paper">Paper</a> · <a href="#plotting">Plot</a> · <a href="#shapes">Shapes</a> · <a href="#starters">Starters</a> · <a href="#core-access">Core</a> · <a href="#instance-mode">Instance mode</a> · <a href="#reference">Reference</a></p></nav>
+    <nav aria-label="On this page"><p><a href="#werkwijzen">Two ways to work</a> · <a href="#global-mode">Start</a> · <a href="#change-drawing">Change</a> · <a href="#paper">Paper</a> · <a href="#plotting">Plot</a> · <a href="#shapes">Shapes</a> · <a href="#starters">Starters</a> · <a href="#core-access">Core</a> · <a href="#instance-mode">Instance mode</a> · <a href="#reference">Reference</a></p></nav>
 
-    <h2 id="werkwijzen">Twee manieren van werken</h2>
-    <p>Teken alles en plot één keer. Of teken en plot één object, wacht tot het klaar is en maak dan het volgende.</p>
-    <h3>Alles tekenen, dan plotten</h3>
-    <p>Teken alle vormen en start één plot. Kies <code>strategy: "drawn"</code> om je tekenvolgorde te behouden.</p>
-    <h3>Eén object tekenen en plotten, dan het volgende</h3>
-    <p>Plot één object en wacht tot het klaar is. Wis de opname met <code>plot.clear()</code>, teken het volgende en plot opnieuw op hetzelfde papier. Een object mag ook een groep vormen zijn. De planner ordent alleen de huidige job.</p>
-    <p><strong>Een plot wist de opname niet.</strong> Zonder <code>clear()</code> plot je vorige objecten opnieuw. Dat kan een bewuste tweede passage zijn. <code>clear()</code> wist geen inkt.</p>
-    <p>Wacht tussen jobs. Nieuwe lijnen aanleveren terwijl de machine tekent, is nog niet mogelijk.</p>
+    <h2 id="werkwijzen">Two ways to work</h2>
+    <p>Draw everything and plot once. Or draw and plot one object, wait until it finishes, then make the next.</p>
+    <h3>Draw everything, then plot</h3>
+    <p>Draw all the shapes and start one plot. Choose <code>strategy: "drawn"</code> to keep the drawing order.</p>
+    <h3>Draw and plot one object, then the next</h3>
+    <p>Plot one object and wait until it finishes. Clear the recording with <code>plot.clear()</code>, draw the next and plot again on the same paper. An object can also be a group of shapes. The planner orders only the current job.</p>
+    <p><strong>Plotting does not clear the recording.</strong> Without <code>clear()</code>, earlier objects are plotted again. That can be a deliberate second pass. <code>clear()</code> does not remove ink.</p>
+    <p>Wait between jobs. Sending new lines while the machine draws is not supported yet.</p>
     <h3>In p5.penplotter</h3>
-    <p>Gebruik dezelfde <code>plot</code> en dezelfde papierinstellingen voor opeenvolgende objecten. <code>plot.clear()</code> wist de opgenomen geometrie, niet het scherm en niet het papier. <code>background()</code> wist het scherm, niet de opname. Een normale voltooide job keert terug naar home. Na een stop of fout controleer je de machine en parkeer je de carriage opnieuw bij home vóór een volgende job.</p>
-    <pre><code class="language-javascript">// Alles tekenen, dan plotten:
+    <p>Use the same <code>plot</code> and paper settings for successive objects. <code>plot.clear()</code> clears the recorded geometry; the screen and paper remain. <code>background()</code> clears the screen; the recording remains. A normally completed job returns home. After a stop or error, check the machine and park the carriage at home again before another job.</p>
+    <pre><code class="language-javascript">// Draw everything, then plot:
 plot.clear();
 plot.rect(10, 10, 100, 80);
 plot.circle(200, 125, 60);
 await plot.go();
 
-// Object voor object: start dit vanuit een async gebruikersactie.
+// One object at a time: start this from an async user action.
 plot.clear();
 plot.rect(10, 10, 100, 80);
-const eerste = await plot.go();
-if (eerste.status === "complete") {
+const first = await plot.go();
+if (first.status === "complete") {
   plot.clear();
   plot.circle(200, 125, 60);
   await plot.go();
 }</code></pre>
-    <p>Dit zijn workflowfragmenten voor een bestaande <code>plot</code> met driver. Vanuit <code>setup()</code> of <code>draw()</code> wacht <code>go()</code> op een klik. Vanuit een gebruikersactie vraagt de adapter bevestiging. Voeg het volgende object pas toe na <code>status: "complete"</code>; een geannuleerde, gestopte of mislukte job is geen afgerond object. Wissel papier of positie niet ongemerkt tussen de jobs.</p>
+    <p>These fragments use an existing <code>plot</code> with a driver. From <code>setup()</code> or <code>draw()</code>, <code>go()</code> waits for a click. From a user action, the adapter asks for confirmation. Add the next object only after <code>status: "complete"</code>; a cancelled, stopped or failed job has not completed the object. Keep paper and placement settings consistent between jobs.</p>
     <h2 id="global-mode">1. Draw on screen</h2>
     <p>Put these two files in the same folder, or use the matching files in the p5.js Web Editor. Open the folder through a web server. The sketch draws a rectangle and a circle; it needs no plotter connection.</p>
     <p>The imports load the libraries; <code>installP5Penplotter()</code> connects them to p5.js.</p>

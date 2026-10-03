@@ -60,12 +60,12 @@
 
   <section id="werkwijzen" class="section">
     <div class="section-header">
-      <h2>Twee manieren van werken</h2>
-      <p>Alles tekenen en daarna plotten. Of één object tekenen en plotten, wachten tot het klaar is en dan het volgende maken. Zo kun je verder werken op hetzelfde papier.</p>
+      <h2>Two ways to work</h2>
+      <p>Draw everything, then plot. Or draw and plot one object, wait until it finishes, then make the next. You can keep working on the same paper.</p>
     </div>
     <div style="max-width:760px; margin:0 auto;">
-      <p>Een plot wist de opname niet. Gebruik <code>plot.clear()</code> vóór het volgende object; anders plot je de vorige objecten opnieuw.</p>
-      <p><a href="docs/guide.html#werkwijzen">Alles tegelijk of object voor object plotten.</a></p>
+      <p>Plotting does not clear the recording. Use <code>plot.clear()</code> before the next object; otherwise earlier objects are plotted again.</p>
+      <p><a href="docs/guide.html#werkwijzen">Plot everything at once or one object at a time.</a></p>
     </div>
   </section>
 
@@ -118,7 +118,7 @@ function setup() {
     <ol class="pipeline-list">
       <li><span>01</span><strong>120 &rarr; 200</strong><p>The same drawing, 200 mm wide on paper. The canvas keeps the same size.</p></li>
       <li><span>02</span><strong>a circle &rarr; a hatch</strong><p>Replace the circle with <code>plot.hatch([[40, 40], [360, 40], [360, 210], [40, 210]], 6)</code>: a rectangle filled with parallel pen strokes.</p></li>
-      <li><span>03</span><strong>order &rarr; disorder</strong><p>Open the <a href="examples/molnar_grid/index.html">Moln&aacute;r grid</a> and change <code>wanorde</code> from <code>rij / (n - 1)</code> to <code>1</code>: every row comes apart.</p></li>
+      <li><span>03</span><strong>order &rarr; disorder</strong><p>Open the <a href="examples/molnar_grid/index.html">Moln&aacute;r grid</a> and change <code>disorder</code> from <code>row / (n - 1)</code> to <code>1</code>: every row comes apart.</p></li>
     </ol>
     <p class="section-desc" style="max-width:760px; margin:2rem auto 0;">Supported shape calls record geometry for paper: shapes, lines and dots. <code>translate()</code>, <code>rotate()</code>, <code>fill()</code> and colours stay on the screen; paper uses the recorded coordinates and the pen in the holder.</p>
   </section>

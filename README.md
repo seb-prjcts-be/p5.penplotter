@@ -8,9 +8,9 @@ You sketch in p5.js the way you always do. Write `plot.line()` instead of `line(
 
 Call `plot.go()` when the drawing is ready, then click the drawing to start plotting. No intermediate SVG is required for direct plotting.
 
-## Twee manieren van werken
+## Two ways to work
 
-Teken alles en plot één keer. Of teken en plot één object, wacht tot het klaar is en maak het volgende. Gebruik `plot.clear()` vóór een nieuw object; anders plot je eerdere objecten opnieuw. Clear wist geen inkt. De [Guide](https://seb-prjcts-be.github.io/p5.penplotter/docs/guide.html#werkwijzen) toont beide werkwijzen.
+Draw everything and plot once. Or draw and plot one object, wait until it finishes, then make the next. Use `plot.clear()` before a new object; otherwise earlier objects are plotted again. Clear does not remove ink. The [Guide](https://seb-prjcts-be.github.io/p5.penplotter/docs/guide.html#werkwijzen) shows both ways.
 
 ## Which library?
 

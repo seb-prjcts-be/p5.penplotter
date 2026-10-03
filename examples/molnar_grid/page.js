@@ -16,6 +16,6 @@ draw = function () {
   document.querySelector("#paths").textContent = String(plot.plan().stats.paths);
 };
 
-melding = function (text) {
+say = function (text) {
   document.querySelector("#status").textContent = text;
 };
