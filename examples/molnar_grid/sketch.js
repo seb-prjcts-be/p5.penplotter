@@ -1,5 +1,5 @@
 let plot;
-let seed = 1;
+let seed = Date.now();
 
 function setup() {
   createCanvas(600, 600);
@@ -43,13 +43,6 @@ function drawSquare(cx, cy, radius, angle) {
     points.push([cx + cos(a) * radius, cy + sin(a) * radius]);
   }
   plot.polygon(points);
-}
-
-function keyPressed() {
-  if (key === "r" || key === "R") {
-    seed = seed + 1;
-    redraw();
-  }
 }
 
 function say(text) {
