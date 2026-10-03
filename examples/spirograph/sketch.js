@@ -5,7 +5,7 @@ let plot;
 let seed = 3;
 
 function setup() {
-  createCanvas(600, 600).parent("p5-preview");
+  createCanvas(600, 600);
   // 300 x 300 mm, centred on the A2 bed
   plot = createPlot({ x: 147, y: 66, width: 300, log: say });
   noLoop();
@@ -21,7 +21,6 @@ function draw() {
   const cx = width / 2;
   const cy = height / 2;
   const R = 250;
-  let paths = 0;
 
   // ── three hypotrochoids: fixed ring R, rolling wheel r, pen at distance d ──
   // Wheels that share a factor with the ring close within 2 to 11 turns.
@@ -40,15 +39,8 @@ function draw() {
       ]);
     }
     plot.polyline(points);
-    paths += 1;
   }
 
-  document.querySelector("#seed").textContent = String(seed);
-  document.querySelector("#paths").textContent = String(paths);
-  const stats = plot.plan().stats;
-  document.querySelector("#length").textContent = `${(stats.drawDistance / 1000).toFixed(1)} m`;
-
-  plot.drawBed(document.querySelector("#bed"));   // where the canvas lands on the paper
   plot.go();   // ready: click the drawing to plot, click again to stop
 }
 
@@ -64,5 +56,5 @@ function keyPressed() {
 }
 
 function say(text) {
-  document.querySelector("#status").textContent = text;
+  console.log(text);
 }

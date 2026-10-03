@@ -28,7 +28,7 @@
   <div class="ex-page-header">
     <div class="section-tag">p5.js addon library · v0.2.1</div>
     <h1>Examples</h1>
-    <p>The previews run the example pages. Start with Direct plot to draw and record shapes; drawing works before connecting hardware. First plot and Wave plot, later on this page, show the advanced core-engine route without a hardware control. The other examples plot with a click on the drawing and stop with another click; open the page for its controls and source. Direct plotting uses Chrome or Edge and the tested iDraw HSE / A2.</p>
+    <p>Use the <a href="setup.html#global-mode">global-mode index.html</a> from Setup and copy an example's sketch.js into the p5.js Web Editor. The wave examples load their wave sampler themselves. The previews below add statistics and a paper preview around the same sketches. Start with Direct plot to draw and record shapes; drawing works before connecting hardware. First plot and Wave plot, later on this page, show the advanced core-engine route without a hardware control. The other examples plot with a click on the drawing and stop with another click. Direct plotting uses Chrome or Edge and the tested iDraw HSE / A2.</p>
   </div>
   <section id="direct_plot" class="section section-dark">
     <div class="section-header">
@@ -38,7 +38,7 @@
     </div>
     <div class="ex-preview">
       <div class="ex-canvas"><iframe src="../examples/direct_plot/index.html?embed" title="Direct plot" loading="lazy"></iframe></div>
-<pre class="ex-code-block"><code class="language-javascript">plot = p.createPlot({ paper: "A2", margin: 12 });
+<pre class="ex-code-block"><code class="language-javascript">plot = createPlot({ paper: "A2", margin: 12 });
 plot.rect(10, 10, 380, 230);
 plot.polyline(points);
 plot.drawBed(bedCanvas); // uses the chosen A2 paper
@@ -134,10 +134,10 @@ plot.go({ plan: { strategy: "drawn" } });   // in the order of the game</code></
     </div>
     <div class="ex-preview">
       <div class="ex-canvas"><iframe src="../examples/first_plot/index.html?embed" title="First plot" loading="lazy"></iframe></div>
-<pre class="ex-code-block"><code class="language-javascript">const plot = p.createPlotterEngine();
+<pre class="ex-code-block"><code class="language-javascript">const plot = createPlotterEngine();
 plot.hatch(boundary, { spacing: 14, angle: Math.PI / 6 });
 plot.circle(324, 374, 126);
-p.drawRoute(plot.plan());</code></pre>
+drawRoute(plot.plan());</code></pre>
 <a class="ex-full-link" href="../examples/first_plot/index.html">-&gt; full example</a>
     </div>
   </section>

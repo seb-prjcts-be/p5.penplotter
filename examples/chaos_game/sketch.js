@@ -10,7 +10,7 @@ let dots = 0;
 const DOTS = 1500;   // about half an hour on the iDraw
 
 function setup() {
-  createCanvas(600, 520).parent("p5-preview");
+  createCanvas(600, 520);
   plot = createPlot({ x: 147, y: 100, width: 300, log: say });   // 300 mm wide on the A2 bed
   corners = [[300, 35], [40, 485], [560, 485]];
   p = { x: 300, y: 35 };
@@ -27,10 +27,6 @@ function draw() {
     plot.point(p.x, p.y);
     dots++;
   }
-  document.querySelector("#dots").textContent = String(dots);
-  const minutes = plot.plan({ strategy: "drawn" }).stats.estimatedSeconds / 60;
-  document.querySelector("#time").textContent = Math.round(minutes) + " min";
-  plot.drawBed(document.querySelector("#bed"));
   if (dots >= DOTS) {
     noLoop();
     plot.go({ plan: { strategy: "drawn" } });   // in the order of the game; click the drawing to start
@@ -38,5 +34,5 @@ function draw() {
 }
 
 function say(text) {
-  document.querySelector("#status").textContent = text;
+  console.log(text);
 }

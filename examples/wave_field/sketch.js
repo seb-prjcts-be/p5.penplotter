@@ -3,9 +3,12 @@
 // One seed per sheet: R for another; click the drawing to plot, click again to stop.
 let plot;
 let seed = 1;
+let shape;
 
-function setup() {
-  createCanvas(600, 600).parent("p5-preview");
+async function setup() {
+  // Load the wave sampler used by this sketch.
+  await import("https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.waves@v3.4.0/p5.waves.min.js");
+  createCanvas(600, 600);
   // 300 x 300 mm, centred on the A2 bed
   plot = createPlot({ x: 147, y: 66, width: 300, log: say });
   noLoop();
@@ -22,7 +25,7 @@ function draw() {
   stroke("#111111");
   noFill();
   randomSeed(seed);
-  const shape = floor(random(35));
+  shape = floor(random(35));
   plot.clear();
 
   // ── 1 · seeds on a jittered grid ──
@@ -51,11 +54,6 @@ function draw() {
   // ── 3 · frame ──
   plot.rect(20, 20, width - 40, height - 40);
 
-  document.querySelector("#seed").textContent = String(seed);
-  document.querySelector("#wave").textContent = String(shape);
-  document.querySelector("#paths").textContent = String(plot.plan().stats.paths);
-
-  plot.drawBed(document.querySelector("#bed"));   // where the canvas lands on the paper
   plot.go();   // ready: click the drawing to plot, click again to stop
 }
 
@@ -67,5 +65,5 @@ function keyPressed() {
 }
 
 function say(text) {
-  document.querySelector("#status").textContent = text;
+  console.log(text);
 }

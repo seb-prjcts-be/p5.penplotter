@@ -2,10 +2,9 @@ let plot;
 let seed = 1;
 
 function setup() {
-  createCanvas(600, 600).parent("p5-preview");
+  createCanvas(600, 600);
   // 300 x 300 mm, centred on the A2 bed
   plot = createPlot({ x: 147, y: 66, width: 300, log: melding });
-  document.querySelector("#size").textContent = "300 × 300 mm";
   noLoop();
 }
 
@@ -33,10 +32,6 @@ function draw() {
     }
   }
 
-  document.querySelector("#seed").textContent = String(seed);
-  document.querySelector("#paths").textContent = String(plot.plan().stats.paths);
-
-  plot.drawBed(document.querySelector("#bed"));   // where the canvas lands on the paper
   plot.go();   // ready: click the drawing to plot, click again to stop
 }
 
@@ -57,5 +52,5 @@ function keyPressed() {
 }
 
 function melding(tekst) {
-  document.querySelector("#status").textContent = tekst;
+  console.log(tekst);
 }

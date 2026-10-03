@@ -1,71 +1,60 @@
-// The core is a sibling of this repository, both on localhost and on GitHub Pages.
-import { PlotterEngine } from "../../../vanilla.penplotter/vanilla.penplotter.js";
-import { installP5Penplotter } from "../../p5.penplotter.js";
-
-installP5Penplotter(p5, PlotterEngine);
-
 let waveSeed = Math.floor(Math.random() * 34);
 
-new p5(function wavePlotSketch(p) {
-  let plotPlan;
+let plotPlan;
 
-  function buildPlan() {
-    const plot = p.createPlotterEngine();
+function buildPlan() {
+  const plot = createPlotterEngine();
 
-    for (let row = 0; row < 24; row += 1) {
-      const points = [];
-      for (let x = 38; x <= 602; x += 4) {
-        const waveY = Waves.wave(x + row * 7, {
-          wave: waveSeed,
-          t: 0,
-          amplitude: 22 + row * 0.35,
-          frequency: 0.045
-        });
-        points.push({
-          x,
-          y: 86 + row * 24 + waveY
-        });
-      }
-      plot.polyline(points);
+  for (let row = 0; row < 24; row += 1) {
+    const points = [];
+    for (let x = 38; x <= 602; x += 4) {
+      const waveY = Waves.wave(x + row * 7, {
+        wave: waveSeed,
+        t: 0,
+        amplitude: 22 + row * 0.35,
+        frequency: 0.045
+      });
+      points.push({
+        x,
+        y: 86 + row * 24 + waveY
+      });
     }
-
-    plot.optimize({
-      simplifyTolerance: 0.3,
-      mergeTolerance: 0.05
-    });
-    return plot.plan({
-      strategy: "nearest",
-      drawSpeed: 120,
-      travelSpeed: 260
-    });
+    plot.polyline(points);
   }
 
-  function updateStats() {
-    document.querySelector("#paths").textContent = String(plotPlan.stats.paths);
-    document.querySelector("#lifts").textContent = String(plotPlan.stats.penLifts);
-    document.querySelector("#travel").textContent = `${plotPlan.stats.travelDistance.toFixed(1)} px`;
-  }
+  plot.optimize({
+    simplifyTolerance: 0.3,
+    mergeTolerance: 0.05
+  });
+  return plot.plan({
+    strategy: "nearest",
+    drawSpeed: 120,
+    travelSpeed: 260
+  });
+}
 
-  p.setup = function setup() {
-    const canvas = p.createCanvas(640, 760);
-    canvas.parent("p5-preview");
-    p.pixelDensity(1);
-    plotPlan = buildPlan();
-    updateStats();
-    p.noLoop();
-  };
+async function setup() {
+  // Load the wave sampler used by this sketch.
+  await import("https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.waves@v3.4.0/p5.waves.min.js");
+  createCanvas(640, 760);
 
-  p.draw = function draw() {
-    p.background("#ffffff");
-    p.drawRoute(plotPlan, {
-      strokeWeight: 1
-    });
-  };
+  pixelDensity(1);
+  plotPlan = buildPlan();
 
-  document.querySelector("#reroll").addEventListener("click", function rerollWave() {
+  noLoop();
+}
+
+function draw() {
+  background("#ffffff");
+  drawRoute(plotPlan, {
+    strokeWeight: 1
+  });
+}
+
+function keyPressed() {
+  if (key === "r" || key === "R") {
     waveSeed = Math.floor(Math.random() * 34);
     plotPlan = buildPlan();
-    updateStats();
-    p.redraw();
-  });
-});
+    redraw();
+  }
+}

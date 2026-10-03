@@ -4,7 +4,7 @@
 let plot;
 
 function setup() {
-  createCanvas(400, 560).parent("p5-preview");
+  createCanvas(400, 560);
   // 200 x 280 mm, centred on the A2 bed
   plot = createPlot({ x: 197, y: 76, width: 200, log: say });
   noLoop();
@@ -61,9 +61,6 @@ function draw() {
   // ── 7 · frame, so the sheet can be measured ──
   plot.rect(10 * mm, 10 * mm, 180 * mm, 260 * mm);
 
-  document.querySelector("#paths").textContent = String(plot.plan().stats.paths);
-
-  plot.drawBed(document.querySelector("#bed"));   // where the canvas lands on the paper
   plot.go();   // the sheet is ready: click the drawing to plot, click again to stop
 }
 
@@ -73,5 +70,5 @@ function cellAt(x, y, size) {
 }
 
 function say(text) {
-  document.querySelector("#status").textContent = text;
+  console.log(text);
 }
