@@ -10,7 +10,6 @@ const examples = fs.readdirSync(path.join(root, "examples"), { withFileTypes: tr
   .sort();
 const manifest = {
   version: packageData.version,
-  generated: new Date().toISOString().slice(0, 10),
   p5js_target: "2.2.2",
   core: "vanilla.penplotter@>=0.2.0",
   core_plan_schema: "vanilla.penplotter/plan@1",
