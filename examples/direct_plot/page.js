@@ -13,7 +13,6 @@ setup = async function () {
 draw = function () {
   sketchDraw();
   document.querySelector("#paths").textContent = String(plot.plan().stats.paths);
-  plot.drawBed(document.querySelector("#bed"));
 };
 
 say = function (text) {

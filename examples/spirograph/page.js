@@ -15,7 +15,6 @@ draw = function () {
   document.querySelector("#seed").textContent = String(seed);
   document.querySelector("#paths").textContent = String(stats.paths);
   document.querySelector("#length").textContent = `${(stats.drawDistance / 1000).toFixed(1)} m`;
-  plot.drawBed(document.querySelector("#bed"));
 };
 
 say = function (text) {

@@ -15,7 +15,6 @@ draw = function () {
   document.querySelector("#seed").textContent = String(seed);
   document.querySelector("#wave").textContent = String(shape);
   document.querySelector("#paths").textContent = String(plot.plan().stats.paths);
-  plot.drawBed(document.querySelector("#bed"));   // where the canvas lands on the paper
 };
 
 say = function (text) {

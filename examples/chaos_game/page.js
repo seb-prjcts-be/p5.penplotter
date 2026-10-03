@@ -15,7 +15,6 @@ draw = function () {
   document.querySelector("#dots").textContent = String(dots);
   const minutes = plot.plan({ strategy: "drawn" }).stats.estimatedSeconds / 60;
   document.querySelector("#time").textContent = Math.round(minutes) + " min";
-  plot.drawBed(document.querySelector("#bed"));
 };
 
 say = function (text) {
