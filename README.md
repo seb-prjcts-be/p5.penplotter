@@ -29,7 +29,7 @@ The site uses current source. The latest tags are core `v0.3.1` and adapter `v0.
 <script type="module">
   import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@4880b41b911ede36b391e2924a4949b27bdb2378/vanilla.penplotter.js";
   import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@4880b41b911ede36b391e2924a4949b27bdb2378/src/driver/ebb.js";
-  import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@d5655385d8c3ce68f3d61eb1ff80a60c9ee2613e/p5.penplotter.js";
+  import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@b495d269a0f38d8e5fd83b3368a483d0fe50d006/p5.penplotter.js";
   installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
 </script>
 <script src="sketch.js"></script>
@@ -105,7 +105,7 @@ pinned one; the version check refuses a core below the required minimum.
 ```js
 import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@4880b41b911ede36b391e2924a4949b27bdb2378/vanilla.penplotter.js";
 import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@4880b41b911ede36b391e2924a4949b27bdb2378/src/driver/ebb.js";
-import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@d5655385d8c3ce68f3d61eb1ff80a60c9ee2613e/p5.penplotter.js";
+import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@b495d269a0f38d8e5fd83b3368a483d0fe50d006/p5.penplotter.js";
 
 installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
 
