@@ -54,59 +54,41 @@ function draw() {
     <p><code>plot.line(40, 125, 360, 125)</code> joins two points in canvas pixels. The same line is drawn on screen and recorded for paper.</p>
     <p><code>background()</code> clears the screen; <code>plot.clear()</code> starts a new recording. <code>noLoop()</code> keeps this drawing still. Use explicit coordinates; screen transforms and styling are not recorded. See the <a href="architecture.html">recording limits</a>.</p>
 
-    <h2 id="paper">2. Drawing size and paper</h2>
-    <p>A 400 × 250 pixel canvas with <code>createPlot({ paper: "A4", margin: 12, width: 80 })</code> maps to an 80 × 50 mm area centred on A4 paper. The line from (40, 125) to (360, 125) is 64 mm long on paper. Choose the paper and margin first. Use <code>paperX</code>/<code>paperY</code> to move the sheet; <code>x</code>/<code>y</code> place the canvas area in millimetres from home.</p>
-    <figure class="canvas-placement-diagram">
-
-    <svg class="bed-figure" viewBox="0 0 320 240" width="320" height="240" role="img" aria-label="A 80 by 50 millimetre drawing centred on A4 landscape paper, centred on the 594 by 432 millimetre machine bed">
-      <rect x="10" y="10" width="297" height="216" fill="#fff" stroke="#000"/>
-      <path d="M6 6 l8 8 m-8 0 l8 -8" fill="none" stroke="#d32f2f" stroke-width="2"/>
-      <text x="18" y="24" font-family="Inter, Arial, sans-serif" font-size="10">(0,0) in the preview</text>
-      <rect x="84.25" y="65.5" width="148.5" height="105" fill="rgba(0,0,0,.03)" stroke="#000"/>
-      <text x="90" y="80" font-family="Inter, Arial, sans-serif" font-size="10">A4 paper</text>
-      <rect x="138.5" y="105.5" width="40" height="25" fill="rgba(0,0,0,.08)" stroke="#000"/>
-      <text x="141" y="121" font-family="Inter, Arial, sans-serif" font-size="9">your canvas</text>
-      <text x="190" y="220" font-family="Inter, Arial, sans-serif" font-size="9">the bed, 594 by 432 mm</text>
-    </svg>
-      <figcaption>An 80 × 50 mm drawing on A4 landscape paper, centred on the HSE/A2 bed. For the physical starting corner, see <a href="setup.html#machine-origin">Setup</a>.</figcaption>
-    </figure>
-    <p>A4 is 210 × 297 mm in portrait or 297 × 210 mm in landscape. A3 is 297 × 420 mm; A2 is 420 × 594 mm. With explicit <code>width</code>, the drawing keeps that width. Without <code>width</code>, the <code>paper</code> option fits the canvas automatically inside the margins. The HSE/A2 bed is 594 × 432 mm, with X along the long rail. Place and orient your paper inside that area, then choose the drawing’s width and position.</p>
-    <h3>Choose A2 directly</h3>
-    <pre><code class="language-javascript">let plot;
-
-function setup() {
-  createCanvas(400, 250);
-  plot = createPlot({ paper: "A2", margin: 12 });
-  noLoop();
-}
-
-function draw() {
-  background(255);
-  noFill();
-  plot.clear();
-  plot.rect(10, 10, 380, 230);
-  plot.line(30, 125, 370, 125);
-  plot.go();
-}</code></pre>
-    <p>Use the <code>index.html</code> from <a href="setup.html#global-mode">Setup</a> and replace its <code>sketch.js</code> with the code above. The canvas fits proportionally inside a 12 mm margin on A2. On the HSE/A2, paper is 594 × 420 mm at X = 0, Y = 6 mm. This canvas maps to 570 × 356.25 mm, centred on it. This is a full-sheet drawing, larger than the first 80 mm canvas area. Put the real paper at that position. Add <code>plot.showBed()</code> after recording the shapes to see the selected paper and placement.</p>
-    <p><code>paper</code> accepts A0–A6. Default <code>orientation: "auto"</code> follows the canvas aspect ratio and tries the other orientation if needed to fit the bed. Explicit <code>"portrait"</code> or <code>"landscape"</code> is honoured or refused. <code>margin</code> defaults to 12 mm. <code>paperX</code>/<code>paperY</code> move the sheet; <code>x</code>/<code>y</code> locate the canvas. <code>width</code> or <code>mmPerPixel</code> overrides fitting. <code>plot.paper</code> reports the resolved sheet. Invalid paper placement or strokes outside the margins are refused before plotting.</p>
-    <h3>Move the paper</h3>
+    <h2 id="paper">2. Paper and placement</h2>
+    <p>Your sketch uses pixels. The plotter uses millimetres. <code>createPlot()</code> sets the size and position of the drawing on your paper.</p>
+    <h3>Use the paper on your machine</h3>
+    <p>Set <code>paper</code> to its format. <code>paperX</code> and <code>paperY</code> locate the paper corner from the machine's starting point. Use zero when the paper starts at that point.</p>
+    <p>In my setup, X runs along the long rails and Y across them. The pen starts at the lower-left corner. The <a href="setup.html#machine-origin">starting point</a> stays fixed when you move the paper.</p>
+    <h3>Place the drawing near the paper corner</h3>
+    <p>Replace <code>createPlot()</code> in the first sketch with:</p>
     <pre><code class="language-javascript">plot = createPlot({
-  paper: "A4",
-  orientation: "portrait",
+  paper: "A2",
+  paperX: 0,
+  paperY: 0,
   margin: 12,
-  paperX: 60,
-  paperY: 100,
-  width: 120
+  x: 12,
+  y: 12,
+  width: 80
 });</code></pre>
-    <p>The sheet starts 60 mm along positive X and 100 mm along positive Y from home. The drawing stays 120 mm wide and is centred on that sheet. Add <code>x</code>/<code>y</code> when the drawing needs another position within the paper margins. Put the real paper at the same position.</p>
-    <h3>Preview a separate sheet</h3>
-    <p>For a sketch without the paper option, show the actual sheet separately from the canvas area:</p>
-    <pre><code class="language-javascript">// After recording the drawing; bedCanvas is a separate HTML canvas.
-plot.drawBed(bedCanvas, {
-  sheet: { x: 60, y: 100, width: 210, height: 297 } // A4 portrait, mm
+    <p><code>width: 80</code> makes the canvas 80 mm wide on paper. Its proportions stay the same. <code>x</code> and <code>y</code> place the canvas corner 12 mm from the machine's starting point along each axis.</p>
+    <figure class="canvas-placement-diagram">
+      <img src="images/animations/paper-placement.gif" width="640" height="480" style="max-width:100%;height:auto;image-rendering:pixelated" alt="CGA drawing of the plotter seen from above, with the pen at the lower-left origin, X along the rails, Y across the bed and a small drawing area near the paper corner.">
+    </figure>
+    <p>If the paper starts elsewhere, enter its position in <code>paperX</code> and <code>paperY</code>. For the same corner placement, set <code>x</code> to <code>paperX + margin</code> and <code>y</code> to <code>paperY + margin</code>. These are distances from the machine origin, not from the paper corner.</p>
+    <h3>Let the library fit the drawing</h3>
+    <p>Leave out <code>width</code>, <code>x</code> and <code>y</code> to fit the canvas inside the margin and centre it on the paper:</p>
+    <pre><code class="language-javascript">plot = createPlot({
+  paper: "A2",
+  paperX: 0,
+  paperY: 0,
+  margin: 12
 });</code></pre>
-    <p>This shades the A4 paper and draws the planned strokes at their existing position. It does not move or scale them. Without <code>sheet</code>, the preview uses selected <code>plot.paper</code>, or the mapped canvas when no paper was selected. To place A4 in landscape, use width 297 and height 210; that changes the paper preview only. For quarter-turn placement of a complete job, use the core’s <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/examples/first_job/">paper and bed panel</a>.</p>
+    <p>Keep <code>width</code> if you want a fixed drawing size. Leave out only <code>x</code> and <code>y</code> to centre that size on the paper.</p>
+    <h3>Check the placement</h3>
+    <p>Add this after the drawing calls:</p>
+    <pre><code class="language-javascript">plot.showBed();</code></pre>
+    <p>The preview shows the paper and the recorded drawing. Its red cross marks the machine origin. The preview turns X to the right and Y down; on my physical machine, X runs up the rails and Y to the right. Match the axes when you compare it with the machine.</p>
+    <p><code>margin</code> leaves space around the drawing. Paper or drawings that do not fit are refused before plotting. <code>orientation: "auto"</code> chooses an orientation that fits; use <code>"portrait"</code> or <code>"landscape"</code> to specify it. The resolved paper settings are available in <code>plot.paper</code>.</p>
 
     <h2 id="plotting">3. Plot the line</h2>
     <p>Add <code>plot.go()</code> at the end of <code>draw()</code>, after recording every shape. It waits for your click; it does not start a machine while the page loads. Check the <a href="setup.html#direct-plotting">connection requirements</a> before the first plot. Park the carriage at the <a href="setup.html#machine-origin">physical origin that matches the driver</a>, place the paper to match the preview, then click the drawing and choose the serial port. The click confirms the plot. Another click requests a stop.</p>
