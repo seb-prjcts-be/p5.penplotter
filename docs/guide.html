@@ -26,50 +26,16 @@
   </nav>
   <main class="page">
     <header class="page-header">
-      <div class="section-tag">p5.js addon library · v0.2.1</div>
+      <div class="section-tag">p5.js addon library</div>
       <h1>Guide</h1>
       <p class="guide-intro">Draw on screen, choose a size on paper and click to plot. Start with the two files below.</p>
     </header>
 
-    <nav aria-label="On this page"><p><a href="#werkwijzen">Two ways to work</a> · <a href="#global-mode">Start</a> · <a href="#change-drawing">Change</a> · <a href="#paper">Paper</a> · <a href="#plotting">Plot</a> · <a href="#shapes">Shapes</a> · <a href="#starters">Starters</a> · <a href="#core-access">Core</a> · <a href="#instance-mode">Instance mode</a> · <a href="#reference">Reference</a></p></nav>
+    <nav aria-label="On this page"><p><a href="#global-mode">Start</a> · <a href="#change-drawing">Change</a> · <a href="#paper">Paper</a> · <a href="#plotting">Plot</a> · <a href="#werkwijzen">Two ways to work</a> · <a href="#shapes">Shapes</a> · <a href="#starters">Starters</a> · <a href="#core-access">Core</a> · <a href="#instance-mode">Instance mode</a> · <a href="#reference">Reference</a></p></nav>
 
-    <h2 id="werkwijzen">Two ways to work</h2>
-    <p>Draw everything and plot once. Or draw and plot one object, wait until it finishes, then make the next.</p>
-    <h3>Draw everything, then plot</h3>
-    <p>Draw all the shapes and start one plot. Choose <code>strategy: "drawn"</code> to keep the drawing order.</p>
-    <h3>Draw and plot one object, then the next</h3>
-    <p>Plot one object and wait until it finishes. Clear the recording with <code>plot.clear()</code>, draw the next and plot again on the same paper. An object can also be a group of shapes. The planner orders only the current job.</p>
-    <p><strong>Plotting does not clear the recording.</strong> Without <code>clear()</code>, earlier objects are plotted again. That can be a deliberate second pass. <code>clear()</code> does not remove ink.</p>
-    <p>Wait between jobs. Sending new lines while the machine draws is not supported yet.</p>
-    <h3>In p5.penplotter</h3>
-    <p>Use the same <code>plot</code> and paper settings for successive objects. <code>plot.clear()</code> clears the recorded geometry; the screen and paper remain. <code>background()</code> clears the screen; the recording remains. A normally completed job returns home. After a stop or error, check the machine and park the carriage at home again before another job.</p>
-    <pre><code class="language-javascript">// Draw everything, then plot:
-plot.clear();
-plot.rect(10, 10, 100, 80);
-plot.circle(200, 125, 60);
-await plot.go();
-
-// One object at a time: start this from an async user action.
-plot.clear();
-plot.rect(10, 10, 100, 80);
-const first = await plot.go();
-if (first.status === "complete") {
-  plot.clear();
-  plot.circle(200, 125, 60);
-  await plot.go();
-}</code></pre>
-    <p>These fragments use an existing <code>plot</code> with a driver. From <code>setup()</code> or <code>draw()</code>, <code>go()</code> waits for a click. From a user action, the adapter asks for confirmation. Add the next object only after <code>status: "complete"</code>; a cancelled, stopped or failed job has not completed the object. Keep paper and placement settings consistent between jobs.</p>
-    <h3>A sequence of small jobs</h3>
-    <p><code>plot.sequence(prepare)</code> starts with one click. It clears the recording before each call to your function, plots that group and waits before calling again. Return <code>false</code> when finished. Each group returns home. <a href="../examples/chaos_game/index.html">Chaos game</a> shows this with 25 dots at a time and includes a screen demo.</p>
-    <pre><code class="language-javascript">let group = 0;
-plot.sequence(() =&gt; {
-  if (group === 5) return false;
-  plot.circle(50 + group * 60, 100, 30);
-  group++;
-  return true;
-}).catch(console.error);</code></pre>
     <h2 id="global-mode">1. Draw on screen</h2>
     <p>Put these two files in the same folder, or use the matching files in the p5.js Web Editor. Open the folder through a web server. The sketch draws a rectangle and a circle; it needs no plotter connection.</p>
+    <p>Use the imports below. Paper placement, bed previews and plotting sequences were added after the v0.2.1 release; that release does not contain them.</p>
     <p>The imports load the libraries; <code>installP5Penplotter()</code> connects them to p5.js.</p>
     <h3>index.html</h3>
     <pre><code class="language-markup">&lt;!DOCTYPE html&gt;
@@ -82,7 +48,8 @@ plot.sequence(() =&gt; {
   &lt;script type="module"&gt;
     import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@9f19656703c94dc970c0233135cdc9a66cda3f3f/vanilla.penplotter.js";
     import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@d5655385d8c3ce68f3d61eb1ff80a60c9ee2613e/p5.penplotter.js";
-    installP5Penplotter(p5, PlotterEngine);
+    import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@9f19656703c94dc970c0233135cdc9a66cda3f3f/src/driver/ebb.js";
+    installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
   &lt;/script&gt;
   &lt;script src="sketch.js"&gt;&lt;/script&gt;
 &lt;/head&gt;
@@ -105,7 +72,7 @@ function draw() {
   plot.circle(200, 125, 80);
 }</code></pre>
 
-    <p>The imports pin both libraries, including paper fitting and bed preview. Keep them in <code>index.html</code>; put the drawing in <code>sketch.js</code>. No plotter is needed to draw or export.</p>
+    <p>The imports pin both libraries, including paper fitting and bed preview. Keep them in <code>index.html</code>; put the drawing in <code>sketch.js</code>. The driver is installed here too; no port is opened until you start plotting. No plotter is needed to draw or export.</p>
     <p><code>background()</code> clears the screen; <code>plot.clear()</code> starts a new recording. <code>noLoop()</code> keeps this drawing still. Screen <code>translate()</code>, <code>rotate()</code>, styling and changes to <code>rectMode()</code> or <code>ellipseMode()</code> do not transform the recorded geometry. Rectangles use corner coordinates and circles use diameters.</p>
 
     <h2 id="change-drawing">2. Change the drawing</h2>
@@ -144,8 +111,8 @@ function draw() {
   plot.line(30, 125, 370, 125);
   plot.go();
 }</code></pre>
-    <p>The canvas fits proportionally inside a 12 mm margin on A2. On the HSE/A2, paper is 594 × 420 mm at X = 0, Y = 6 mm. This canvas maps to 570 × 356.25 mm, centred on it. This is a full-sheet drawing, larger than the first 80 mm test. Put the real paper at that position. <code>plot.drawBed(bedCanvas)</code> uses the selected sheet automatically.</p>
-    <p><code>paper</code> accepts A0–A6. Default <code>orientation: "auto"</code> follows the canvas aspect ratio and tries the other orientation if needed to fit the bed. Explicit <code>"portrait"</code> or <code>"landscape"</code> is honoured or refused. <code>margin</code> defaults to 12 mm. <code>paperX</code>/<code>paperY</code> move the sheet; <code>x</code>/<code>y</code> locate the canvas. <code>width</code> or <code>mmPerPixel</code> overrides fitting. <code>plot.paper</code> reports the resolved sheet. Invalid paper placement or strokes outside the margins are refused before plotting. This requires current source in both libraries; older pins do not include it.</p>
+    <p>Use the starter’s <code>index.html</code> and replace its <code>sketch.js</code> with the code above. The canvas fits proportionally inside a 12 mm margin on A2. On the HSE/A2, paper is 594 × 420 mm at X = 0, Y = 6 mm. This canvas maps to 570 × 356.25 mm, centred on it. This is a full-sheet drawing, larger than the first 80 mm test. Put the real paper at that position. Add <code>plot.showBed()</code> after recording the shapes to see the selected paper and placement.</p>
+    <p><code>paper</code> accepts A0–A6. Default <code>orientation: "auto"</code> follows the canvas aspect ratio and tries the other orientation if needed to fit the bed. Explicit <code>"portrait"</code> or <code>"landscape"</code> is honoured or refused. <code>margin</code> defaults to 12 mm. <code>paperX</code>/<code>paperY</code> move the sheet; <code>x</code>/<code>y</code> locate the canvas. <code>width</code> or <code>mmPerPixel</code> overrides fitting. <code>plot.paper</code> reports the resolved sheet. Invalid paper placement or strokes outside the margins are refused before plotting. The imports above include these paper options.</p>
     <h3>Move the paper</h3>
     <pre><code class="language-javascript">plot = createPlot({
   paper: "A4",
@@ -162,13 +129,11 @@ function draw() {
 plot.drawBed(bedCanvas, {
   sheet: { x: 60, y: 100, width: 210, height: 297 } // A4 portrait, mm
 });</code></pre>
-    <p>This shades the A4 paper and draws the planned strokes at their existing position. It does not move or scale them. Without <code>sheet</code>, the preview uses selected <code>plot.paper</code>, or the mapped canvas when no paper was selected. To place A4 in landscape, use width 297 and height 210; that changes the paper preview only. For quarter-turn placement of a complete job, use the core’s <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/examples/first_job/">paper and bed panel</a>. Both previews require current-source imports as described in <a href="setup.html">Setup</a>.</p>
+    <p>This shades the A4 paper and draws the planned strokes at their existing position. It does not move or scale them. Without <code>sheet</code>, the preview uses selected <code>plot.paper</code>, or the mapped canvas when no paper was selected. To place A4 in landscape, use width 297 and height 210; that changes the paper preview only. For quarter-turn placement of a complete job, use the core’s <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/examples/first_job/">paper and bed panel</a>. Use the imports from the starter above for these previews.</p>
     <p>Tested on one machine so far: an iDraw HSE / A2 with EBB firmware 3.0.2.</p>
 
     <h2 id="plotting">4. Start a plot</h2>
-    <p>In the module block in <code>index.html</code>, add the driver import and replace the installation line:</p>
-    <pre><code class="language-javascript">import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@9f19656703c94dc970c0233135cdc9a66cda3f3f/src/driver/ebb.js";
-installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
+    <p>The starter already installs the driver. Use the same <code>index.html</code> for the plotting examples below.</p>
     <p>Add <code>plot.go()</code> at the end of <code>draw()</code>, after recording every shape. It waits for your click; it does not start a machine while the page loads. Use Chrome or Edge on localhost or HTTPS. First check a small job in the core's <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/examples/direct_plot/">40 × 25 mm dry-run example</a>. Park the carriage at the <a href="setup.html#machine-origin">physical origin that matches the driver</a>, place the paper to match the preview, then click the drawing and choose the serial port. The click confirms the plot. Another click requests a stop.</p>
     <p>Direct plotting is physically tested on the iDraw HSE / A2 with EBB firmware 3.0.2. A stop requests pen lift and motor release; delivery requires a working connection.</p>
     <figure class="doc-animation" id="animation-plot-go">
@@ -176,8 +141,43 @@ installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
       <figcaption>Draw first, then click to plot. Click again to stop. This is an illustration of a complete drawing; machine speed and placement are schematic.</figcaption>
     </figure>
 
+    <h2 id="werkwijzen">Two ways to work</h2>
+    <p>Draw everything and plot once. Or draw and plot one object, wait until it finishes, then make the next.</p>
+    <h3>Draw everything, then plot</h3>
+    <p>Draw all the shapes and start one plot. Choose <code>strategy: "drawn"</code> to keep the drawing order.</p>
+    <h3>Draw and plot one object, then the next</h3>
+    <p>Plot one object and wait until it finishes. Clear the recording with <code>plot.clear()</code>, draw the next and plot again on the same paper. An object can also be a group of shapes. The planner orders only the current job.</p>
+    <p><strong>Plotting does not clear the recording.</strong> Without <code>clear()</code>, earlier objects are plotted again. That can be a deliberate second pass. <code>clear()</code> does not remove ink.</p>
+    <p>Wait between jobs. Sending new lines while the machine draws is not supported yet.</p>
+    <h3>In p5.penplotter</h3>
+    <p>Use the same <code>plot</code> and paper settings for successive objects. <code>plot.clear()</code> clears the recorded geometry; the screen and paper remain. <code>background()</code> clears the screen; the recording remains. A normally completed job returns home. After a stop or error, check the machine and park the carriage at home again before another job.</p>
+    <pre><code class="language-javascript">// Call from a button or key handler, using the existing plot.
+async function plotTwoObjects() {
+  plot.clear();
+  plot.rect(10, 10, 100, 80);
+  const first = await plot.go();
+  if (first.status !== "complete") return;
+  plot.clear();
+  plot.circle(200, 125, 60);
+  await plot.go();
+}</code></pre>
+    <p>Call <code>plotTwoObjects()</code> from a button or key handler after creating <code>plot</code> with the starter setup. Each <code>go()</code> can ask for confirmation or wait for another click. For one initial click to run all groups, use <code>sequence()</code> below. Add the next object only after <code>status: "complete"</code>; a cancelled, stopped or failed job has not completed the object. Keep paper and placement settings consistent between jobs.</p>
+    <h3>A sequence of small jobs</h3>
+    <p>Keep the starter’s <code>setup()</code> and replace <code>draw()</code> with the code below. <code>plot.sequence(prepare)</code> starts with one click. It clears the recording before each call to your function, plots that group and waits before calling again. Return <code>false</code> when finished. Each group returns home. <a href="../examples/chaos_game/index.html">Chaos game</a> shows this with 25 dots at a time and includes a screen demo.</p>
+    <pre><code class="language-javascript">let group = 0;
+
+function draw() {
+  background(255);
+  noFill();
+  plot.sequence(() =&gt; {
+    if (group === 5) return false;
+    plot.circle(50 + group * 60, 100, 30);
+    group++;
+    return true;
+  }).catch(console.error);
+}</code></pre>
     <h2 id="shapes">Shapes and fills</h2>
-    <p><code>plot.…</code> has these 2D primitives, with the same arguments: <code>point</code>, <code>line</code>, <code>circle</code>, <code>ellipse</code>, <code>arc</code>, <code>rect</code>, <code>square</code>, <code>triangle</code>, <code>quad</code>, plus <code>polyline</code> and <code>polygon</code>, which take <code>[x, y]</code> pairs or <code>{ x, y }</code> objects. Angles follow <code>angleMode()</code>. A point becomes a quarter-millimetre dash, because a pen cannot dot.</p>
+    <p><code>plot.…</code> records these 2D shapes: <code>point</code>, <code>line</code>, <code>circle</code>, <code>ellipse</code>, <code>arc</code>, <code>rect</code>, <code>square</code>, <code>triangle</code>, <code>quad</code>, plus <code>polyline</code> and <code>polygon</code>, which take <code>[x, y]</code> pairs or <code>{ x, y }</code> objects. Angles follow <code>angleMode()</code>. A point is recorded as a 0.24 mm dash. Rectangles use corner coordinates; ellipse and arc coordinates refer to their centre. Rounded rectangles and screen transforms are not recorded.</p>
     <pre><code class="language-javascript">plot.square(30, 10, 40);
 plot.triangle(80, 50, 120, 10, 160, 50);
 plot.arc(330, 30, 40, 40, 0, HALF_PI, PIE);
@@ -209,7 +209,7 @@ plot.stipple(square, 150, 3);    // count, seed</code></pre>
     </figure>
 
     <h2 id="starters">Complete drawing starters</h2>
-    <p>Three plain global-mode sketches. Use the <code>index.html</code> from <a href="#global-mode">the starter above</a> with <a href="#plotting">the driver installation</a>; each one writes <code>plot.go()</code> when ready: click the drawing to plot and click again to request a stop.</p>
+    <p>Three p5 sketches. Use the <code>index.html</code> from <a href="#global-mode">the starter above</a> with its driver installation; each one writes <code>plot.go()</code> when ready: click the drawing to plot and click again to request a stop.</p>
     <h3>Rings</h3>
     <pre><code class="language-javascript">let plot;
 
@@ -280,7 +280,7 @@ function draw() {
 
     <figure class="doc-animation" id="animation-pens-and-layers">
       <img src="images/animations/pens-and-layers.gif?v=20261002-colour" width="600" height="400" loading="lazy" alt="Two pens draw separate layers; one layer can be excluded.">
-      <figcaption>Sage is pen A; ochre is pen B. Each colour follows its assigned paths. The second pass hides one layer; it does not erase the source paths. One pen can draw the outline; another can draw the texture. Use <code>plot.engine.pen()</code> and <code>plot.engine.layer()</code>, and set the p5 screen colour separately with <code>stroke()</code>. The physical pen change is yours to make.</figcaption>
+      <figcaption>Sage is pen A; ochre is pen B. Each colour follows its assigned paths. The second pass hides one layer; it does not erase the source paths. One pen can draw the outline; another can draw the texture. Use <code>plot.engine.pen()</code> and <code>plot.engine.layer()</code>, and set the p5 screen colour separately with <code>stroke()</code>. Assigning a pen does not pause the machine. For direct plotting with multiple pens, supply an <code>onToolChange</code> callback to <code>plot.go()</code> that waits for you to finish each physical pen change.</figcaption>
     </figure>
 
     <figure class="doc-animation" id="animation-svg-files">
@@ -296,8 +296,8 @@ function draw() {
     p.noFill();
     p.noLoop();
     const plot = p.createPlot({ paper: "A4", margin: 12, width: 80 });
-    plot.circle(400, 400, 180);
-    p.drawRoute(plot.plan());
+    plot.circle(200, 125, 80);
+    plot.showBed();
   };
 });</code></pre>
 
@@ -310,13 +310,13 @@ function draw() {
       <tr><td><code>showBed([canvas])</code></td><td>Shows the bed and paper with a red origin cross. Creates and reuses a separate preview when no canvas is supplied. Call after recording the drawing.</td></tr>
       <tr><td><code>drawBed(canvas, { sheet })</code></td><td>Uses a separate HTML canvas or 2D context. Sheet position and size are millimetres; defaults to selected paper, then mapped canvas.</td></tr>
       <tr><td><code>go(), stop()</code></td><td>Go from setup/draw waits for a click and needs the installed driver. Stop requests an abort; neither is a preview method.</td></tr>
-      <tr><td><code>createPlotterEngine(), drawRoute(plan)</code></td><td>Advanced core route. Engine geometry uses document units; its circle takes a radius. DrawRoute displays planned routes through p5.</td></tr>
+      <tr><td><code>createPlotterEngine(), drawRoute(plan)</code></td><td>Advanced core route. Engine geometry uses document units; its circle takes a radius. DrawRoute displays plan coordinates directly as pixels; it does not convert millimetres back to sketch pixels. Use showBed for a physical placement preview.</td></tr>
     </tbody></table>
     <p><a href="setup.html">Setup</a> shows the imports. <a href="architecture.html">Architecture</a> explains what is recorded. Keep both source pins together; older tags lack some helpers.</p>
   </main>
   <footer>
     <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; Sebastien Vanblaere &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine</p>
-    <p class="footer-sub">MIT License &middot; v0.2.1</p>
+    <p class="footer-sub">MIT License</p>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
 </body>
