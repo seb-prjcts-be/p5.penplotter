@@ -80,7 +80,7 @@ function draw() {
     <h2 id="direct-plotting">3. Plot the same line on paper</h2>
     <p>Use Chrome or Edge. Connect the plotter by USB and switch it on.</p>
     <h3 id="machine-origin">Prepare the paper and pen</h3>
-    <figure><img src="images/animations/setup-plotter.gif" width="600" height="400" style="max-width:100%;height:auto" alt="CGA-style plotter with its pen at the bottom-left starting corner and a controller card with a blinking red button."></figure>
+    <figure><img src="images/animations/setup-plotter.gif?v=2" width="640" height="480" style="max-width:100%;height:auto;image-rendering:pixelated" alt="CGA-style plotter with its pen at the bottom-left starting corner and a controller card with a blinking red button."></figure>
     <p>On my iDraw HSE / A2, the starting corner is bottom left when the long rails run away from you. With the motors off, move the carriage to that corner. The driver takes this position as zero; the machine does not find it automatically.</p>
     <p>Use the paper already on the machine. Set <code>paper</code> in the sketch to its format. Set <code>paperX</code> and <code>paperY</code> to the paper corner's distance from the machine origin, in millimetres along each axis. Both are zero when that corner is at the origin. Set <code>x</code> and <code>y</code> to those distances plus the margin to place the drawing at the paper corner. See <a href="guide.html#paper">Paper and placement</a> for the placement options.</p>
     <p>If your machine has a different starting corner or motor direction, confirm its origin before running this test. Moving the carriage to another corner does not change the driver's directions.</p>
