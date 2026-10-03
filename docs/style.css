@@ -417,4 +417,6 @@ pre code { white-space: pre; overflow-wrap: normal; }
 .workflow-pair figure { margin: 0; min-width: 0; }
 .workflow-pair img { display: block; width: 100%; height: auto; image-rendering: pixelated; }
 .workflow-pair figcaption { margin: .8rem 0; line-height: 1.6; }
+.workflow-pair h2 { margin: 0 0 .5rem; font-size: 1.3rem; line-height: 1.4; }
+.workflow-pair p { margin: 0; }
 @media (max-width: 620px) { .workflow-pair { grid-template-columns: minmax(0, 1fr); } }

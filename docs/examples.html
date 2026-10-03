@@ -29,16 +29,21 @@
     <div class="section-tag">p5.js addon library · v0.2.1</div>
     <h1>Examples</h1>
     <p>Choose how you want to work, then try a different drawing. Each example has a copyable sketch. Use the <code>index.html</code> from <a href="setup.html#global-mode">Setup</a>.</p>
-    <p><a href="#direct_plot">Draw everything, then plot</a> with <code>plot.go()</code>, or <a href="#chaos_game">draw one object, plot it and wait before the next</a> with <code>plot.sequence()</code>.</p>
   </div>
   <div class="workflow-pair" aria-label="Two ways to plot">
     <figure>
       <img src="images/animations/workflow-draw-then-plot.gif" width="600" height="400" alt="All three objects appear on the p5 canvas before the plotter draws them on paper. It returns home after the drawing.">
-      <figcaption><a href="#direct_plot">Draw everything, then plot</a><br><code>plot.go()</code></figcaption>
+      <figcaption>
+        <h2><a href="#direct_plot">Draw everything, then plot</a></h2>
+        <p>Use <code>plot.go()</code> after drawing all the objects. Click the drawing to start plotting.</p>
+      </figcaption>
     </figure>
     <figure>
       <img src="images/animations/workflow-object-by-object.gif" width="600" height="400" alt="The sketch draws one object, plots it and waits before drawing the next. The plotter keeps its position between objects and returns home after the last one.">
-      <figcaption><a href="#chaos_game">Draw one object, plot it, then the next</a><br><code>plot.sequence(nextObject)</code></figcaption>
+      <figcaption>
+        <h2><a href="#chaos_game">Draw one object, plot it, then the next</a></h2>
+        <p>Use <code>plot.sequence()</code> to draw and plot one object at a time. It waits until each object finishes before preparing the next.</p>
+      </figcaption>
     </figure>
   </div>
   <section id="direct_plot" class="section section-dark">
