@@ -67,7 +67,7 @@ function draw() {
 ### Click to plot
 
 <p align="center">
-  <img src="docs/images/animations/starting-plot.gif" alt="The drawing waits for a click, asks for a port when needed, then plots; a second click requests a stop" width="480">
+  <img src="docs/images/animations/starting-plot-p5.gif" alt="The drawing waits for a click, asks for a port when needed, then plots; a second click requests a stop" width="480">
 </p>
 
 `plot.go()` waits for a click when called from `setup()` or `draw()`. Check the machine, then click the drawing. The browser asks for a serial port when needed. A click while plotting requests a stop.
