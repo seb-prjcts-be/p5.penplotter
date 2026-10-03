@@ -8,7 +8,7 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20261002c">
+  <link rel="stylesheet" href="style.css?v=20261003-workflows">
 </head>
 <body>
   <nav id="navbar">
@@ -31,6 +31,17 @@
     <p>Choose how you want to work, then try a different drawing. Each example has a copyable sketch. Use the <code>index.html</code> from <a href="setup.html#global-mode">Setup</a>.</p>
     <p><a href="#direct_plot">Draw everything, then plot</a> with <code>plot.go()</code>, or <a href="#chaos_game">draw one object, plot it and wait before the next</a> with <code>plot.sequence()</code>.</p>
   </div>
+  <div class="workflow-pair" aria-label="Two ways to plot">
+    <figure>
+      <img src="images/animations/workflow-draw-then-plot.gif" width="600" height="400" alt="All three objects appear on the p5 canvas before the plotter draws them on paper. It returns home after the drawing.">
+      <figcaption><a href="#direct_plot">Draw everything, then plot</a><br><code>plot.go()</code></figcaption>
+    </figure>
+    <figure>
+      <img src="images/animations/workflow-object-by-object.gif" width="600" height="400" alt="The sketch draws one object, plots it and waits before drawing the next. The plotter keeps its position between objects and returns home after the last one.">
+      <figcaption><a href="#chaos_game">Draw one object, plot it, then the next</a><br><code>plot.sequence(nextObject)</code></figcaption>
+    </figure>
+  </div>
+  <p class="workflow-note">The animations show drawing order in bed coordinates; machine speed is schematic.</p>
   <section id="direct_plot" class="section section-dark">
     <div class="section-header">
       <div class="section-tag">five lines, a frame, and the pen</div>
