@@ -1,4 +1,4 @@
-let waveSeed = Math.floor(Math.random() * 34);
+let waveSeed = Math.floor(Math.random() * 35);
 
 let plotPlan;
 

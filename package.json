@@ -13,7 +13,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "test": "node tests/snapshot.js && node tests/plot.js && node tests/requirements.js",
+    "test": "node tests/snapshot.js && node tests/plot.js && node tests/requirements.js && node tests/examples.js",
     "docs": "node tools/build-docs.js",
     "manifest": "node tools/gen-manifest.js"
   },

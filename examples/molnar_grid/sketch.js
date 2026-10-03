@@ -16,12 +16,12 @@ function draw() {
   plot.clear();
 
   let n = 10;
-  let cell = width / n;
+  let cell = (width - 40) / n;
   for (let row = 0; row < n; row++) {
     let disorder = row / (n - 1);
     for (let column = 0; column < n; column++) {
-      let cx = column * cell + cell / 2;
-      let cy = row * cell + cell / 2;
+      let cx = 20 + column * cell + cell / 2;
+      let cy = 20 + row * cell + cell / 2;
       for (let k = 1; k <= 4; k++) {
         let radius = (cell * 0.42 * k) / 4;
         let angle = random(-1, 1) * disorder * QUARTER_PI;

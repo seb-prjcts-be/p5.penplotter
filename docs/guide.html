@@ -137,9 +137,9 @@ plot.drawBed(bedCanvas, {
     <h3>Draw everything, then plot</h3>
     <p>Draw all the shapes and start one plot. Choose <code>strategy: "drawn"</code> to keep the drawing order.</p>
     <h3>Draw and plot one object, then the next</h3>
-    <p>Keep the same <code>plot</code> and paper settings. Plot one object, wait until it finishes, clear the recording with <code>plot.clear()</code>, then draw the next. The planner orders only the current job; each completed job returns home.</p>
-    <p><strong>Plotting does not clear the recording.</strong> Without <code>clear()</code>, earlier objects are plotted again. That can be a deliberate second pass. <code>clear()</code> does not remove ink.</p>
-    <p>Wait between jobs. Sending new lines while the machine draws is not supported yet.</p>
+    <p>Keep the same <code>plot</code> and paper settings. Plot one object, wait until it finishes, clear the recording with <code>plot.clear()</code>, then draw the next. With separate <code>go()</code> calls, the planner orders the current object and the carriage returns home after each plot. <code>sequence()</code> below keeps the position between objects and returns home after the last one.</p>
+    <p><strong><code>go()</code> keeps the recording.</strong> Without <code>clear()</code>, earlier objects are plotted again. That can be a deliberate second pass. <code>clear()</code> does not remove ink.</p>
+    <p>Wait until an object finishes before adding the next. A sequence uses one pen; sending new lines while the machine draws is not supported yet.</p>
     <pre><code class="language-javascript">// Call from a button or key handler, using the existing plot.
 async function plotTwoObjects() {
   plot.clear();
@@ -151,8 +151,8 @@ async function plotTwoObjects() {
   await plot.go();
 }</code></pre>
     <p>Call <code>plotTwoObjects()</code> from a button or key handler after creating <code>plot</code> with the starter setup. Each <code>go()</code> can ask for confirmation or wait for another click. For one initial click to plot successive objects, use <code>sequence()</code> below. Add the next object only after <code>status: "complete"</code>; a cancelled, stopped or failed job has not completed the object. Keep paper and placement settings consistent between jobs.</p>
-    <h3>Plot one object, then the next</h3>
-    <p>Keep the starter’s <code>setup()</code> and replace <code>draw()</code> with the code below. <code>plot.sequence(prepare)</code> starts with one click. It clears the recording before each call to your function, plots that object and waits before calling again. Return <code>false</code> when finished. The carriage returns home after the last object. <a href="../examples/chaos_game/index.html">Chaos game</a> shows this with one point at a time and includes a screen demo.</p>
+    <h4>One click with sequence()</h4>
+    <p>Keep the starter’s <code>setup()</code> and replace <code>draw()</code> with the code below. <code>plot.sequence(prepare)</code> starts with one click. It clears the recording before each call to your function, plots that object and waits before calling again. The index starts at zero and increases after each completed object. Return <code>false</code> when finished. The carriage returns home after the last object. <a href="../examples/chaos_game/index.html">Chaos game</a> shows this with one point at a time and includes a screen demo.</p>
     <pre><code class="language-javascript">function draw() {
   background(255);
   noFill();

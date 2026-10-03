@@ -396,12 +396,12 @@ async function testSequence() {
     return true;
   });
   while (!release) await new Promise(resolve => setTimeout(resolve, 0));
-  assert.equal(prepared, 1, "next group is not calculated while the machine is drawing");
+  assert.equal(prepared, 1, "next object is not calculated while the machine is drawing");
   assert.equal((await plot.sequence(() => true)).status, "busy");
   release(); release = null;
   while (!release) await new Promise(resolve => setTimeout(resolve, 0));
   assert.equal(prepared, 2);
-  assert.equal(jobs[1].length, 1, "clear prevents replotting the first group");
+  assert.equal(jobs[1].length, 1, "clear prevents replotting the first object");
   release();
   assert.deepEqual(await operation, { status: "complete", batches: 2 });
   assert.equal(plot.pending, null);

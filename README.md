@@ -10,7 +10,7 @@ Call `plot.go()` when the drawing is ready, then click the drawing to start plot
 
 ## Two ways to work
 
-Draw everything and plot once. Or draw and plot one object, wait until it finishes, then make the next. Use `plot.clear()` before a new object; otherwise earlier objects are plotted again. Clear does not remove ink. The [Guide](https://seb-prjcts-be.github.io/p5.penplotter/docs/guide.html#werkwijzen) shows both ways.
+Draw everything and plot once. Or draw and plot one object, wait until it finishes, then make the next. With separate `go()` calls, use `plot.clear()` before a new object; otherwise earlier objects are plotted again. `plot.sequence()` clears automatically before asking for the next object. Clear does not remove ink. The [Guide](https://seb-prjcts-be.github.io/p5.penplotter/docs/guide.html#werkwijzen) shows both ways.
 
 ## Which library?
 

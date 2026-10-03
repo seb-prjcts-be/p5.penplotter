@@ -1,7 +1,7 @@
 // Fit the canvas on A2, with a 12 mm paper margin.
 const PLACE = { paper: "A2", margin: 12 };
 
-let waveSeed = Math.floor(Math.random() * 34);
+let waveSeed = Math.floor(Math.random() * 35);
 
 let plot;
 
@@ -18,7 +18,7 @@ async function setup() {
 }
 
 function draw() {
-  background("#ffffff"); // screen only: no plot. in front of it
+  background("#ffffff"); // Background colour stays on screen.
   stroke("#111111");
   noFill();
 

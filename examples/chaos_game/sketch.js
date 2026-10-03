@@ -18,7 +18,7 @@ function draw() {
   stroke(0);
   strokeWeight(2);
   plot.showBed();
-  plot.sequence(nextPoint, { plan: { strategy: "drawn" } }).catch(error => say(error.message));
+  plot.sequence(nextPoint).catch(error => say(error.message));
 }
 
 function nextPoint() {

@@ -1,4 +1,4 @@
-// Spirograph — hypotrochoids, the oldest plotter drawing there is.
+// Spirograph: curves traced by a wheel rolling inside a ring.
 // Three curves share one centre; the seed picks their gear ratios.
 // Refresh for another drawing; click to plot, click again to stop.
 let plot;
@@ -27,8 +27,8 @@ function draw() {
   const wheels = [75, 100, 110, 150, 175, 200, 225];
   for (let curve = 0; curve < 3; curve += 1) {
     const r = wheels[floor(random(wheels.length))];
-    const d = r * random(0.35, 1.25);
-    const turns = r / gcd(R, r); // wheel turns until the curve closes
+    const d = r * random(0.35, 1.2);
+    const turns = r / gcd(R, r); // turns until the curve closes
     const points = [];
     const steps = turns * 240;
     for (let i = 0; i <= steps; i += 1) {

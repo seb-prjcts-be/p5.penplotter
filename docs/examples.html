@@ -51,7 +51,7 @@ plot.go();   // click the drawing to plot</code></pre>
     <div class="section-header">
       <div class="section-tag">let the grid come apart</div>
       <h2>Molnár <span class="accent">grid</span></h2>
-      <p class="section-desc">Ten rows of nested squares. The top row is exact; each row down, the squares drift and turn a little more, until the bottom row has come apart. Try another seed to change the arrangement. The drawing is a plain global-mode sketch; its library imports are in index.html.</p>
+      <p class="section-desc">Ten rows of nested squares. The top row is exact; each row down, the squares drift and turn a little more, until the bottom row has come apart. Try another seed to change the arrangement. Keep the drawing in sketch.js and the library imports in index.html.</p>
     </div>
     <div class="ex-preview">
       <div class="ex-canvas"><iframe src="../examples/molnar_grid/index.html?embed" title="Molnár grid" loading="lazy"></iframe></div>
@@ -111,18 +111,24 @@ plot.polyline(points);</code></pre>
 
   <section id="chaos_game" class="section">
     <div class="section-header">
-      <div class="section-tag">a triangle nobody drew, dot by dot</div>
+      <div class="section-tag">one point at a time</div>
       <h2>Chaos <span class="accent">game</span></h2>
-      <p class="section-desc">One point jumps halfway to a random corner and leaves a dot; after a few hundred dots the Sierpinski triangle is there. Calculate one point, plot it and wait, then calculate the next. The carriage returns home after the last point. The screen demo shows the sequence without a machine.</p>
+      <p class="section-desc">The same halfway rule, repeated patiently, produces a Sierpinski triangle. This example calculates one point, plots it and waits before calculating the next. Try the screen demo or open the sketch to plot it on paper.</p>
     </div>
     <div class="ex-preview">
       <div class="ex-canvas"><iframe src="../examples/chaos_game/index.html?embed" title="Chaos game" loading="lazy"></iframe></div>
-<pre class="ex-code-block"><code class="language-javascript">const c = random(corners);
-p.x = (p.x + c[0]) / 2;
-p.y = (p.y + c[1]) / 2;
-plot.point(p.x, p.y);
-// nextPoint records one point and returns false when finished.
-plot.sequence(nextPoint, { plan: { strategy: "drawn" } });</code></pre>
+<pre class="ex-code-block"><code class="language-javascript">function nextPoint() {
+  if (dots &gt;= DOTS) return false;
+  const c = random(corners);
+  p.x = (p.x + c[0]) / 2;
+  p.y = (p.y + c[1]) / 2;
+  plot.point(p.x, p.y);
+  dots++;
+  plot.showBed();
+  return true;
+}
+
+plot.sequence(nextPoint);</code></pre>
 <a class="ex-full-link" href="../examples/chaos_game/index.html">-&gt; full example</a>
 <a class="ex-full-link" href="../examples/chaos_game/index.html#animation-chaos-game">-&gt; watch the triangle appear</a>
     </div>
