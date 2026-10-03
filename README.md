@@ -20,14 +20,6 @@ Draw everything and plot once. Or draw and plot one object, wait until it finish
 
 Each job is prepared before plotting. `plot.sequence()` calculates and plots successive small jobs, waiting for each to finish before preparing the next. Live streaming is not implemented; [live drawing notes](https://seb-prjcts-be.github.io/vanilla.penplotter/docs/live.html) describe the proposed direction.
 
-### Screen and paper
-
-`createPlot()`, `createPlotterEngine()` and `drawRoute()` become part of p5, in global and instance mode.
-
-The shapes in millimetres, cleanup, route planning, exports and machine commands stay in `vanilla.penplotter`.
-
-**Direct plotting is physically tested on one profile:** iDraw HSE / A2, EBB firmware 3.0.2, over Web Serial in Chrome or Edge. SVG, HPGL and G-code exports need software and settings suited to the receiving machine.
-
 ## Install
 
 The site uses current source. The latest tags are core `v0.3.1` and adapter `v0.2.1`; newer `pen()`, `drawRoute()` and bed preview helpers are available on `main`, not in all tagged builds.
@@ -82,7 +74,7 @@ function draw() {
 
 Park the carriage in the home corner by hand first; the machine has no home position of its own.
 
-In my photographed setup, the starting corner is bottom left: positive X runs up the long rail and positive Y runs right. The paper preview shows the same coordinates with (0,0) at top left, X right and Y down. Moving the carriage to another corner does not reverse the motor directions. The driver assumes the starting position; its bounds check cannot detect a wrong physical origin. See [the two views in Setup](https://seb-prjcts-be.github.io/p5.penplotter/docs/setup.html#machine-origin).
+See [the physical starting corner in Setup](https://seb-prjcts-be.github.io/p5.penplotter/docs/setup.html#machine-origin). Moving the carriage to another corner does not reverse the motor directions.
 
 The plot contains the shape calls recorded since the last `plot.clear()`. Clear at the start of `draw()` to replace each frame, and use `noLoop()` for a stable drawing. Screen transforms and styling are not recorded.
 
@@ -186,9 +178,7 @@ Each one is a standalone page under `examples/`; the [examples page](https://seb
 
 ## Related work
 
-[p5.plotSvg](https://github.com/golanlevin/p5.plotSvg) by Golan Levin exports a plotter-friendly SVG from a p5 sketch, with `beginRecordSvg()` and `endRecordSvg()`, and covers many more p5 primitives than this adapter. You can use the exported file with plotting software. This adapter records explicit shape calls for direct plotting with `plot.go()`. The engine’s `svg_to_pen` example can also import supported geometry from a p5.plotSvg file.
-
-[p5.plotterControl](https://github.com/craigfahner/p5.plotterControl) (craigfahner) drives GRBL pen plotters live from p5.js. `p5.penplotter` targets EBB machines such as the iDraw HSE and plans the whole drawing before the pen moves.
+See [About](https://seb-prjcts-be.github.io/p5.penplotter/docs/about.html#related-work) for p5.plotSvg, p5.plotterControl and the sister libraries.
 
 ## Public API
 
@@ -203,9 +193,7 @@ Each one is a standalone page under `examples/`; the [examples page](https://seb
 
 `createPlot()` options: `paper`, `margin`, `orientation`, `paperX`, `paperY`, `width` or `mmPerPixel`, `x`, `y`, `profile`, `confirm`, `log`. Start with a paper format and margin; add a width when the drawing needs a fixed physical size. Use `clear()`, `plan()`, `connect()`, `go()` and `stop()` to control the job.
 
-Choose paper directly with `createPlot({ paper: "A2", margin: 12 })`. A0–A6 dimensions come from the core's `PlotterEngine.paperSize()`. The canvas fits proportionally inside the paper margins and is centred on the sheet; the sheet is centred on the installed machine's bed. Default `orientation: "auto"` follows the canvas aspect ratio and tries the other orientation if needed to fit the bed. On the HSE/A2, A2 is 594 × 420 mm at X = 0, Y = 6 mm. Explicit `"portrait"` or `"landscape"` never flips silently. `paperX`/`paperY` move the sheet; `x`/`y` still locate the canvas. Positions and margins are millimetres; the default margin is 12. `width` or `mmPerPixel` overrides automatic fitting.
-
-`plot.paper` reports the resolved format, orientation, dimensions, position and margin. `plot.drawBed(canvas)` uses that sheet automatically. Invalid paper placement, a canvas outside the margins or recorded strokes outside those margins are refused before direct plotting. Without a machine profile, paper starts at X/Y = 0. Without `paper`, existing mapping stays unchanged. This option requires current source in both libraries; earlier pinned builds do not include it.
+The [Guide](https://seb-prjcts-be.github.io/p5.penplotter/docs/guide.html#paper) explains paper formats, orientation and placement.
 
 Version 0.2.1 targets p5.js 2.2.2. The core and hardware status are determined solely by `vanilla.penplotter`.
 

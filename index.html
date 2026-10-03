@@ -64,8 +64,7 @@
       <p>Draw everything, then plot. Or draw and plot one object, wait until it finishes, then make the next. You can keep working on the same paper.</p>
     </div>
     <div style="max-width:760px; margin:0 auto;">
-      <p>Plotting does not clear the recording. Use <code>plot.clear()</code> before the next object; otherwise earlier objects are plotted again.</p>
-      <p><a href="docs/guide.html#werkwijzen">Plot everything at once or one object at a time.</a></p>
+      <p><a href="docs/guide.html#werkwijzen">See both workflows in the Guide.</a></p>
     </div>
   </section>
 
@@ -101,7 +100,6 @@ function setup() {
   plot.circle(200, 125, 120);
   plot.go();                                          // ready: click the drawing
 }</code></pre>
-      <p class="section-desc" style="margin-top:1.25rem;">The editor needs the library imports and installation in <code>index.html</code>, once. Copy them from the start page.</p>
     </div>
     <div class="cta-row">
       <a href="docs/setup.html#global-mode" class="cta-btn">Copy the start (index.html + sketch.js) &#8594;</a>
@@ -132,7 +130,7 @@ function setup() {
     </div>
     <ol class="pipeline-list">
       <li><span>01</span><strong>Chrome or Edge</strong><p>Connect the plotter by USB. These examples use Web Serial in Chrome or Edge on localhost or HTTPS.</p></li>
-      <li><span>02</span><strong>Home corner</strong><p>In my photographed setup, start at the bottom-left corner: X runs up the long rail, Y to the right. The preview shows these coordinates turned to put (0,0) at top left. <a href="docs/setup.html#machine-origin">See the two views</a>.</p></li>
+      <li><span>02</span><strong>Home corner</strong><p>Park the carriage at the <a href="docs/setup.html#machine-origin">physical starting corner shown in Setup</a>.</p></li>
       <li><span>03</span><strong>Click your drawing</strong><p>Choose the plotter in the port list when the browser asks for it.</p></li>
       <li><span>04</span><strong>Click again to stop</strong><p>The driver requests a stop, pen lift and motor release. Those commands need a working connection.</p></li>
     </ol>
@@ -162,7 +160,7 @@ function setup() {
     <div class="section-header">
       <div class="section-tag">under the hood</div>
       <h2>How it <span class="accent">works</span></h2>
-      <p class="section-desc"><code>p5.penplotter</code> draws supported p5 shapes and records their coordinates in millimetres. <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> supplies cleanup, route planning, previews, file exports and the machine driver. It can also be used without p5.js.</p>
+      <p class="section-desc">Read <a href="docs/architecture.html">Architecture</a> for the recording and planning behind the drawing.</p>
     </div>
     <div class="cta-row">
       <a href="docs/setup.html" class="cta-btn secondary">Setup &#8594;</a>

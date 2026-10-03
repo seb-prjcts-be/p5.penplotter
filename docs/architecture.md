@@ -1,51 +1,35 @@
 # How p5.penplotter works
 
-## Two ways to work
+## Recording geometry
 
-Draw everything and call `plot.go()`. Or plot one object, wait until it finishes, clear the recording with `plot.clear()` and draw the next. Clear does not erase the screen or paper. Without clear, earlier objects are plotted again. `plot.sequence(prepare)` handles successive jobs with one initial click. It clears the recording, asks for the next group, plans and runs it, waits for completion, then repeats. Returning `false` ends the sequence; stop, cancellation or failure prevents further groups. Each job returns home, so this is not a continuous driver session. Live streaming is not implemented yet. See the [Guide](guide.html#werkwijzen).
+Each supported shape call has two outputs: a p5 drawing on the canvas and geometry in the core engine. The adapter converts canvas pixels to millimetres using an offset and scale. It converts a circle's diameter to a radius; a point becomes a 0.24 mm dash. Core fills are converted back to pixels for display.
 
-## Screen and paper
+The recording contains the shapes added since the last `plot.clear()`. Clear replaces the geometry engine, while keeping the driver and open connection. Planning takes a snapshot of that recording; later changes to the canvas do not add strokes to an active job.
 
-You draw with p5.js. The supported `plot.line()`, `plot.circle()` and other shape calls draw on the canvas and also record points for the pen. `vanilla.penplotter` cleans up those points, plans their route and supplies the machine driver.
+## Paper and coordinates
 
-Choose paper and a margin with `createPlot()`. The adapter fits and centres the canvas on the sheet, then converts its coordinates to millimetres. An explicit width keeps the drawing at that size; paper and drawing positions can be set separately. A p5 circle takes a diameter; the core receives a radius. A point becomes a short dash on paper.
+Paper dimensions come from `PlotterEngine.paperSize()`. The adapter resolves the sheet's orientation and position, then calculates the drawing's scale and offset. `plan()` checks the recorded strokes against the selected paper margins before connecting. The driver checks machine travel separately.
 
-Paper and canvas area can have different sizes and positions. `plot.drawBed(canvas, { sheet: { x, y, width, height } })` shows the actual sheet in millimetres alongside the planned strokes. Without `sheet`, it uses selected `plot.paper` or, when no paper was selected, the mapped canvas area. Preview does not alter the plan or rotate the drawing; p5 screen transforms are still not captured.
+A bed preview displays the resolved sheet and plan. It does not change either. Paper placement does not establish a machine origin or reverse motor directions. See [Setup](setup.html#machine-origin) for the physical origin and [Guide](guide.html#paper) for placement examples.
 
-## What is recorded
+## Jobs and the driver
 
-`createPlot({ paper: "A2", margin: 12 })` asks the core's `PlotterEngine.paperSize()` for sheet dimensions. It centres paper on the installed profile's bed and fits the canvas proportionally inside its margins. Without a profile, paper starts at zero. Automatic orientation follows the canvas aspect ratio and tries the other orientation if needed to fit the bed; an explicit orientation is honoured or refused. `width`/`mmPerPixel` overrides fitting, `x`/`y` locates the canvas, and `paperX`/`paperY` locates the sheet. `plot.paper` is the resolved sheet and the default for `drawBed()`. `plan()` checks recorded draw moves against paper margins before `start()` connects. Paper dimensions remain in the core; sketches without `paper` keep their existing mapping.
+The adapter supplies a complete PlotPlan to the core's driver. The driver compiles its movements into motor and pen commands and sends them through Web Serial. For the iDraw profile, EBB means EiBotBoard, the controller connected over USB.
 
-The plot keeps the shapes recorded since the last `plot.clear()`. To record one frame, clear at its start. For a stable drawing, use `noLoop()` and redraw when you choose a new seed.
+`plot.sequence()` prepares and runs one complete job at a time. It waits for completion before asking for the next group. In the current p5 adapter, each group returns home and releases the motors. The [Guide](guide.html#werkwijzen) shows how to use it.
 
-Screen transforms such as `translate()` and `rotate()`, p5 fill and stroke styling, and changes to `rectMode()` or `ellipseMode()` are not recorded. The pen geometry uses corner rectangles and centred ellipses. Use explicit coordinates and the plot's engine tools and layers for paper.
+An experimental [core driver session](https://github.com/seb-prjcts-be/vanilla.penplotter/pull/1) retains position and motor steps between jobs. On 2026-10-03, three successive lines were plotted on the iDraw HSE / A2 with EBB 3.0.2, followed by one return home. Stop and fault cases were tested with simulated connections only. This session is not yet connected to the p5 sequence or included in the site's pinned imports. Adding geometry while the machine draws remains unimplemented.
 
-Hatch, crosshatch and stipple are generated by the core and drawn back onto the canvas. They are pen strokes, rather than p5 colour fills. Text, general Bézier curves and arbitrary p5 sketches are not captured.
+![The JavaScript driver connects the plan to the EBB controller; the connectors show data flow.](images/animations/ebb.gif)
 
-## Starting a plot
+## Recording limits
 
-When `plot.go()` is called from `setup()` or `draw()`, it waits for a click on the drawing. That click starts a plan from the recorded geometry, asks the browser for a serial port when needed, and runs the supplied driver. A click while plotting requests a stop. Calls from a key or mouse handler ask for confirmation instead.
+The adapter records shape arguments, without reading p5's drawing state. `translate()`, `rotate()` and `scale()` do not transform recorded geometry. Rectangles use corner coordinates; ellipses use centre coordinates, regardless of screen modes. Colours, stroke weight and ordinary p5 fills stay on screen.
 
-![](images/animations/starting-plot.gif)
+Text, general Bézier curves and arbitrary p5 sketches are not captured. For transformed shapes, calculate the coordinates before passing them to the plot. The [Guide](guide.html#reference) lists the available calls.
 
-The driver comes from `vanilla.penplotter`; this adapter contains no machine protocol. Direct plotting has been physically tested on an iDraw HSE / A2 with EBB firmware 3.0.2. The same core can preview and export a drawing without a connected plotter.
+## Library boundaries
 
-The driver assumes that the carriage starts at the machine origin; it cannot measure the physical starting position. The bed preview is a coordinate view, with X right and Y down. Match those axes to the actual machine before plotting. See [the physical and coordinate views](setup.html#machine-origin). Paper placement does not change the motor directions or establish a new machine origin.
+`p5.penplotter` installs helpers on the p5 prototype and owns the canvas-to-millimetre mapping. `vanilla.penplotter` owns geometry, SVG import, cleanup, route planning, file exports, machine profiles and drivers. See the [core architecture](https://seb-prjcts-be.github.io/vanilla.penplotter/docs/architecture.html) for those parts.
 
-## Connecting the adapter
-
-```js
-installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
-```
-
-Here, `Ebb` is the driver module imported from `vanilla.penplotter/src/driver/ebb.js`. EBB means EiBotBoard: the hardware controller that operates the plotter's motors and pen lift. The JavaScript driver translates a plan into commands and sends them through Web Serial over USB to a compatible controller.
-
-![Sage connectors carry data, not pen travel. First, preview and export without a driver; then the JavaScript driver and physical EBB controller join the flow.](images/animations/ebb.gif)
-
-The connection adds helpers to the p5 prototype for global and instance mode. `createPlotterEngine()` exposes the core, while `drawRoute()` draws its planned routes in p5. Pen-up travel belongs to the core preview.
-
-The adapter checks its minimum dependencies, not every possible version combination. The site's examples load current source from the neighbouring core repository. For your own project, pin both libraries and test the pair. The [Setup](setup.html) page shows the load order and wiring.
-
-## What stays in the core
-
-Geometry, SVG import, cleanup, route planning, file exports, machine profiles and drivers live in `vanilla.penplotter`. Fixes belong there rather than being copied into the adapter. See the [core architecture](https://seb-prjcts-be.github.io/vanilla.penplotter/docs/architecture.html) for its current scope.
+Installation checks the minimum dependencies; it does not verify every version combination. [Setup](setup.html) supplies the pinned imports and explains their load order.

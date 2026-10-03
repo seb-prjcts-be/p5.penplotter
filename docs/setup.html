@@ -28,13 +28,12 @@
     <header class="page-header">
       <div class="section-tag">p5.js addon library · v0.2.1</div>
       <h1>Setup</h1>
-      <p class="guide-intro">Start with global mode. It works in the p5.js Web Editor and on localhost. Then choose where the drawing goes on paper and connect your plotter.</p>
+      <p class="guide-intro">Load the library in the p5.js Web Editor or a local project. Start with the two files below.</p>
     </header>
 
-    <p>With either setup you can <a href="guide.html#werkwijzen">plot everything at once or one object at a time</a>.</p>
-    <h2 id="global-mode">1. Global mode</h2>
+    <h2 id="global-mode">1. In the p5.js editor</h2>
     <p>Use these two files in the p5.js Web Editor or a folder served through localhost.</p>
-    <p>The imports pin the same source commits as the <a href="guide.html#global-mode">Guide starter</a>. They live in <code>index.html</code>, inside one inline module. <code>sketch.js</code> is a plain script with no imports at all.</p>
+    <p>The imports pin both libraries to tested source commits. Paper placement, bed previews and sequences were added after the v0.2.1 tag. Keep these imports in <code>index.html</code> and the drawing in <code>sketch.js</code>, with no imports there.</p>
     <h3>index.html</h3>
     <pre><code class="language-javascript">&lt;!DOCTYPE html&gt;
 &lt;html lang="en"&gt;
@@ -77,15 +76,7 @@ function draw() {
   plot.circle(200, 150, 80);
   plot.go();   // ready: click the drawing to plot, click again to stop
 }</code></pre>
-    <h3>Why it works</h3>
-    <p><code>sketch.js</code> defines <code>setup()</code> and <code>draw()</code>. The module installs <code>createPlot()</code> before p5 calls them. See <a href="#module-load-order">Module load order</a> for the full sequence.</p>
-    <h3>Rules</h3>
-    <ul>
-      <li>Load p5.js <strong>before</strong> the module. The module reads the global <code>p5</code> the moment it runs.</li>
-      <li><code>sketch.js</code> must <strong>not</strong> have <code>type="module"</code>. Add it and <code>setup</code> stops being global.</li>
-      <li>Call <code>createPlot()</code> inside <code>setup()</code>, never at the top of the file. At the top of <code>sketch.js</code> the adapter is not installed yet.</li>
-      <li>The position of the module in the document does not matter. Deferred is deferred.</li>
-    </ul>
+    <p>Load p5.js before the module, keep <code>sketch.js</code> as a normal script and call <code>createPlot()</code> inside <code>setup()</code>. The adapter is installed before p5 calls it. The <a href="#module-load-order">load-order reference</a> explains why.</p>
     <h3 id="editor">In the p5.js Web Editor</h3>
     <p>Replace the editor's <code>index.html</code> with the one above and keep <code>sketch.js</code> as a normal file. Drawing, the preview and <code>plot.go()</code> all work there; the port list opens on your click like anywhere else. Plotted from the editor on 2026-10-01, in Chrome, with the eight-line sketch from the start page.</p>
     <h3>If it breaks</h3>
@@ -95,30 +86,8 @@ function draw() {
       <li>An older version keeps showing up after an update: reload with Ctrl+F5 to drop the browser's cached module.</li>
     </ul>
 
-    <h2 id="canvas-on-paper">2. Your canvas on the paper</h2>
-    <p>The starter uses <code>createPlot({ paper: "A4", margin: 12, width: 120 })</code>. The 400 × 250 pixel canvas becomes a 120 × 75 mm drawing area, centred on A4 paper. The paper is centred on the machine bed. Put the real sheet at the position shown in the paper preview.</p>
-    <p>Start with <code>paper</code> and <code>margin</code>. Without <code>width</code>, the canvas fits proportionally inside the margins. A0–A6 are supported when they fit the machine bed. <code>orientation</code> selects portrait or landscape; the default is <code>"auto"</code>. Use <code>paperX</code>/<code>paperY</code> to move the sheet and <code>x</code>/<code>y</code> to move the drawing within it. Positions and widths are millimetres. See <a href="guide.html#paper">the guide</a> for placement and margin checks.</p>
-    <div class="canvas-placement-figures">
-    <figure class="canvas-placement-diagram">
-
-    <svg class="bed-figure" viewBox="0 0 320 240" width="320" height="240" role="img" aria-label="A 120 by 75 millimetre drawing centred on A4 landscape paper, centred on the 594 by 432 millimetre machine bed">
-      <rect x="10" y="10" width="297" height="216" fill="#fff" stroke="#000"/>
-      <path d="M6 6 l8 8 m-8 0 l8 -8" fill="none" stroke="#d32f2f" stroke-width="2"/>
-      <text x="18" y="24" font-family="Inter, Arial, sans-serif" font-size="10">(0,0) in the preview</text>
-      <rect x="84.25" y="65.5" width="148.5" height="105" fill="rgba(0,0,0,.03)" stroke="#000"/>
-      <text x="90" y="80" font-family="Inter, Arial, sans-serif" font-size="10">A4 paper</text>
-      <rect x="128.5" y="99.25" width="60" height="37.5" fill="rgba(0,0,0,.08)" stroke="#000"/>
-      <text x="132" y="121" font-family="Inter, Arial, sans-serif" font-size="9">your canvas</text>
-      <text x="190" y="220" font-family="Inter, Arial, sans-serif" font-size="9">the bed, 594 by 432 mm</text>
-    </svg>
-      <figcaption>The starter: a 120 × 75 mm drawing on A4 landscape paper, centred on the HSE/A2 bed. This is a coordinate view; the physical starting corner is shown below.</figcaption>
-    </figure>
-    <figure class="doc-animation" id="animation-draw-bed">
-      <img src="images/animations/draw-bed.svg" width="600" height="400" loading="lazy" alt="The canvas is placed within a 594 by 432 millimetre bed and checked with plot.drawBed.">
-      <figcaption><code>plot.drawBed(bedCanvas)</code> previews the planned strokes and selected paper; without a paper selection, it uses the mapped canvas area. Pass a separate HTML canvas for the preview. This animation is schematic, not to scale, and shows no automatic homing.</figcaption>
-    </figure>
-
-    </div>
+    <h2 id="canvas-on-paper">2. Paper placement</h2>
+    <p>The starter makes a 120 × 75 mm drawing, centred on A4 paper. Use the <a href="guide.html#paper">Guide</a> to preview the sheet, change its format or move the drawing.</p>
 
     <h2 id="direct-plotting">3. Direct plotting</h2>
     <h3 id="machine-origin">The physical starting corner</h3>
@@ -131,15 +100,14 @@ function draw() {
       <li>Chrome or Edge, on <code>localhost</code> or <code>https</code>. Web Serial exists nowhere else. A folder under XAMPP's <code>htdocs</code> opened as <code>http://localhost/…</code> qualifies; a file opened as <code>file://</code> does not. The p5.js Web Editor does; plotted from it on 2026-10-01.</li>
       <li>A click on the drawing. <code>plot.go()</code> is written at the end of the drawing; the browser shows its port list only after a click, so the status line asks you to check the machine and click. That click is the confirmation. A second click stops.</li>
     </ul>
-    <p>Park the carriage in the home corner by hand before the first plot; the machine has no homing. The driver refuses plan coordinates outside the profile's travel. That check cannot detect a carriage parked at the wrong physical origin.</p>
 
     <figure class="doc-animation" id="animation-home-and-stop">
       <img src="images/animations/home-and-stop.svg" width="600" height="400" loading="lazy" alt="The home corner, a completed route and a stop in the middle of a drawing.">
-      <figcaption>The machine has no automatic homing. Park the carriage at the home corner by hand before plotting. A normal completed job returns home by default; stopping requests a pen lift and motor release at the current position. Delivery needs a working connection. This is a bed-coordinate view; use the physical starting corner described above.</figcaption>
+      <figcaption>A completed job returns home by default. A stop requests pen lift and motor release at the current position; a working connection is needed. Park the carriage at the physical origin before starting another job.</figcaption>
     </figure>
 
     <h2 id="advanced-setups">Advanced setups</h2>
-    <p>The global-mode setup above is enough to use p5.penplotter. These alternatives are for sketches that use JavaScript modules.</p>
+    <p>The editor setup above is enough for a regular p5 sketch. These alternatives are for sketches that use JavaScript modules.</p>
 
     <h3 id="instance-mode">Instance mode, sketch as a module</h3>
     <p>Put the imports in <code>sketch.js</code> and load it as a module. Create the sketch with <code>new p5(…)</code>; p5 calls use the <code>p.</code> prefix.</p>
@@ -249,11 +217,6 @@ import * as Ebb from "../vanilla.penplotter/src/driver/ebb.js";
 import { installP5Penplotter } from "../p5.penplotter/p5.penplotter.js";</code></pre>
     <p>Relative imports resolve against the importing file. <code>vanilla.penplotter.js</code> re-exports from its own <code>src/</code> folder, so the whole repository has to be present, not the single file.</p>
     <h2 id="reference">Reference</h2>
-    <figure class="doc-animation" id="animation-dependencies">
-      <img src="images/animations/dependencies.gif" width="600" height="400" loading="lazy" alt="The dependency diagram connects a sketch and optional wave sampler to the p5 adapter and vanilla engine.">
-      <figcaption>Your sketch stays on top. p5.penplotter records its shapes; vanilla.penplotter plans the route and talks to the machine.</figcaption>
-    </figure>
-
     <h3 id="module-load-order">Module load order</h3>
     <p><code>p5.penplotter</code> and <code>vanilla.penplotter</code> are ES modules: files that use <code>import</code> and <code>export</code>. A module has two properties that decide these setups.</p>
     <ul>
