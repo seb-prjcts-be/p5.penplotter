@@ -19,8 +19,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="docs/style.css?v=20261002c">
   <link rel="stylesheet" href="docs/home-overview.css">
-  <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.waves@v3.4.0/p5.waves.min.js"></script>
 </head>
 <body>
 
@@ -52,7 +50,7 @@
         <p class="hero-sub">Draw in the p5.js editor. Record supported shapes, then click to plot them on the tested iDraw HSE / A2.<br>Try changing a number or adding another shape.</p>
         <div class="cta-row">
           <a href="docs/setup.html#editor" class="cta-btn">Try it in the editor &#8594;</a>
-          <a href="#make" class="cta-btn secondary">See what it draws &#8595;</a>
+          <a href="docs/examples.html" class="cta-btn secondary">Examples &#8594;</a>
         </div>
       </div>
     </div>
@@ -68,105 +66,15 @@
     </div>
   </section>
 
-  <!-- 1. WHAT YOU CAN MAKE -->
-  <section id="make" class="section section-dark">
+  <section id="start" class="section section-dark">
     <div class="section-header">
-      <div class="section-tag">what you can make</div>
-      <h2>Four <span class="accent">drawings</span></h2>
-      <p class="section-desc">Each drawing is recorded for the pen and shown on screen. Click one to open it.</p>
-    </div>
-    <div class="make-grid">
-      <a class="make-card" href="examples/molnar_grid/index.html"><div class="ex-canvas"><iframe src="examples/molnar_grid/index.html?embed" title="Moln&aacute;r grid" loading="lazy"></iframe></div><p>Let the grid come apart.</p></a>
-      <a class="make-card" href="examples/spirograph/index.html"><div class="ex-canvas"><iframe src="examples/spirograph/index.html?embed" title="Spirograph" loading="lazy"></iframe></div><p>Three wheels, one unbroken line.</p></a>
-      <a class="make-card" href="examples/wave_field/index.html"><div class="ex-canvas"><iframe src="examples/wave_field/index.html?embed" title="Wave field" loading="lazy"></iframe></div><p>A seed chooses the wave field.</p></a>
-      <a class="make-card" href="examples/chaos_game/index.html"><div class="ex-canvas"><iframe src="examples/chaos_game/index.html?embed" title="Chaos game" loading="lazy"></iframe></div><p>A triangle nobody drew, dot by dot.</p></a>
-    </div>
-  </section>
-
-  <!-- 2. TRY IT -->
-  <section id="try" class="section">
-    <div class="section-header">
-      <div class="section-tag">try it</div>
-      <h2>Eight <span class="accent">lines</span></h2>
-      <p class="section-desc">Copy the imports from <a href="docs/setup.html#global-mode">Setup</a> into <code>index.html</code>. Put this drawing in <code>sketch.js</code>.</p>
+      <h2>Start here</h2>
     </div>
     <div style="max-width:760px; margin:0 auto;">
-      <pre class="code-block"><code class="language-javascript">let plot;
-
-function setup() {
-  createCanvas(400, 250);
-  plot = createPlot({ paper: "A4", margin: 12, width: 120 });   // centred on A4 paper
-  plot.rect(10, 10, 380, 230);
-  plot.circle(200, 125, 120);
-  plot.go();                                          // ready: click the drawing
-}</code></pre>
-    </div>
-    <div class="cta-row">
-      <a href="docs/setup.html#global-mode" class="cta-btn">Copy the start (index.html + sketch.js) &#8594;</a>
-    </div>
-  </section>
-
-  <!-- 3. CHANGE ONE THING -->
-  <section id="change" class="section section-dark">
-    <div class="section-header">
-      <div class="section-tag">change one thing and look</div>
-      <h2>Things to <span class="accent">try</span></h2>
-      <p class="section-desc">Change one thing and compare the drawing.</p>
-    </div>
-    <ol class="pipeline-list">
-      <li><span>01</span><strong>120 &rarr; 200</strong><p>The same drawing, 200 mm wide on paper. The canvas keeps the same size.</p></li>
-      <li><span>02</span><strong>a circle &rarr; a hatch</strong><p>Replace the circle with <code>plot.hatch([[40, 40], [360, 40], [360, 210], [40, 210]], 6)</code>: a rectangle filled with parallel pen strokes.</p></li>
-      <li><span>03</span><strong>order &rarr; disorder</strong><p>Open the <a href="examples/molnar_grid/index.html">Moln&aacute;r grid</a> and change <code>disorder</code> from <code>row / (n - 1)</code> to <code>1</code>: every row comes apart.</p></li>
-    </ol>
-    <p class="section-desc" style="max-width:760px; margin:2rem auto 0;">Supported shape calls record geometry for paper: shapes, lines and dots. <code>translate()</code>, <code>rotate()</code>, <code>fill()</code> and colours stay on the screen; paper uses the recorded coordinates and the pen in the holder.</p>
-  </section>
-
-  <!-- 4. ON PAPER -->
-  <section id="paper" class="section">
-    <div class="section-header">
-      <div class="section-tag">put it on paper</div>
-      <h2>On <span class="accent">paper</span></h2>
-      <p class="section-desc">Check the connection, paper and carriage position before starting.</p>
-    </div>
-    <ol class="pipeline-list">
-      <li><span>01</span><strong>Chrome or Edge</strong><p>Connect the plotter by USB. These examples use Web Serial in Chrome or Edge on localhost or HTTPS.</p></li>
-      <li><span>02</span><strong>Home corner</strong><p>Park the carriage at the <a href="docs/setup.html#machine-origin">physical starting corner shown in Setup</a>.</p></li>
-      <li><span>03</span><strong>Click your drawing</strong><p>Choose the plotter in the port list when the browser asks for it.</p></li>
-      <li><span>04</span><strong>Click again to stop</strong><p>The driver requests a stop, pen lift and motor release. Those commands need a working connection.</p></li>
-    </ol>
-    <p class="section-desc" style="max-width:760px; margin:2rem auto 0;">Direct plotting has been tested on the iDraw HSE / A2 with EBB firmware 3.0.2. Without hardware you can preview recorded shapes and use <code>plot.engine.exportSVG()</code>. Use the exported file with software that supports your machine.</p>
-    <div class="cta-row">
-      <a href="examples/calibration_sheet/index.html" class="cta-btn secondary">With a plotter: test your pen on the calibration sheet &#8594;</a>
-    </div>
-  </section>
-
-  <!-- 5. GO FURTHER -->
-  <section id="further" class="section section-dark">
-    <div class="section-header">
-      <div class="section-tag">go further</div>
-      <h2>More to <span class="accent">try</span></h2>
-      <p class="section-desc">Try a fill, a second pen or points sampled from a wave.</p>
-    </div>
-    <ol class="pipeline-list">
-      <li><span>fill</span><strong>Hatching and dots</strong><p><code>plot.hatch()</code>, <code>plot.crossHatch()</code> and <code>plot.stipple()</code> fill a shape with lines or short dashes. <a href="docs/guide.html#animation-fills">Watch the fills &rarr;</a></p></li>
-      <li><span>pens</span><strong>Two pens, one sheet</strong><p>Black first, then red; the machine stops once and waits for you. Through <code>plot.engine</code>. <a href="docs/guide.html#animation-pens-and-layers">See the pen layers &rarr;</a></p></li>
-      <li><span>waves</span><strong>Waves</strong><p>Sample a formula into points to draw rows or direction fields. <a href="examples/wave_field/index.html">Wave field &rarr;</a></p></li>
-      <li><span>time</span><strong>Watch it appear</strong><p>The chaos game calculates one point, plots it and waits before calculating the next. New strokes arriving while the machine draws would need <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/live.html">live streaming</a>, which is not implemented. <a href="examples/chaos_game/index.html">Try the chaos game &rarr;</a></p></li>
-    </ol>
-  </section>
-
-  <!-- 6. UNDER THE HOOD -->
-  <section id="hood" class="section" style="text-align:center; padding:4rem 2rem;">
-    <div class="section-header">
-      <div class="section-tag">under the hood</div>
-      <h2>How it <span class="accent">works</span></h2>
-      <p class="section-desc">Read <a href="docs/architecture.html">Architecture</a> for the recording and planning behind the drawing.</p>
-    </div>
-    <div class="cta-row">
-      <a href="docs/setup.html" class="cta-btn secondary">Setup &#8594;</a>
-      <a href="docs/guide.html" class="cta-btn secondary">Guide &#8594;</a>
-      <a href="docs/architecture.html" class="cta-btn secondary">Architecture &#8594;</a>
-      <a href="https://github.com/seb-prjcts-be/p5.penplotter" class="cta-btn secondary" target="_blank">GitHub &#8594;</a>
+      <p><a href="docs/setup.html">Setup</a> has the files to copy into the editor and the connection instructions.</p>
+      <p><a href="docs/examples.html">Examples</a> starts with the two ways to plot, followed by different drawings and plot previews.</p>
+      <p><a href="docs/guide.html">Guide</a> explains the shape calls, paper size and placement.</p>
+      <p><a href="docs/architecture.html">Architecture</a> describes how recording, planning and the driver work.</p>
     </div>
   </section>
 
@@ -176,6 +84,5 @@ function setup() {
     <p class="footer-sub">MIT License &middot; v0.2.1</p>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
 </body>
 </html>
