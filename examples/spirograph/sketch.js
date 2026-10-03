@@ -1,8 +1,8 @@
 // Spirograph — hypotrochoids, the oldest plotter drawing there is.
 // Three curves share one centre; the seed picks their gear ratios.
-// Change seed and run again for another drawing; click to plot, click again to stop.
+// Refresh for another drawing; click to plot, click again to stop.
 let plot;
-let seed = 3;
+let seed = Date.now();
 
 function setup() {
   createCanvas(600, 600);

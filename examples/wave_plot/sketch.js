@@ -50,11 +50,3 @@ function draw() {
     strokeWeight: 1
   });
 }
-
-function keyPressed() {
-  if (key === "r" || key === "R") {
-    waveSeed = Math.floor(Math.random() * 34);
-    plotPlan = buildPlan();
-    redraw();
-  }
-}

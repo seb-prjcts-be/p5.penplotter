@@ -44,10 +44,3 @@ function draw() {
 function say(text) {
   console.log(text);
 }
-
-function keyPressed() {
-  if (key === "r" || key === "R") {
-    waveSeed = Math.floor(Math.random() * 34);
-    redraw();
-  }
-}

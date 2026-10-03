@@ -21,3 +21,10 @@ draw = function () {
 say = function (text) {
   document.querySelector("#status").textContent = text;
 };
+
+function keyPressed() {
+  if (key === "r" || key === "R") {
+    seed += 1;
+    redraw();
+  }
+}

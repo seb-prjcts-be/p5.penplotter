@@ -23,3 +23,11 @@ document.querySelector("#reroll").addEventListener("click", function rerollWave(
 
   redraw();
 });
+
+function keyPressed() {
+  if (key === "r" || key === "R") {
+    waveSeed = Math.floor(Math.random() * 34);
+    plotPlan = buildPlan();
+    redraw();
+  }
+}

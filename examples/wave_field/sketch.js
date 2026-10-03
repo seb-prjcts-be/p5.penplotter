@@ -1,8 +1,8 @@
 // Wave field — streamlines through a direction field that p5.waves shapes.
 // Two waves, one per axis, give every point an angle; sixty lines follow it.
-// One seed per sheet: R for another; click the drawing to plot, click again to stop.
+// Refresh for another drawing; click the drawing to plot, click again to stop.
 let plot;
-let seed = 1;
+let seed = Date.now();
 let shape;
 
 async function setup() {
@@ -58,12 +58,6 @@ function draw() {
   plot.go();   // ready: click the drawing to plot, click again to stop
 }
 
-function keyPressed() {
-  if (key === "r" || key === "R") {
-    seed += 1;
-    redraw();
-  }
-}
 
 function say(text) {
   console.log(text);

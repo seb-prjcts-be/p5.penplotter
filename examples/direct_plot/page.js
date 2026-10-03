@@ -24,3 +24,10 @@ document.querySelector("#reroll").addEventListener("click", () => {
   waveSeed = Math.floor(Math.random() * 34);
   redraw();
 });
+
+function keyPressed() {
+  if (key === "r" || key === "R") {
+    waveSeed = Math.floor(Math.random() * 34);
+    redraw();
+  }
+}
