@@ -48,7 +48,7 @@ let plot;
 
 function setup() {
   createCanvas(400, 400);
-  plot = createPlot({ paper: "A2", paperX: 0, paperY: 0 });
+  plot = createPlot({ paper: "A2", paperX: 0, paperY: 0, width: 100 });
   noLoop();
 }
 
@@ -62,6 +62,8 @@ function draw() {
 ```
 
 This example uses A2 paper with its corner at the machine origin. Set `paper` to the format on your plotter. `showBed()` displays the drawing's placement.
+
+`width: 100` makes the canvas 100 mm wide on paper. This circle has a diameter of 75 mm.
 
 ### Click to plot
 
@@ -106,12 +108,21 @@ install(p5);
 
 new p5(function sketch(p) {
   let plot;
-  p.setup = function setup() {
-    p.createCanvas(600, 600);
-    plot = p.createPlot({ paper: "A2", margin: 12, width: 300 });
-    plot.circle(300, 300, 400);
-    plot.go();   // click the drawing to plot
+
+  p.setup = function () {
+    p.createCanvas(400, 400);
+    plot = p.createPlot({ paper: "A2", paperX: 0, paperY: 0, width: 100 });
     p.noLoop();
+  };
+
+  p.draw = function () {
+    p.background("#ffffff");
+    p.stroke("#111111");
+    p.noFill();
+
+    plot.circle(200, 200, 300);
+    plot.showBed();
+    plot.go();   // ready: click the drawing to plot, click again to stop
   };
 });
 ```

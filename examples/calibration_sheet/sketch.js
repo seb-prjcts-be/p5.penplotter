@@ -6,7 +6,7 @@ let plot;
 function setup() {
   createCanvas(400, 560);
   // 200 x 280 mm, centred on A2 paper
-  plot = createPlot({ paper: "A2", margin: 12, width: 200, log: say });
+  plot = createPlot({ paper: "A2", paperX: 0, paperY: 0, margin: 12, width: 200, log: say });
   noLoop();
 }
 

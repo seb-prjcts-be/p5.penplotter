@@ -4,7 +4,7 @@ let seed = Date.now();
 function setup() {
   createCanvas(600, 600);
   // 300 x 300 mm, centred on A2 paper
-  plot = createPlot({ paper: "A2", margin: 12, width: 300, log: say });
+  plot = createPlot({ paper: "A2", paperX: 0, paperY: 0, margin: 12, width: 300, log: say });
   noLoop();
 }
 

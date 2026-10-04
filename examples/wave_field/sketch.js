@@ -10,7 +10,7 @@ async function setup() {
   await import("https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.waves@v3.4.0/p5.waves.min.js");
   createCanvas(600, 600);
   // 300 x 300 mm, centred on A2 paper
-  plot = createPlot({ paper: "A2", margin: 12, width: 300, log: say });
+  plot = createPlot({ paper: "A2", paperX: 0, paperY: 0, margin: 12, width: 300, log: say });
   noLoop();
 }
 

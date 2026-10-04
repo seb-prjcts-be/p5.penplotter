@@ -7,7 +7,7 @@ const DOTS = 1500;
 
 function setup() {
   createCanvas(600, 520);
-  plot = createPlot({ paper: "A2", margin: 12, width: 300, log: say });
+  plot = createPlot({ paper: "A2", paperX: 0, paperY: 0, margin: 12, width: 300, log: say });
   corners = [[300, 35], [40, 485], [560, 485]];
   p = { x: 300, y: 35 };
   noLoop();

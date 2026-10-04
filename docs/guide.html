@@ -26,7 +26,7 @@
   </nav>
   <main class="page">
     <header class="page-header">
-      <div class="section-tag">p5.js addon library</div>
+      <div class="section-tag">p5.js addon library · v0.2.5</div>
       <h1>Guide</h1>
     </header>
 
@@ -37,6 +37,8 @@
 <pre><code class="language-javascript">for (let diameter = 60; diameter &lt;= 300; diameter += 40) {
   plot.circle(200, 200, diameter);
 }</code></pre>
+<p class="editor-demo-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/apyX-0LdF" target="_blank" rel="noopener noreferrer">p5.js Web Editor</a></p>
+
 <p>Each pass adds a circle with a larger diameter. Try changing the step from <code>40</code> to <code>20</code> to put the rings closer together.</p>
     <h3 id="shapes">Other shapes</h3>
     <p><code>plot.…</code> records these 2D shapes: <code>point</code>, <code>line</code>, <code>circle</code>, <code>ellipse</code>, <code>arc</code>, <code>rect</code>, <code>square</code>, <code>triangle</code>, <code>quad</code>, plus <code>polyline</code> and <code>polygon</code>, which take <code>[x, y]</code> pairs or <code>{ x, y }</code> objects. Angles follow <code>angleMode()</code>. A point is recorded as a 0.24 mm dash. Rectangles use corner coordinates; ellipse and arc coordinates refer to their centre. Rounded rectangles and screen transforms are not recorded.</p>
@@ -44,6 +46,8 @@
 plot.triangle(80, 50, 120, 10, 160, 50);
 plot.arc(330, 30, 40, 40, 0, HALF_PI, PIE);
 plot.polygon([[0, 0], [40, 0], [40, 40]]);</code></pre>
+<p class="editor-demo-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/pUl7L0Rs6" target="_blank" rel="noopener noreferrer">p5.js Web Editor</a></p>
+
     <figure class="doc-animation" id="animation-shapes">
       <img src="images/animations/shapes.svg" width="600" height="400" loading="lazy" alt="Lines, circles, rectangles and other p5 shapes are drawn on screen and paper.">
       <figcaption>Replace the circle with <code>plot.triangle(80, 320, 200, 80, 320, 320)</code> to draw three joined points.</figcaption>
@@ -61,25 +65,34 @@ for (let x = 40; x &lt;= 360; x += 4) {
   points.push([x, 200 + 40 * Math.sin(x * 0.04)]);
 }
 plot.polyline(points);</code></pre>
+<p class="editor-demo-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/YBI6I4T-y" target="_blank" rel="noopener noreferrer">p5.js Web Editor</a></p>
+
 <p><code>Math.sin()</code> gives each point its height. Change <code>40</code> to <code>10</code> for a shallower wave. The <a href="../examples/direct_plot/index.html">Wave lines example</a> repeats a wave across several rows.</p>
 <h3>Redraw a sketch</h3>
 <p><code>background()</code> clears the screen. Add <code>plot.clear()</code> before the drawing calls when a key or button redraws your sketch; it replaces the previous recording. Without it, each redraw adds more shapes to the same plot. Keep <code>noLoop()</code> for a drawing that changes only when requested.</p>
+
+<p class="editor-demo-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/5Ubv0-CQZ" target="_blank" rel="noopener noreferrer">p5.js Web Editor</a></p>
     <h2 id="paper">2. Paper and placement</h2>
     <p>Your sketch uses pixels. The plotter uses millimetres. <code>createPlot()</code> sets the size and position of the drawing on your paper.</p>
     <h3>Let the library fit the drawing</h3>
-    <p>The circle sketch leaves out <code>width</code>, <code>x</code> and <code>y</code>. The library fits the canvas inside the margin and centres it on the paper:</p>
+    <p>Remove <code>width: 100</code> from the circle sketch to let the library fit the canvas inside the margin and centre it on the paper:</p>
     <pre><code class="language-javascript">plot = createPlot({
   paper: "A2",
   paperX: 0,
   paperY: 0,
   margin: 12
 });</code></pre>
+<p class="editor-demo-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/qAQwVT_J1" target="_blank" rel="noopener noreferrer">p5.js Web Editor</a></p>
+
     <h3>Set the drawing size</h3>
-<p>Add <code>width: 120</code> to <code>createPlot()</code> to make the 400-pixel canvas 120 mm wide on paper. The circle's diameter becomes 90 mm. Leave out <code>x</code> and <code>y</code> to keep the drawing centred on the sheet.</p>
+<p>Change <code>width: 100</code> to <code>width: 120</code> in <code>createPlot()</code> to make the 400-pixel canvas 120 mm wide on paper. The circle's diameter becomes 90 mm. Leave out <code>x</code> and <code>y</code> to keep the drawing centred on the sheet.</p>
+
+<p class="editor-demo-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/-N6WfXYj_" target="_blank" rel="noopener noreferrer">p5.js Web Editor</a></p>
     <h3>Use the paper on your machine</h3>
     <p>Set <code>paper</code> to its format. <code>paperX</code> and <code>paperY</code> locate the paper corner from the machine's starting point. Use zero when the paper starts at that point.</p>
     <p>In my setup, X runs along the long rails and Y across them. The pen starts at the lower-left corner. The <a href="setup.html#machine-origin">starting point</a> stays fixed when you move the paper.</p>
-    <h3>Place the drawing near the paper corner</h3>
+    <details>
+      <summary>Place the drawing near the paper corner</summary>
     <p>Replace <code>createPlot()</code> in the first sketch with:</p>
     <pre><code class="language-javascript">plot = createPlot({
   paper: "A2",
@@ -90,11 +103,14 @@ plot.polyline(points);</code></pre>
   y: 12,
   width: 80
 });</code></pre>
+<p class="editor-demo-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/aijLF8Mt-" target="_blank" rel="noopener noreferrer">p5.js Web Editor</a></p>
+
     <p><code>width: 80</code> makes the canvas 80 mm wide on paper. Its proportions stay the same. <code>x</code> and <code>y</code> place the canvas corner 12 mm from the machine's starting point along each axis.</p>
     <figure class="canvas-placement-diagram">
       <img src="images/animations/paper-placement.gif" width="640" height="480" style="max-width:100%;height:auto;image-rendering:pixelated" alt="CGA drawing of the plotter seen from above, with the pen at the lower-left origin, X along the rails, Y across the bed and a small drawing area near the paper corner.">
     </figure>
     <p>If the paper starts elsewhere, enter its position in <code>paperX</code> and <code>paperY</code>. For the same corner placement, set <code>x</code> to <code>paperX + margin</code> and <code>y</code> to <code>paperY + margin</code>. These are distances from the machine origin, not from the paper corner.</p>
+    </details>
     <h3>Check the placement</h3>
     <p>Keep this after the drawing calls, before <code>plot.go()</code>:</p>
     <pre><code class="language-javascript">plot.showBed();</code></pre>
@@ -107,6 +123,8 @@ plot.polyline(points);</code></pre>
     <pre><code class="language-javascript">let square = [[100, 100], [300, 100], [300, 300], [100, 300]];
 plot.hatch(square, 3, PI / 4);   // spacing in mm, angle
 plot.polygon(square);</code></pre>
+<p class="editor-demo-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/NQUPPEP9Y" target="_blank" rel="noopener noreferrer">Hatch</a> · <a href="https://editor.p5js.org/seb_prjcts.be/sketches/xM0HkkL3o" target="_blank" rel="noopener noreferrer">Cross-hatch</a> · <a href="https://editor.p5js.org/seb_prjcts.be/sketches/tb86rpiUW" target="_blank" rel="noopener noreferrer">Stipple</a></p>
+
 
     <figure class="doc-animation" id="animation-fills">
       <img src="images/animations/fills.svg" width="600" height="400" loading="lazy" alt="Hatch, cross-hatch and stipple appear on the p5 canvas and on paper.">
@@ -137,6 +155,8 @@ plot.polygon(square);</code></pre>
     return true;
   }).catch(console.error);
 }</code></pre>
+<p class="editor-demo-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/F0MLZ3DqT" target="_blank" rel="noopener noreferrer">p5.js Web Editor</a></p>
+
 <p>The index starts at zero. Each call records one circle and returns <code>true</code> to continue. Returning <code>false</code> ends the sequence. Prepare the paper and pen as in Setup, press Play, then click the drawing to start. The <a href="../examples/chaos_game/index.html">Chaos game</a> uses this to plot one point at a time.</p>
 <p>With <code>go()</code>, use <code>plot.go({ plan: { strategy: "drawn" } })</code> to keep the drawing order.</p>
     <details>
@@ -152,6 +172,8 @@ async function plotTwoObjects() {
   plot.circle(200, 125, 60);
   await plot.go();
 }</code></pre>
+<p class="editor-demo-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/lR_qCMPRG" target="_blank" rel="noopener noreferrer">p5.js Web Editor</a></p>
+
       <p>Call <code>plotTwoObjects()</code> from a button or key handler after creating <code>plot</code>. Check <code>status: "complete"</code> before continuing.</p>
     </details>
 
@@ -162,11 +184,15 @@ async function plotTwoObjects() {
       <img src="images/animations/route.gif?v=20261002-colour" width="600" height="400" loading="lazy" alt="The pen follows a planned route with less pen-up travel.">
       <figcaption>Cream solid lines show the input drawing; sage solid lines show the planned drawing. Ochre dotted lines are moves with the pen raised: they leave no ink. Same marks, a different visiting order. Compare <code>plot.plan({ strategy: "drawn" })</code> with <code>plot.plan({ strategy: "nearest" })</code>. Keep the drawn order when watching the picture appear is part of the work.</figcaption>
     </figure>
+<p class="editor-demo-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/7Rz1fSZTM" target="_blank" rel="noopener noreferrer">p5.js Web Editor</a></p>
+
 
     <figure class="doc-animation" id="animation-pens-and-layers">
       <img src="images/animations/pens-and-layers.gif?v=20261002-colour" width="600" height="400" loading="lazy" alt="Two pens draw separate layers; one layer can be excluded.">
       <figcaption>Sage is pen A; ochre is pen B. Each colour follows its assigned paths. The second pass hides one layer; it does not erase the source paths. One pen can draw the outline; another can draw the texture. Use <code>plot.engine.pen()</code> and <code>plot.engine.layer()</code>, and set the p5 screen colour separately with <code>stroke()</code>. Assigning a pen does not pause the machine. For direct plotting with multiple pens, supply an <code>onToolChange</code> callback to <code>plot.go()</code> that waits for you to finish each physical pen change.</figcaption>
     </figure>
+<p class="editor-demo-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/6towL4jTb" target="_blank" rel="noopener noreferrer">p5.js Web Editor</a></p>
+
 
     <figure class="doc-animation" id="animation-svg-files">
       <img src="images/animations/svg-files.gif?v=20261002-colour" width="600" height="400" loading="lazy" alt="SVG geometry becomes a pen plan and can be exported in three file formats.">
@@ -174,6 +200,8 @@ async function plotTwoObjects() {
     </figure>
 
 <p>To save the recorded drawing as SVG, use <code>plot.engine.exportSVG()</code>. It returns SVG text which you can save as a file. Exporting does not open the plotter connection.</p>
+
+<p class="editor-demo-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/6zLLSMygK" target="_blank" rel="noopener noreferrer">p5.js Web Editor</a></p>
     <details class="module-setups">
       <summary>Using JavaScript modules</summary>
     <h2 id="advanced-setups">Using JavaScript modules</h2>
@@ -192,8 +220,8 @@ new p5(function sketch(p) {
   let plot;
 
   p.setup = function () {
-    p.createCanvas(400, 250);
-    plot = p.createPlot({ paper: "A4", margin: 12, width: 120 });
+    p.createCanvas(400, 400);
+    plot = p.createPlot({ paper: "A2", paperX: 0, paperY: 0, width: 100 });
     p.noLoop();
   };
 
@@ -202,12 +230,13 @@ new p5(function sketch(p) {
     p.stroke("#111111");
     p.noFill();
 
-    plot.clear();
-    plot.rect(10, 10, 380, 230);
-    plot.circle(200, 125, 120);
+    plot.circle(200, 200, 300);
+    plot.showBed();
     plot.go();   // ready: click the drawing to plot, click again to stop
   };
 });</code></pre>
+<p class="editor-demo-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/XkAPIFSmj" target="_blank" rel="noopener noreferrer">p5.js Web Editor</a></p>
+
     <p>Instance mode keeps each sketch's p5 calls on its own <code>p</code> object. Use it for several sketches on one page or when the sketch already uses modules.</p>
 
 
@@ -223,8 +252,8 @@ install(p5);
 let plot;
 
 function setup() {
-  createCanvas(400, 250);
-  plot = createPlot({ paper: "A4", margin: 12, width: 120 });
+  createCanvas(400, 400);
+  plot = createPlot({ paper: "A2", paperX: 0, paperY: 0, width: 100 });
   noLoop();
 }
 
@@ -233,14 +262,15 @@ function draw() {
   stroke("#111111");
   noFill();
 
-  plot.clear();
-  plot.rect(10, 10, 380, 230);
-  plot.circle(200, 125, 120);
+  plot.circle(200, 200, 300);
+  plot.showBed();
   plot.go();   // ready: click the drawing to plot, click again to stop
 }
 
 window.setup = setup;
 window.draw = draw;</code></pre>
+<p class="editor-demo-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/QqZ6JMmVu" target="_blank" rel="noopener noreferrer">p5.js Web Editor</a></p>
+
     <h4>Why it works</h4>
     <p>The module runs at <a href="architecture.html#module-load-order">step 4 of the load sequence</a>, connects the adapter, and puts <code>setup</code> and <code>draw</code> on <code>window</code>. At step 6 p5 finds them there, exactly as it would find a classic script's functions. Inside the functions, <code>createCanvas</code> and <code>key</code> resolve because p5 in global mode copies its API onto <code>window</code> before calling <code>setup()</code>.</p>
     <h4>When to use it</h4>
@@ -259,6 +289,8 @@ window.draw = draw;</code></pre>
 &lt;script type="module" src="sketch.js"&gt;&lt;/script&gt;</code></pre>
     <pre><code class="language-javascript">import { install } from "p5.penplotter";
 install(p5);</code></pre>
+<p class="editor-demo-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/qvfeTbOqQ" target="_blank" rel="noopener noreferrer">p5.js Web Editor</a></p>
+
     <p>The import map must appear before the first module script. Bare names like <code>"p5.penplotter"</code> are what a package manager would resolve; the import map does the same job in the browser, without one.</p>
     <p>The bundle includes core 0.3.1 and its EBB driver. Keep the bundle URL fixed to preserve this tested source combination.</p>
 
@@ -268,7 +300,13 @@ install(p5);</code></pre>
     <div class="table-wrap">
     <table><thead><tr><th>Call or option</th><th>Units and behaviour</th></tr></thead><tbody>
       <tr><td><code>createPlot(options)</code></td><td>Returns a <code>P5Plot</code>. Shape coordinates are canvas pixels. <code>width</code>, <code>x</code> and <code>y</code> are millimetres; without paper or scale options, one pixel maps to one millimetre.</td></tr>
-      <tr><td><code>paper, margin, orientation</code></td><td>A0–A6; default margin 12 mm and orientation <code>auto</code>. Fits and centres the canvas. <code>width</code> or <code>mmPerPixel</code> overrides fitting; <code>paperX/paperY</code> move the sheet.</td></tr>
+      <tr><td><code>paper, margin, orientation</code></td><td>A0–A6; default margin 12 mm and orientation <code>auto</code>. Fits and centres the canvas. <code>width</code> or <code>mmPerPixel</code> overrides fitting; <code>paperX/paperY</code> locate the sheet from the machine origin. Set both to zero for paper in the starting corner; omitted values centre the sheet on the bed.</td></tr>
+      <tr><td><code>point, line, circle, ellipse, arc</code></td><td>Draw on screen and record geometry. Coordinates and sizes are canvas pixels; circle takes a diameter. A point records a 0.24 mm dash. Angles follow <code>angleMode()</code>.</td></tr>
+      <tr><td><code>rect, square, triangle, quad</code></td><td>Draw and record shapes in canvas pixels. Rectangles use corner coordinates. Screen transforms and rounded corners are not recorded.</td></tr>
+      <tr><td><code>polyline(points), polygon(points)</code></td><td>Accept <code>[x, y]</code> pairs or <code>{ x, y }</code> objects in canvas pixels. Polygon closes the path.</td></tr>
+      <tr><td><code>hatch(points, spacing, angle), crossHatch(points, spacing, angle)</code></td><td>Fill a polygon with lines in one or two directions. Points are canvas pixels; spacing is millimetres on paper. Angles follow <code>angleMode()</code>.</td></tr>
+      <tr><td><code>stipple(points, count, seed)</code></td><td>Fill a polygon with small marks. Points are canvas pixels. Count sets the number of marks; seed repeats their positions.</td></tr>
+      <tr><td><code>plot.engine.exportSVG()</code></td><td>Returns the recorded drawing as SVG text in physical units. Does not open a plotter connection.</td></tr>
       <tr><td><code>clear(), plan(options)</code></td><td>Clear starts an empty recording. Plan returns the core PlotPlan and checks selected paper margins. <code>strategy: "drawn"</code> preserves drawing order.</td></tr>
       <tr><td><code>sequence(prepare, options)</code></td><td>One click starts the sequence. Clears before preparing each object and waits for completion. Return false to finish. Use plan to choose drawing order.</td></tr>
       <tr><td><code>showBed([canvas])</code></td><td>Shows the bed and paper with a red origin cross. Creates and reuses a separate preview when no canvas is supplied. Call after recording the drawing.</td></tr>
@@ -281,7 +319,7 @@ install(p5);</code></pre>
   </main>
   <footer>
     <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; Sebastien Vanblaere &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine</p>
-    <p class="footer-sub">MIT License</p>
+    <p class="footer-sub">MIT License &middot; v0.2.5</p>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
 </body>

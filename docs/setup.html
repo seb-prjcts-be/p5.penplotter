@@ -56,7 +56,7 @@
 
 function setup() {
   createCanvas(400, 400);
-  plot = createPlot({ paper: "A2", paperX: 0, paperY: 0 });
+  plot = createPlot({ paper: "A2", paperX: 0, paperY: 0, width: 100 });
   noLoop();
 }
 
@@ -67,8 +67,11 @@ function draw() {
   plot.showBed();
   plot.go();
 }</code></pre>
+<p class="editor-demo-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/qMN6UFSIE" target="_blank" rel="noopener noreferrer">p5.js Web Editor</a></p>
+
 <p><code>plot.circle()</code> draws the circle on screen and records it for the plotter. Its arguments are the centre and diameter, as in p5. <code>noLoop()</code> keeps the sketch from recording the circle again each frame.</p>
 <p>This example uses A2 paper with its corner at the machine origin. Set <code>paper</code> to the format already on your plotter. <code>showBed()</code> displays where the drawing will land on that sheet.</p>
+<p><code>width: 100</code> makes the canvas 100 mm wide on paper. This circle has a diameter of 75 mm.</p>
 <h2 id="direct-plotting">Draw it on paper</h2>
 <p>Use Chrome or Edge. Connect the plotter by USB and switch it on.</p>
 <h3 id="machine-origin">Prepare the paper and pen</h3>

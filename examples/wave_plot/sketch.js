@@ -38,7 +38,7 @@ async function setup() {
   createCanvas(640, 760);
 
   pixelDensity(1);
-  plot = createPlot({ paper: "A2", margin: 12 });
+  plot = createPlot({ paper: "A2", paperX: 0, paperY: 0, margin: 12 });
 
   noLoop();
 }

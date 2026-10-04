@@ -1,5 +1,5 @@
 // Fit the canvas on A2, with a 12 mm paper margin.
-const PLACE = { paper: "A2", margin: 12 };
+const PLACE = { paper: "A2", paperX: 0, paperY: 0, margin: 12 };
 
 let waveSeed = Math.floor(Math.random() * 35);
 
