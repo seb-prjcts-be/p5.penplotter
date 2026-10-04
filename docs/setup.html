@@ -79,6 +79,10 @@ function draw() {
 <p>On my iDraw HSE / A2, the starting corner is bottom left when the long rails run away from you. With the motors off, move the carriage to that corner. The driver takes this position as zero; the machine does not find it automatically.</p>
 <p>Place the paper with its corner at that origin, as set by <code>paperX: 0</code> and <code>paperY: 0</code> above. Check its position in the bed preview.</p>
 <p>Click the drawing. Select the plotter in the browser's port list and click Connect. A second click on the drawing requests a stop.</p>
+    <figure class="doc-animation" id="animation-first-circle">
+      <img src="images/animations/first-circle.gif?v=20261004" width="600" height="400" loading="lazy" alt="The first-circle sketch is drawn on screen, the drawing is clicked, the plotter is chosen in the port list and the pen draws a 75 mm circle on A2 paper, then returns to the starting corner.">
+      <figcaption>The circle sketch from start to paper: click the drawing, choose the plotter, click Connect. The pen draws the 75 mm circle and returns to the starting corner. The estimate of about 23 seconds comes from the iDraw HSE / A2 profile.</figcaption>
+    </figure>
 <p>If your machine has a different starting corner or motor direction, confirm its origin before plotting. Moving the carriage to another corner does not change the driver's directions.</p>
 <p>After a stop or error, switch off the motors and return the carriage to the starting corner before trying again.</p>
     <h2 id="troubleshooting">If the installation fails</h2>

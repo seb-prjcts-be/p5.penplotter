@@ -33,6 +33,10 @@
 <nav aria-label="On this page"><p><a href="#change-drawing">Change the drawing</a> · <a href="#paper">Paper</a> · <a href="#fills">Fills</a> · <a href="#werkwijzen">Plotting</a> · <a href="#core-access">Routes and files</a> · <a href="#advanced-setups">Modules</a> · <a href="#reference">Reference</a></p></nav>
 <p id="global-mode">Start with <a href="setup.html#editor">the circle in Setup</a>. The drawing examples below use its 400 × 400 canvas. Paper settings are introduced in the placement section.</p>
 <h2 id="change-drawing">1. Change the drawing</h2>
+    <figure class="doc-animation" id="animation-plot-prefix">
+      <img src="images/animations/plot-prefix.gif?v=20261004" width="600" height="400" loading="lazy" alt="Two columns compare line() and plot.line() with the same arguments. Both draw on screen; only plot.line() records a 60 mm line that the pen draws on paper.">
+      <figcaption>Only a call with <code>plot.</code> in front is recorded for the pen. <code>line(80, 200, 320, 200)</code> stays on screen; <code>plot.line(80, 200, 320, 200)</code> also becomes a 60 mm line on paper with the Setup sketch&rsquo;s <code>width: 100</code>.</figcaption>
+    </figure>
 <p>Replace <code>plot.circle(200, 200, 300)</code> in <code>draw()</code> with this loop. Keep <code>setup()</code>, <code>background()</code>, <code>noFill()</code>, <code>showBed()</code> and <code>go()</code>.</p>
 <pre><code class="language-javascript">for (let diameter = 60; diameter &lt;= 300; diameter += 40) {
   plot.circle(200, 200, diameter);
@@ -54,7 +58,7 @@ plot.polygon([[0, 0], [40, 0], [40, 40]]);</code></pre>
     </figure>
 
     <figure class="doc-animation" id="animation-point-closeup">
-      <img src="images/animations/point-closeup.gif" width="600" height="400" loading="lazy" alt="A tiny plotted point is enlarged to reveal its short horizontal stroke.">
+      <img src="images/animations/point-closeup.gif?v=20261004" width="600" height="400" loading="lazy" alt="A tiny plotted point is enlarged to reveal its short horizontal stroke.">
       <figcaption>Zoom in on <code>plot.point()</code>: the recorded point is a 0.24 mm dash. A row of points becomes a texture, even though every mark is a very short line.</figcaption>
     </figure>
 
@@ -70,6 +74,10 @@ plot.polyline(points);</code></pre>
 <p><code>Math.sin()</code> gives each point its height. Change <code>40</code> to <code>10</code> for a shallower wave. The <a href="../examples/direct_plot/index.html">Wave lines example</a> repeats a wave across several rows.</p>
 <h3>Redraw a sketch</h3>
 <p><code>background()</code> clears the screen. Add <code>plot.clear()</code> before the drawing calls when a key or button redraws your sketch; it replaces the previous recording. Without it, each redraw adds more shapes to the same plot. Keep <code>noLoop()</code> for a drawing that changes only when requested.</p>
+    <figure class="doc-animation" id="animation-no-loop">
+      <img src="images/animations/no-loop.gif?v=20261004" width="600" height="400" loading="lazy" alt="Left, a looping draw() places a circle at a random position each frame: the screen shows one circle, the recording fills with 300. Right, with noLoop() both show a single circle.">
+      <figcaption>A looping <code>draw()</code> records one more shape every frame, and <code>background()</code> clears only the screen. Five seconds of random circles become 300 recorded circles, about 10 minutes of plotting. Identical shapes are merged when the plan is made; shapes that change are not.</figcaption>
+    </figure>
 
 <p class="editor-demo-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/5Ubv0-CQZ" target="_blank" rel="noopener noreferrer">p5.js Web Editor</a></p>
     <h2 id="paper">2. Paper and placement</h2>
