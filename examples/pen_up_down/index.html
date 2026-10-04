@@ -17,10 +17,8 @@
   <pre><code class="language-markup" data-src="index_cdn.html" data-part="module">Loading module...</code></pre>
   <script type="module" src="../code.js"></script>
   <script type="module">
-    import { PlotterEngine } from "../../../vanilla.penplotter/vanilla.penplotter.js";
-    import * as Ebb from "../../../vanilla.penplotter/src/driver/ebb.js";
-    import { installP5Penplotter } from "../../p5.penplotter.js";
-    installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
+    import { install } from "../../dist/p5.penplotter.js";
+    install(p5);
   </script>
   <script src="sketch.js"></script>
 </body>

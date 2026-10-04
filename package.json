@@ -1,21 +1,27 @@
 {
   "name": "p5.penplotter",
-  "version": "0.2.2",
+  "version": "0.2.5-rc.1",
   "description": "The p5.js adapter for vanilla.penplotter.",
   "type": "module",
   "main": "p5.penplotter.js",
   "exports": {
-    ".": "./p5.penplotter.js"
+    ".": "./p5.penplotter.js",
+    "./browser": "./dist/p5.penplotter.js"
   },
   "files": [
     "p5.penplotter.js",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "dist"
   ],
   "scripts": {
     "test": "node tests/snapshot.js && node tests/plot.js && node tests/requirements.js && node tests/examples.js && node tests/cdn.js",
     "docs": "node tools/build-docs.js",
-    "manifest": "node tools/gen-manifest.js"
+    "manifest": "node tools/gen-manifest.js",
+    "build": "node tools/build-browser.js",
+    "test:bundle": "node tests/bundle.js",
+    "test:browser": "node tests/browser.js",
+    "examples:cdn": "node tools/build-cdn-examples.js"
   },
   "peerDependencies": {
     "p5": ">=2.2.2",
@@ -24,5 +30,10 @@
   "repository": "github:seb-prjcts-be/p5.penplotter",
   "homepage": "https://seb-prjcts-be.github.io/p5.penplotter/",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "p5": "2.2.2",
+    "playwright-core": "1.63.0"
+  }
 }

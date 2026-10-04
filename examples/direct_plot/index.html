@@ -63,13 +63,11 @@
   </main>
   <footer>
     <p><a href="../../docs/examples.html">&larr; All examples</a> &nbsp;&middot;&nbsp; <a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter on GitHub</a></p>
-    <p class="footer-sub">p5.penplotter v0.2.2 &nbsp;&middot;&nbsp; p5.js v2.2.2 &nbsp;&middot;&nbsp; iDraw HSE / A2</p>
+    <p class="footer-sub">p5.penplotter v0.2.5-rc.1 &nbsp;&middot;&nbsp; p5.js v2.2.2 &nbsp;&middot;&nbsp; iDraw HSE / A2</p>
   </footer>
   <script type="module">
-    import { PlotterEngine } from "../../../vanilla.penplotter/vanilla.penplotter.js";
-    import * as Ebb from "../../../vanilla.penplotter/src/driver/ebb.js";
-    import { installP5Penplotter } from "../../p5.penplotter.js";
-    installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
+    import { install } from "../../dist/p5.penplotter.js";
+    install(p5);
   </script>
   <script src="sketch.js"></script>
   <script src="page.js"></script>
