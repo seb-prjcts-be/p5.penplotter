@@ -22,7 +22,7 @@ Each job is prepared before plotting. `plot.sequence()` calculates one object, p
 
 ## Install
 
-The site uses current source. The latest tags are core `v0.3.1` and adapter `v0.2.1`; newer `pen()`, `drawRoute()` and bed preview helpers are available on `main`, not in all tagged builds.
+The site uses current source. The latest tags are core `v0.3.1` and adapter `v0.2.2`; newer `pen()`, `drawRoute()` and bed preview helpers are available on `main`, not in all tagged builds.
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
@@ -114,7 +114,7 @@ Tested on one machine: iDraw HSE / A2 (EBB firmware 3.0.2) on 2026-09-21. Plotte
 | direct plotting | iDraw HSE / A2 with EBB firmware 3.0.2 | the only physically tested profile (`idraw-hse-a2`) |
 | examples | wave formulas, vanilla.waves (pinned commit) | examples only; neither library depends on them |
 
-Tested together: `vanilla.penplotter` 0.3.1 with `p5.penplotter` 0.2.1.
+Tested together: `vanilla.penplotter` 0.3.1 with `p5.penplotter` 0.2.2.
 
 Publishing: always `vanilla.penplotter` first, then `p5.penplotter`. The examples of
 `p5.penplotter` load the core as a sibling folder (`../vanilla.penplotter/`), locally under
@@ -246,7 +246,7 @@ See [About](https://seb-prjcts-be.github.io/p5.penplotter/docs/about.html#relate
 
 The [Guide](https://seb-prjcts-be.github.io/p5.penplotter/docs/guide.html#paper) explains paper formats, orientation and placement.
 
-Version 0.2.1 targets p5.js 2.2.2. The core and hardware status are determined solely by `vanilla.penplotter`.
+Version 0.2.2 targets p5.js 2.2.2. The core and hardware status are determined solely by `vanilla.penplotter`.
 
 ## Test
 
