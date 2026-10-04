@@ -145,3 +145,7 @@ html.embed .demo-canvas canvas { max-height: 100%; width: auto !important; heigh
 
 .token.tag, .token.attr-name { color: #E45649; }
 .token.attr-value { color: #50A14F; }
+
+.demo-header .demo-editor-link { margin-top: .5rem; font-size: .78rem; }
+.demo-editor-link a { color: var(--text-faint, #666); text-underline-offset: .2em; }
+.demo-editor-link a:hover { color: #333; }

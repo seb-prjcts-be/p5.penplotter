@@ -423,3 +423,5 @@ pre code { white-space: pre; overflow-wrap: normal; }
 
 .module-setups { margin: 2rem 0; }
 .module-setups summary, details.page summary { cursor: pointer; font-size: 1.15rem; margin-bottom: 1rem; }
+
+.ex-full-link.editor-demo-link { margin-left: .8rem; }
