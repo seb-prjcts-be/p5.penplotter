@@ -22,44 +22,20 @@ Each job is prepared before plotting. `plot.sequence()` calculates one object, p
 
 ## Install
 
-The site uses current source. The latest tags are core `v0.3.1` and adapter `v0.2.2`; newer `pen()`, `drawRoute()` and bed preview helpers are available on `main`, not in all tagged builds.
+The current browser bundle is v0.2.5-rc.1, a release candidate. The latest final release remains v0.2.2. The candidate URL below is available on jsDelivr.
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
 <script type="module">
-  const libraries = (async () => {
-    async function latest(repo) {
-      const response = await fetch(`https://api.github.com/repos/seb-prjcts-be/${repo}/commits/main?t=${Date.now()}`, { cache: "no-store" });
-      if (!response.ok) throw new Error(`Cannot resolve ${repo}/main: HTTP ${response.status}`);
-      const { sha } = await response.json();
-      if (!/^[a-f0-9]{40}$/.test(sha)) throw new Error(`Invalid commit for ${repo}`);
-      return `https://cdn.jsdelivr.net/gh/seb-prjcts-be/${repo}@${sha}`;
-    }
-    const [core, adapter] = await Promise.all([latest("vanilla.penplotter"), latest("p5.penplotter")]);
-    const [{ PlotterEngine }, Ebb, { installP5Penplotter }] = await Promise.all([
-      import(`${core}/vanilla.penplotter.js`),
-      import(`${core}/src/driver/ebb.js`),
-      import(`${adapter}/p5.penplotter.js`)
-    ]);
-    installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
-    console.info("penplotter source", { core, adapter });
-  })();
-  // p5 may start before asynchronous imports finish: wait before sketch setup.
-  const originalSetup = window.setup;
-  if (typeof originalSetup === "function") {
-    window.setup = async function (...args) {
-      await libraries;
-      return originalSetup.apply(this, args);
-    };
-  }
-  await libraries;
+  import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5-rc.1/dist/p5.penplotter.js";
+  install(p5);
 </script>
 <script src="sketch.js"></script>
 ```
 
-Each start resolves the current `main` commits through the GitHub API, then loads the core, driver and adapter from those immutable jsDelivr URLs. The console reports the exact source URLs. GitHub API access is required; a lookup failure stops startup rather than using old code. To preserve a finished sketch, keep the reported commit URLs pinned instead. The GitHub Pages URLs (`https://seb-prjcts-be.github.io/…`) always serve the latest `main`; the adapter checks the engine's version at install and refuses a core below the required minimum.
+The browser bundle contains the adapter, core and EBB driver from one tested source combination. It performs no GitHub lookup and loads no separate core modules. p5.js stays separate. The CDN URL uses a fixed release tag; keep that tag to preserve a sketch. The bundle pins vanilla.penplotter 0.3.1 at commit `c72ba7fb8ea60c0ea2d84f7e36dd03d161fbd7c8`.
 
-Leave out `{ driver: Ebb }` if you only preview.
+Preview and export work without connecting a plotter. Web Serial is opened only after a user gesture. The original `installP5Penplotter(p5, PlotterEngine, { driver })` API remains available from the root adapter module for explicit integrations.
 
 All four ways of wiring a sketch, with the load-order timeline behind them, are on the [Setup](https://seb-prjcts-be.github.io/p5.penplotter/docs/setup.html) page.
 
@@ -104,6 +80,8 @@ Tested on one machine: iDraw HSE / A2 (EBB firmware 3.0.2) on 2026-09-21. Plotte
 
 ## Requirements
 
+The browser examples use the bundled core. Building and source-level integration tests need the pinned sibling checkout. The source adapter still accepts the minimum versions listed below.
+
 <!-- vereisten:start -->
 | component | requires | note |
 |---|---|---|
@@ -114,43 +92,16 @@ Tested on one machine: iDraw HSE / A2 (EBB firmware 3.0.2) on 2026-09-21. Plotte
 | direct plotting | iDraw HSE / A2 with EBB firmware 3.0.2 | the only physically tested profile (`idraw-hse-a2`) |
 | examples | wave formulas, vanilla.waves (pinned commit) | examples only; neither library depends on them |
 
-Tested together: `vanilla.penplotter` 0.3.1 with `p5.penplotter` 0.2.2.
+The candidate bundles `vanilla.penplotter` 0.3.1 with `p5.penplotter` 0.2.5-rc.1. Automated comparisons cover plans, SVG and EBB commands against adapter 0.2.2. Physical candidate checks remain open.
 
-Publishing: always `vanilla.penplotter` first, then `p5.penplotter`. The examples of
-`p5.penplotter` load the core as a sibling folder (`../vanilla.penplotter/`), locally under
-`htdocs` and online on GitHub Pages. They therefore always get the latest core, not a
-pinned one; the version check refuses a core below the required minimum.
+The browser examples load the fixed candidate bundle, which includes its core and driver. They do not load a sibling library or resolve the latest commits at startup.
 <!-- vereisten:end -->
 
 ## Instance mode
 
 ```js
-const libraries = (async () => {
-  async function latest(repo) {
-    const response = await fetch(`https://api.github.com/repos/seb-prjcts-be/${repo}/commits/main?t=${Date.now()}`, { cache: "no-store" });
-    if (!response.ok) throw new Error(`Cannot resolve ${repo}/main: HTTP ${response.status}`);
-    const { sha } = await response.json();
-    if (!/^[a-f0-9]{40}$/.test(sha)) throw new Error(`Invalid commit for ${repo}`);
-    return `https://cdn.jsdelivr.net/gh/seb-prjcts-be/${repo}@${sha}`;
-  }
-  const [core, adapter] = await Promise.all([latest("vanilla.penplotter"), latest("p5.penplotter")]);
-  const [{ PlotterEngine }, Ebb, { installP5Penplotter }] = await Promise.all([
-    import(`${core}/vanilla.penplotter.js`),
-    import(`${core}/src/driver/ebb.js`),
-    import(`${adapter}/p5.penplotter.js`)
-  ]);
-  installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
-  console.info("penplotter source", { core, adapter });
-})();
-// p5 may start before asynchronous imports finish: wait before sketch setup.
-const originalSetup = window.setup;
-if (typeof originalSetup === "function") {
-  window.setup = async function (...args) {
-    await libraries;
-    return originalSetup.apply(this, args);
-  };
-}
-await libraries;
+import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5-rc.1/dist/p5.penplotter.js";
+install(p5);
 
 new p5(function sketch(p) {
   let plot;
@@ -246,7 +197,7 @@ See [About](https://seb-prjcts-be.github.io/p5.penplotter/docs/about.html#relate
 
 The [Guide](https://seb-prjcts-be.github.io/p5.penplotter/docs/guide.html#paper) explains paper formats, orientation and placement.
 
-Version 0.2.2 targets p5.js 2.2.2. The core and hardware status are determined solely by `vanilla.penplotter`.
+The browser candidate targets p5.js 2.2.2. The core and hardware status are determined solely by `vanilla.penplotter`.
 
 ## Test
 
@@ -265,3 +216,7 @@ Written with AI assistance, under the direction of Sebastien Vanblaere. Physical
 MIT License.
 
 Sebastien Vanblaere
+
+## Build and validate the browser bundle
+
+See [the bundle workflow](docs/cdn-bundle.md). The build pins its core commit in `browser/core-source.json`. Use Node 22 or newer and `npm ci --legacy-peer-deps`; the core is supplied by its sibling Git checkout rather than the npm registry.

@@ -1,7 +1,7 @@
 name: test
 on:
   push:
-    branches: [main]
+    branches: [main, cdn-v0.2.5]
   pull_request:
 permissions:
   contents: read
@@ -12,15 +12,32 @@ jobs:
       - uses: actions/checkout@v4
         with:
           path: p5.penplotter
+          fetch-depth: 0
+      - id: core-source
+        working-directory: p5.penplotter
+        run: node -e 'const fs=require("fs"); const source=JSON.parse(fs.readFileSync("browser/core-source.json")); fs.writeFileSync(process.env.GITHUB_OUTPUT, "commit="+source.commit+"\n");'
       # The examples and the requirements test use the core as a sibling folder.
       - uses: actions/checkout@v4
         with:
           repository: seb-prjcts-be/vanilla.penplotter
           path: vanilla.penplotter
+          ref: ${{ steps.core-source.outputs.commit }}
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - run: npm ci --legacy-peer-deps
+        working-directory: p5.penplotter
+      - run: npm run build
+        working-directory: p5.penplotter
       - run: npm test
         working-directory: p5.penplotter
-      - run: npm run docs && npm run manifest && git diff --exit-code -- docs
+      - run: npm run test:bundle
+        working-directory: p5.penplotter
+      - run: npm test
+        working-directory: vanilla.penplotter
+      - run: npx playwright-core install --with-deps chromium
+        working-directory: p5.penplotter
+      - run: npm run test:browser
+        working-directory: p5.penplotter
+      - run: npm run docs && npm run manifest && npm run examples:cdn && git diff --exit-code -- docs examples dist
         working-directory: p5.penplotter

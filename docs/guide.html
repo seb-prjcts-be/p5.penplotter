@@ -216,11 +216,8 @@ plot.stipple(square, 150, 3);    // count, seed</code></pre>
     <pre><code class="language-markup">&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
 &lt;script type="module" src="sketch.js"&gt;&lt;/script&gt;</code></pre>
     <h4>sketch.js</h4>
-    <pre><code class="language-javascript">import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@4880b41b911ede36b391e2924a4949b27bdb2378/vanilla.penplotter.js";
-import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@4880b41b911ede36b391e2924a4949b27bdb2378/src/driver/ebb.js";
-import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@b495d269a0f38d8e5fd83b3368a483d0fe50d006/p5.penplotter.js";
-
-installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
+    <pre><code class="language-javascript">import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5-rc.1/dist/p5.penplotter.js";
+install(p5);
 
 new p5(function sketch(p) {
   let plot;
@@ -257,11 +254,8 @@ new p5(function sketch(p) {
     <pre><code class="language-markup">&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
 &lt;script type="module" src="sketch.js"&gt;&lt;/script&gt;</code></pre>
     <h4>sketch.js</h4>
-    <pre><code class="language-javascript">import { PlotterEngine } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@4880b41b911ede36b391e2924a4949b27bdb2378/vanilla.penplotter.js";
-import * as Ebb from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@4880b41b911ede36b391e2924a4949b27bdb2378/src/driver/ebb.js";
-import { installP5Penplotter } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@b495d269a0f38d8e5fd83b3368a483d0fe50d006/p5.penplotter.js";
-
-installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
+    <pre><code class="language-javascript">import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5-rc.1/dist/p5.penplotter.js";
+install(p5);
 
 let plot;
 
@@ -295,20 +289,15 @@ window.draw = draw;</code></pre>
 &lt;script type="importmap"&gt;
 {
   "imports": {
-    "vanilla.penplotter": "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@4880b41b911ede36b391e2924a4949b27bdb2378/vanilla.penplotter.js",
-    "vanilla.penplotter/driver/ebb": "https://cdn.jsdelivr.net/gh/seb-prjcts-be/vanilla.penplotter@4880b41b911ede36b391e2924a4949b27bdb2378/src/driver/ebb.js",
-    "p5.penplotter": "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@b495d269a0f38d8e5fd83b3368a483d0fe50d006/p5.penplotter.js"
+    "p5.penplotter": "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5-rc.1/dist/p5.penplotter.js"
   }
 }
 &lt;/script&gt;
 &lt;script type="module" src="sketch.js"&gt;&lt;/script&gt;</code></pre>
-    <pre><code class="language-javascript">import { PlotterEngine } from "vanilla.penplotter";
-import * as Ebb from "vanilla.penplotter/driver/ebb";
-import { installP5Penplotter } from "p5.penplotter";
-
-installP5Penplotter(p5, PlotterEngine, { driver: Ebb });</code></pre>
+    <pre><code class="language-javascript">import { install } from "p5.penplotter";
+install(p5);</code></pre>
     <p>The import map must appear before the first module script. Bare names like <code>"p5.penplotter"</code> are what a package manager would resolve; the import map does the same job in the browser, without one.</p>
-    <p>The adapter refuses a core below its required minimum; it does not verify every change between versions. For a project you want to keep, pin both versions or keep tested local copies of both repositories.</p>
+    <p>The bundle includes core 0.3.1 and its EBB driver. Keep the bundle URL fixed to preserve this tested source combination.</p>
 
     </details>
 

@@ -549,7 +549,7 @@ export function installP5Penplotter(p5Constructor, EngineClass, installOptions =
 }
 
 export const P5Penplotter = Object.freeze({
-  version: "0.2.2",
+  version: "0.2.5-rc.1",
   requires: REQUIRES,
   install: installP5Penplotter,
   draw: drawPlanWithP5

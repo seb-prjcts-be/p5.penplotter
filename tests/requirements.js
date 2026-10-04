@@ -55,7 +55,7 @@ function testInstallRefusesAnOlderCore() {
 }
 
 // With the sibling checkout at hand: the real core satisfies the contract and
-// both READMEs carry the identical block.
+// both READMEs carry the identical source dependency table.
 async function testAgainstSiblingCore() {
   const core = process.env.VANILLA_PLOTTER_ROOT || path.resolve(root, "..", "vanilla.penplotter");
   if (!fs.existsSync(path.join(core, "vanilla.penplotter.js"))) {
@@ -70,7 +70,8 @@ async function testAgainstSiblingCore() {
   assert.equal(PlotterEngine.version, corePackage.version);
   const theirs = fs.readFileSync(path.join(core, "README.md"), "utf8").replace(/\r\n/g, "\n").match(BLOCK);
   assert.ok(theirs, "vanilla.penplotter README needs the shared vereisten block");
-  assert.equal(theirs[1], read("README.md").match(BLOCK)[1], "both READMEs carry the same vereisten block");
+  const contractTable = block => block.trim().split("\n\n")[0];
+  assert.equal(contractTable(theirs[1]), contractTable(read("README.md").match(BLOCK)[1]), "both READMEs carry the same source dependency table");
   console.log(`p5.penplotter requirements: sibling core ${corePackage.version} ok`);
 }
 
