@@ -1,6 +1,6 @@
 {
   "name": "p5.penplotter",
-  "version": "0.2.5-rc.1",
+  "version": "0.2.5",
   "description": "The p5.js adapter for vanilla.penplotter.",
   "type": "module",
   "main": "p5.penplotter.js",

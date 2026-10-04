@@ -1,6 +1,6 @@
-# Browser bundle candidate for v0.2.5
+# Browser bundle for v0.2.5
 
-The published v0.2.2 release and its tag remain unchanged. This branch prepares `0.2.5-rc.1`; it is not the final v0.2.5 release. Existing Web Editor reference sketches are preserved.
+The published v0.2.2 release and its tag remain unchanged. Version `0.2.5` includes the browser bundle. Existing Web Editor reference sketches are preserved.
 
 ## User setup
 
@@ -8,12 +8,12 @@ Load p5.js 2.2.2 before the module block. The module bundle supplies the matchin
 
 ```html
 <script type="module">
-  import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5-rc.1/dist/p5.penplotter.js";
+  import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5/dist/p5.penplotter.js";
   install(p5);
 </script>
 ```
 
-Use this tagged URL only once that candidate tag is published; a full candidate commit URL can be used before then. Fixed URLs preserve the code used by a sketch. There is no GitHub API request, automatic main lookup or setup wrapper.
+Use the fixed release URL above. Fixed URLs preserve the code used by a sketch. There is no GitHub API request, automatic main lookup or setup wrapper.
 
 The classic `dist/p5.penplotter.browser.js` file is an alternative: load it with a normal script tag after p5.js and before sketch.js. It installs synchronously. Do not load the explicit adapter installation and a bundle in the same sketch. Reinstalling the same bundle is harmless; a conflicting installation throws an error.
 
@@ -41,8 +41,8 @@ The browser runner uses `/usr/bin/chromium` when available, `PENPLOTTER_CHROMIUM
 
 Automated checks cover v0.2.2 geometry, plan, SVG and EBB-command equivalence, double/conflicting installation, missing/old p5, deterministic build bytes and the actual bundled driver's FIFO regression. Real Chromium checks all nine repository sketches at fixed seeds against the explicit v0.2.2 adapter with the pinned core. They also check module, classic and instance startup with actual p5 2.2.2. Chaos Game must wait for a click before starting its sequence.
 
-The gallery and example pages link to the separate candidate Web Editor sketches. Their URLs are preserved during this merge. Repository browser checks validate the local sketches; they do not establish the current contents of the hosted copies.
+The gallery and example pages link to the separate candidate Web Editor sketches. Their URLs are preserved; these hosted copies still use v0.2.5-rc.1. Repository browser checks validate the local sketches; they do not establish the current contents of the hosted copies.
 
-Before final v0.2.5 publication, recheck the candidate CDN bytes and hosted editor sketches, and record physical results on iDraw HSE/A2 with EBB 3.0.2: Wave Lines, Molnar Grid, Spirograph, Calibration Sheet, U/D and a short Chaos Game sequence. Check controlled stop and the next job after parking the carriage again. Preview, mock/simulation and physical outcomes remain separate.
+Physical checks specific to this bundle remain unrecorded. Record results on iDraw HSE/A2 with EBB 3.0.2: Wave Lines, Molnar Grid, Spirograph, Calibration Sheet, U/D and a short Chaos Game sequence. Check controlled stop and the next job after parking the carriage again. Preview, mock/simulation and physical outcomes remain separate.
 
-An unconfirmed physical check blocks the final release. An unexplained geometry or command difference blocks migration. No existing release tag or asset is overwritten; correction after publication requires a new release.
+The release is published at the maintainer’s request on the basis of automated and browser checks. This does not establish a completed physical test of the bundle. An unexplained geometry or command difference requires investigation. No existing release tag or asset is overwritten; correction after publication requires a new release.

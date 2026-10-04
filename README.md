@@ -22,12 +22,12 @@ Each job is prepared before plotting. `plot.sequence()` calculates one object, p
 
 ## Install
 
-The current browser bundle is v0.2.5-rc.1, a release candidate. The latest final release remains v0.2.2. The candidate URL below is available on jsDelivr.
+The current browser bundle is v0.2.5. Load it from the fixed release URL below.
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
 <script type="module">
-  import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5-rc.1/dist/p5.penplotter.js";
+  import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5/dist/p5.penplotter.js";
   install(p5);
 </script>
 <script src="sketch.js"></script>
@@ -92,15 +92,15 @@ The browser examples use the bundled core. Building and source-level integration
 | direct plotting | iDraw HSE / A2 with EBB firmware 3.0.2 | the only physically tested profile (`idraw-hse-a2`) |
 | examples | wave formulas, vanilla.waves (pinned commit) | examples only; neither library depends on them |
 
-The candidate bundles `vanilla.penplotter` 0.3.1 with `p5.penplotter` 0.2.5-rc.1. Automated comparisons cover plans, SVG and EBB commands against adapter 0.2.2. Physical candidate checks remain open.
+The release bundles `vanilla.penplotter` 0.3.1 with `p5.penplotter` 0.2.5. Automated comparisons cover plans, SVG and EBB commands against adapter 0.2.2. Physical checks specific to this bundle have not been recorded.
 
-The browser examples load the fixed candidate bundle, which includes its core and driver. They do not load a sibling library or resolve the latest commits at startup.
+The browser examples load the fixed release bundle, which includes its core and driver. They do not load a sibling library or resolve the latest commits at startup.
 <!-- vereisten:end -->
 
 ## Instance mode
 
 ```js
-import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5-rc.1/dist/p5.penplotter.js";
+import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5/dist/p5.penplotter.js";
 install(p5);
 
 new p5(function sketch(p) {
@@ -197,7 +197,7 @@ See [About](https://seb-prjcts-be.github.io/p5.penplotter/docs/about.html#relate
 
 The [Guide](https://seb-prjcts-be.github.io/p5.penplotter/docs/guide.html#paper) explains paper formats, orientation and placement.
 
-The browser candidate targets p5.js 2.2.2. The core and hardware status are determined solely by `vanilla.penplotter`.
+The browser bundle targets p5.js 2.2.2. The core and hardware status are determined solely by `vanilla.penplotter`.
 
 ## Test
 

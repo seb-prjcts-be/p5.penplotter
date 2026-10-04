@@ -34,7 +34,7 @@ const server = http.createServer((request, response) => {
     if (!file.startsWith(base + path.sep)) { response.writeHead(403).end(); return; }
     let data = fs.readFileSync(file);
     if (file.endsWith("index.html") && url.searchParams.has("baseline")) {
-      data = Buffer.from(data.toString().replace(/<script type="module">\s*import \{ install \} from "(?:\.\.\/\.\.\/dist\/p5\.penplotter\.js|https:\/\/cdn\.jsdelivr\.net\/gh\/seb-prjcts-be\/p5\.penplotter@v0\.2\.5-rc\.1\/dist\/p5\.penplotter\.js)";\s*install\(p5\);\s*<\/script>/, baselineSetup));
+      data = Buffer.from(data.toString().replace(/<script type="module">\s*import \{ install \} from "(?:\.\.\/\.\.\/dist\/p5\.penplotter\.js|https:\/\/cdn\.jsdelivr\.net\/gh\/seb-prjcts-be\/p5\.penplotter@v0\.2\.5\/dist\/p5\.penplotter\.js)";\s*install\(p5\);\s*<\/script>/, baselineSetup));
     }
     response.setHeader("Content-Type", contentType(file) + "; charset=utf-8");
     response.end(data);
@@ -60,7 +60,7 @@ try {
       // network is needed for these local browser equivalence checks.
       await page.route("https://**/*", async route => {
         const url = route.request().url();
-        if (url === "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5-rc.1/dist/p5.penplotter.js") return route.fulfill({ path: path.join(root, "dist/p5.penplotter.js"), contentType: "text/javascript" });
+        if (url === "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5/dist/p5.penplotter.js") return route.fulfill({ path: path.join(root, "dist/p5.penplotter.js"), contentType: "text/javascript" });
         if (url.includes("/npm/p5@2.2.2/")) return route.fulfill({ path: path.join(root, "node_modules/p5/lib/p5.min.js"), contentType: "text/javascript" });
         if (url.includes("/p5.waves@v3.4.0/")) return route.fulfill({ path: path.join(root, "tests/fixtures/p5.waves-3.4.0.min.js"), contentType: "text/javascript" });
         if (url.includes("prismjs")) return route.fulfill({ body: "", contentType: "text/javascript" });

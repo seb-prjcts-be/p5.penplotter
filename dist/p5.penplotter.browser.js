@@ -2545,7 +2545,7 @@ ${travel}
     return p5Constructor;
   }
   var P5Penplotter = Object.freeze({
-    version: "0.2.5-rc.1",
+    version: "0.2.5",
     requires: REQUIRES,
     install: installP5Penplotter,
     draw: drawPlanWithP5
