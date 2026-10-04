@@ -13,13 +13,13 @@ draw = function () {
 
   document.querySelector("#paths").textContent = String(plotPlan.stats.paths);
   document.querySelector("#lifts").textContent = String(plotPlan.stats.penLifts);
-  document.querySelector("#travel").textContent = `${plotPlan.stats.travelDistance.toFixed(1)} px`;
+  document.querySelector("#travel").textContent = `${plotPlan.stats.travelDistance.toFixed(1)} mm`;
 
 };
 
 document.querySelector("#reroll").addEventListener("click", function rerollWave() {
   waveSeed = Math.floor(Math.random() * 34);
-  plotPlan = buildPlan();
+
 
   redraw();
 });
@@ -27,7 +27,7 @@ document.querySelector("#reroll").addEventListener("click", function rerollWave(
 function keyPressed() {
   if (key === "r" || key === "R") {
     waveSeed = Math.floor(Math.random() * 34);
-    plotPlan = buildPlan();
+
     redraw();
   }
 }

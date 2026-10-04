@@ -85,6 +85,19 @@ try {
         const svg = engine ? engine.exportSVG().replace(/data-path="path_\d+"/g, 'data-path="path"') : null;
         return JSON.parse(JSON.stringify({ plan, commands, svg, waitingForClick: typeof plot !== "undefined" ? !!plot.pending : false }, (key, value) => key === "pathId" || (key === "id" && /^path_/.test(value)) ? "path" : value));
       }, baselineMode);
+      assert.equal(snapshot.plan.units, "mm", `${name}: physical plot units`);
+      if (["first_plot", "wave_plot"].includes(name)) assert.equal(snapshot.waitingForClick, true, `${name}: waits for click before connecting`);
+      if (name === "wave_plot") {
+        const frame = await page.evaluate(() => frameCount);
+        await page.locator("#reroll").click();
+        await page.waitForFunction(before => frameCount > before, frame);
+        const state = await page.evaluate(() => ({ paths: plotPlan.stats.paths, pending: !!plot.pending, previewCount: document.querySelectorAll("canvas.p5Canvas").length, travel: document.querySelector("#travel").textContent }));
+        assert.equal(state.paths, 24);
+        assert.equal(state.pending, true);
+        assert.equal(state.previewCount, 1);
+        assert.match(state.travel, /mm$/);
+        assert.deepEqual(errors, [], "wave selection redraws without errors");
+      }
       if (name === "chaos_game") assert.equal(snapshot.waitingForClick, true, "sequence waits for the user");
       else if (name !== "pen_up_down") assert.ok(snapshot.plan.stats.paths > 0, "actual drawing generated");
       snapshots.push(snapshot);

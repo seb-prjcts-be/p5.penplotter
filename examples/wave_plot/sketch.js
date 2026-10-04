@@ -1,9 +1,10 @@
 let waveSeed = Math.floor(Math.random() * 35);
 
+let plot;
 let plotPlan;
 
 function buildPlan() {
-  const plot = createPlotterEngine();
+  plot.clear();
 
   for (let row = 0; row < 24; row += 1) {
     const points = [];
@@ -22,14 +23,12 @@ function buildPlan() {
     plot.polyline(points);
   }
 
-  plot.optimize({
+  plot.engine.optimize({
     simplifyTolerance: 0.3,
     mergeTolerance: 0.05
   });
   return plot.plan({
-    strategy: "nearest",
-    drawSpeed: 120,
-    travelSpeed: 260
+    strategy: "nearest"
   });
 }
 
@@ -39,14 +38,17 @@ async function setup() {
   createCanvas(640, 760);
 
   pixelDensity(1);
-  plotPlan = buildPlan();
+  plot = createPlot({ paper: "A2", margin: 12 });
 
   noLoop();
 }
 
 function draw() {
   background("#ffffff");
-  drawRoute(plotPlan, {
-    strokeWeight: 1
-  });
+  stroke("#111111");
+  strokeWeight(1);
+  noFill();
+  plotPlan = buildPlan();
+  plot.showBed();
+  plot.go();
 }

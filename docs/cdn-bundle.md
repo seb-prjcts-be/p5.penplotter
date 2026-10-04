@@ -41,7 +41,7 @@ The browser runner uses `/usr/bin/chromium` when available, `PENPLOTTER_CHROMIUM
 
 Automated checks cover v0.2.2 geometry, plan, SVG and EBB-command equivalence, double/conflicting installation, missing/old p5, deterministic build bytes and the actual bundled driver's FIFO regression. Real Chromium checks all nine repository sketches at fixed seeds against the explicit v0.2.2 adapter with the pinned core. They also check module, classic and instance startup with actual p5 2.2.2. Chaos Game must wait for a click before starting its sequence.
 
-The gallery and example pages link to the separate candidate Web Editor sketches. Their URLs are preserved; these hosted copies still use v0.2.5-rc.1. Repository browser checks validate the local sketches; they do not establish the current contents of the hosted copies.
+The gallery and example pages link to the matching Web Editor sketches. These copies use the fixed v0.2.5 CDN and the repository sketch code. All nine public previews were checked in Chrome after saving the updates; no physical plots were performed.
 
 Physical checks specific to this bundle remain unrecorded. Record results on iDraw HSE/A2 with EBB 3.0.2: Wave Lines, Molnar Grid, Spirograph, Calibration Sheet, U/D and a short Chaos Game sequence. Check controlled stop and the next job after parking the carriage again. Preview, mock/simulation and physical outcomes remain separate.
 
