@@ -11,11 +11,8 @@
   <script>if (location.search.includes("embed")) document.documentElement.classList.add("embed");</script>
   <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
   <script type="module">
-    // The core is a sibling of this repository, both on localhost and on GitHub Pages.
-    import { PlotterEngine } from "../../../vanilla.penplotter/vanilla.penplotter.js";
-    import * as Ebb from "../../../vanilla.penplotter/src/driver/ebb.js";
-    import { installP5Penplotter } from "../../p5.penplotter.js";
-    installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
+    import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5-rc.1/dist/p5.penplotter.js";
+    install(p5);
   </script>
   <script src="sketch.js"></script>
   <script src="page.js"></script>
@@ -39,7 +36,7 @@
       <div class="demo-number">Ruler · tone · circles · spacing</div>
       <h1>Calibration sheet</h1>
       <p>What your pen does on your paper, in millimetres. A 100 mm ruler to check the scale, hatch and cross-hatch scales from 6 to 0.8 mm, stipple densities, circles from 2 to 40 mm, and line pairs from 0.3 to 2 mm apart. Only physical variables: nothing a screen could fake. Plot it once per pen and keep the sheet.</p>
-      <p class="demo-editor-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/4ajgW73ky" target="_blank" rel="noopener noreferrer">p5.js Web Editor ↗</a></p>
+      <p class="demo-editor-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/O5rbfSNiU" target="_blank" rel="noopener noreferrer">p5.js Web Editor ↗</a></p>
     </div>
     <div class="demo-layout">
       <div class="demo-code">

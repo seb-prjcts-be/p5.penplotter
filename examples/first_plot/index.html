@@ -30,7 +30,7 @@
       <div class="demo-number">01 · p5.js</div>
       <h1>Plot preview</h1>
       <p>A hatched polygon and a circle show how the core plans a route. This sketch displays the plan on screen; it does not connect to a plotter.</p>
-      <p class="demo-editor-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/diEjAtLEB" target="_blank" rel="noopener noreferrer">p5.js Web Editor ↗</a></p>
+      <p class="demo-editor-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/q7FKX8z5i" target="_blank" rel="noopener noreferrer">p5.js Web Editor ↗</a></p>
     </div>
     <div class="demo-layout">
       <div class="demo-code">
@@ -56,10 +56,8 @@
     <p class="footer-sub">p5.penplotter v0.2.2 &nbsp;&middot;&nbsp; p5.js v2.2.2 &nbsp;&middot;&nbsp; iDraw HSE / A2</p>
   </footer>
   <script type="module">
-    import { PlotterEngine } from "../../../vanilla.penplotter/vanilla.penplotter.js";
-    import * as Ebb from "../../../vanilla.penplotter/src/driver/ebb.js";
-    import { installP5Penplotter } from "../../p5.penplotter.js";
-    installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
+    import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5-rc.1/dist/p5.penplotter.js";
+    install(p5);
   </script>
   <script src="sketch.js"></script>
   <script src="page.js"></script>

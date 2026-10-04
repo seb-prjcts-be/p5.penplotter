@@ -12,15 +12,13 @@
   <p>Click the sketch, then press U to raise the pen or D to lower it. The browser asks for a port on the first keypress. Use Chrome or Edge on localhost or HTTPS.</p>
   <p>This sketch sends no XY moves and keeps the board's existing servo calibration. D leaves the pen down: press U promptly when testing over paper. If U does not lift it, switch the plotter off.</p>
   <p><a href="sketch.js">Copy sketch.js</a> · <a href="../../docs/setup.html">Setup</a></p>
-  <p class="demo-editor-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/NqgGpx1N2" target="_blank" rel="noopener noreferrer">p5.js Web Editor ↗</a></p>
+  <p class="demo-editor-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/PvTDYl1Gd" target="_blank" rel="noopener noreferrer">p5.js Web Editor ↗</a></p>
   <h2>Module for index.html</h2>
   <pre><code class="language-markup" data-src="index_cdn.html" data-part="module">Loading module...</code></pre>
   <script type="module" src="../code.js"></script>
   <script type="module">
-    import { PlotterEngine } from "../../../vanilla.penplotter/vanilla.penplotter.js";
-    import * as Ebb from "../../../vanilla.penplotter/src/driver/ebb.js";
-    import { installP5Penplotter } from "../../p5.penplotter.js";
-    installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
+    import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5-rc.1/dist/p5.penplotter.js";
+    install(p5);
   </script>
   <script src="sketch.js"></script>
 </body>

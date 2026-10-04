@@ -12,11 +12,8 @@
   <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.waves@v3.4.0/p5.waves.min.js"></script>
   <script type="module">
-    // The core is a sibling of this repository, both on localhost and on GitHub Pages.
-    import { PlotterEngine } from "../../../vanilla.penplotter/vanilla.penplotter.js";
-    import * as Ebb from "../../../vanilla.penplotter/src/driver/ebb.js";
-    import { installP5Penplotter } from "../../p5.penplotter.js";
-    installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
+    import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5-rc.1/dist/p5.penplotter.js";
+    install(p5);
   </script>
   <script src="sketch.js"></script>
   <script src="page.js"></script>
@@ -40,7 +37,7 @@
       <div class="demo-number">wave formulas · streamlines</div>
       <h1>Wave field</h1>
       <p>Two waves, one per axis, give every point of the sheet a direction. Sixty lines start on a loose grid and follow it until they leave the frame. The wave shape comes from the seed: a seed chooses the field.</p>
-      <p class="demo-editor-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/unSunym_F" target="_blank" rel="noopener noreferrer">p5.js Web Editor ↗</a></p>
+      <p class="demo-editor-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/wngvRvgvb" target="_blank" rel="noopener noreferrer">p5.js Web Editor ↗</a></p>
     </div>
     <div class="demo-layout">
       <div class="demo-code">

@@ -31,7 +31,7 @@
       <div class="demo-number">02 · wave formulas</div>
       <h1>Wave plot preview</h1>
       <p>Twenty-four wave lines show the route chosen by the core planner. This sketch displays the plan on screen; it does not connect to a plotter. For drawing on paper, start with the Direct plot example.</p>
-      <p class="demo-editor-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/MtTjqsybD" target="_blank" rel="noopener noreferrer">p5.js Web Editor ↗</a></p>
+      <p class="demo-editor-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/MftL0THXh" target="_blank" rel="noopener noreferrer">p5.js Web Editor ↗</a></p>
     </div>
     <div class="demo-layout">
       <div class="demo-code">
@@ -58,10 +58,8 @@
     <p class="footer-sub">p5.penplotter v0.2.2 &nbsp;&middot;&nbsp; p5.js v2.2.2 &nbsp;&middot;&nbsp; iDraw HSE / A2</p>
   </footer>
   <script type="module">
-    import { PlotterEngine } from "../../../vanilla.penplotter/vanilla.penplotter.js";
-    import * as Ebb from "../../../vanilla.penplotter/src/driver/ebb.js";
-    import { installP5Penplotter } from "../../p5.penplotter.js";
-    installP5Penplotter(p5, PlotterEngine, { driver: Ebb });
+    import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5-rc.1/dist/p5.penplotter.js";
+    install(p5);
   </script>
   <script src="sketch.js"></script>
   <script src="page.js"></script>
