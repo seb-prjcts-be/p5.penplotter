@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Examples - p5.penplotter</title>
-  <meta name="description" content="Two ways to plot from p5.js, drawing variations and examples for inspecting a planned route.">
+  <meta name="description" content="Two ways to plot from p5.js, drawing variations and examples for checking placement.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -30,6 +30,7 @@
     <h1>Examples</h1>
     <p>Open a drawing, copy its sketch and try changing it. Keep the <code>index.html</code> from <a href="setup.html">Setup</a>. The <a href="guide.html#werkwijzen">Guide</a> explains the two ways to plot.</p>
   </div>
+<div class="ex-page-header"><h2>Lines and shapes</h2><p>Start with Wave lines, then try the grids and curves. These sketches use <code>plot.go()</code>.</p></div>
   <section id="direct_plot" class="section section-dark">
     <div class="section-header">
       <div class="section-tag">five lines, a frame, and the pen</div>
@@ -42,7 +43,68 @@
 <a class="ex-full-link editor-demo-link" href="https://editor.p5js.org/seb_prjcts.be/sketches/AeNqN2ZIQ" target="_blank" rel="noopener noreferrer">p5.js Web Editor ↗</a>
     </div>
   </section>
-
+  <section id="molnar_grid" class="section">
+    <div class="section-header">
+      <div class="section-tag">let the grid come apart</div>
+      <h2>Molnár <span class="accent">grid</span></h2>
+      <p class="section-desc">Ten rows of nested squares. The top row is exact; each row down, the squares drift and turn a little more, until the bottom row has come apart. Uses <code>plot.go()</code>.</p>
+    </div>
+    <div class="ex-preview">
+      <div class="ex-canvas"><iframe src="../examples/molnar_grid/index.html?embed" title="Molnár grid" loading="lazy"></iframe></div>
+<a class="ex-full-link" href="../examples/molnar_grid/index.html">-&gt; full example</a>
+<a class="ex-full-link editor-demo-link" href="https://editor.p5js.org/seb_prjcts.be/sketches/9MrEswkWu" target="_blank" rel="noopener noreferrer">p5.js Web Editor ↗</a>
+    </div>
+  </section>
+  <section id="spirograph" class="section section-dark">
+    <div class="section-header">
+      <div class="section-tag">three wheels, one unbroken line</div>
+      <h2>Spirograph</h2>
+      <p class="section-desc">Three hypotrochoids around one centre; the seed picks the gear ratios. Each curve is one unbroken polyline, with no pen lift within the curve. Uses <code>plot.go()</code>.</p>
+    </div>
+    <div class="ex-preview">
+      <div class="ex-canvas"><iframe src="../examples/spirograph/index.html?embed" title="Spirograph" loading="lazy"></iframe></div>
+<a class="ex-full-link" href="../examples/spirograph/index.html">-&gt; full example</a>
+<a class="ex-full-link editor-demo-link" href="https://editor.p5js.org/seb_prjcts.be/sketches/JxCfFpDpG" target="_blank" rel="noopener noreferrer">p5.js Web Editor ↗</a>
+    </div>
+  </section>
+  <section id="wave_field" class="section">
+    <div class="section-header">
+      <div class="section-tag">a seed chooses the field</div>
+      <h2>Wave <span class="accent">field</span></h2>
+      <p class="section-desc">Two waves, one per axis, give every point a direction; sixty lines follow it until they leave the frame. The seed picks the wave shape: different fields from different seeds. Uses <code>plot.go()</code>.</p>
+    </div>
+    <div class="ex-preview">
+      <div class="ex-canvas"><iframe src="../examples/wave_field/index.html?embed" title="Wave field" loading="lazy"></iframe></div>
+<a class="ex-full-link" href="../examples/wave_field/index.html">-&gt; full example</a>
+<a class="ex-full-link editor-demo-link" href="https://editor.p5js.org/seb_prjcts.be/sketches/wngvRvgvb" target="_blank" rel="noopener noreferrer">p5.js Web Editor ↗</a>
+    </div>
+  </section>
+<div class="ex-page-header"><h2>Placement and fills</h2><p>Check the drawing on the bed preview. The calibration sheet compares marks made by your pen on your paper.</p></div>
+  <section id="first_plot" class="section section-dark">
+    <div class="section-header">
+      <div class="section-tag">a polygon, a circle and their placement</div>
+      <h2>Plot <span class="accent">preview</span></h2>
+      <p class="section-desc">A hatched polygon and a circle. Check their placement on A2, then click the drawing to plot.</p>
+    </div>
+    <div class="ex-preview">
+      <div class="ex-canvas"><iframe src="../examples/first_plot/index.html?embed" title="Plot preview" loading="lazy"></iframe></div>
+<a class="ex-full-link" href="../examples/first_plot/index.html">-&gt; full example</a>
+<a class="ex-full-link editor-demo-link" href="https://editor.p5js.org/seb_prjcts.be/sketches/q7FKX8z5i" target="_blank" rel="noopener noreferrer">p5.js Web Editor ↗</a>
+    </div>
+  </section>
+  <section id="calibration_sheet" class="section section-dark">
+    <div class="section-header">
+      <div class="section-tag">what your pen does on your paper</div>
+      <h2>Calibration <span class="accent">sheet</span></h2>
+      <p class="section-desc">What your pen does on your paper: a 100 mm ruler, hatch and cross-hatch scales down to 0.8 mm, stipple densities, circles from 2 to 40 mm and line pairs from 0.3 mm apart. Plot it once per pen and keep the sheet. Uses <code>plot.go()</code>.</p>
+    </div>
+    <div class="ex-preview">
+      <div class="ex-canvas"><iframe src="../examples/calibration_sheet/index.html?embed" title="Calibration sheet" loading="lazy"></iframe></div>
+<a class="ex-full-link" href="../examples/calibration_sheet/index.html">-&gt; full example</a>
+<a class="ex-full-link editor-demo-link" href="https://editor.p5js.org/seb_prjcts.be/sketches/O5rbfSNiU" target="_blank" rel="noopener noreferrer">p5.js Web Editor ↗</a>
+    </div>
+  </section>
+<div class="ex-page-header"><h2>One object at a time</h2><p>The Chaos game uses <code>plot.sequence()</code> to prepare each point after the previous one finishes.</p></div>
   <section id="chaos_game" class="section">
     <div class="section-header">
       <div class="section-tag">one point at a time</div>
@@ -56,86 +118,12 @@
 <a class="ex-full-link" href="../examples/chaos_game/index.html#animation-chaos-game">-&gt; watch the triangle appear</a>
     </div>
   </section>
-  <div class="ex-page-header">
-    <h2>Other drawings</h2>
-    <p>These drawings use <code>plot.go()</code>.</p>
-  </div>
-  <section id="molnar_grid" class="section">
-    <div class="section-header">
-      <div class="section-tag">let the grid come apart</div>
-      <h2>Molnár <span class="accent">grid</span></h2>
-      <p class="section-desc">Ten rows of nested squares. The top row is exact; each row down, the squares drift and turn a little more, until the bottom row has come apart. Uses <code>plot.go()</code>.</p>
-    </div>
-    <div class="ex-preview">
-      <div class="ex-canvas"><iframe src="../examples/molnar_grid/index.html?embed" title="Molnár grid" loading="lazy"></iframe></div>
-<a class="ex-full-link" href="../examples/molnar_grid/index.html">-&gt; full example</a>
-<a class="ex-full-link editor-demo-link" href="https://editor.p5js.org/seb_prjcts.be/sketches/9MrEswkWu" target="_blank" rel="noopener noreferrer">p5.js Web Editor ↗</a>
-    </div>
-  </section>
-
-  <section id="calibration_sheet" class="section section-dark">
-    <div class="section-header">
-      <div class="section-tag">what your pen does on your paper</div>
-      <h2>Calibration <span class="accent">sheet</span></h2>
-      <p class="section-desc">What your pen does on your paper: a 100 mm ruler, hatch and cross-hatch scales down to 0.8 mm, stipple densities, circles from 2 to 40 mm and line pairs from 0.3 mm apart. Plot it once per pen and keep the sheet. Uses <code>plot.go()</code>.</p>
-    </div>
-    <div class="ex-preview">
-      <div class="ex-canvas"><iframe src="../examples/calibration_sheet/index.html?embed" title="Calibration sheet" loading="lazy"></iframe></div>
-<a class="ex-full-link" href="../examples/calibration_sheet/index.html">-&gt; full example</a>
-<a class="ex-full-link editor-demo-link" href="https://editor.p5js.org/seb_prjcts.be/sketches/O5rbfSNiU" target="_blank" rel="noopener noreferrer">p5.js Web Editor ↗</a>
-    </div>
-  </section>
-
-  <section id="wave_field" class="section">
-    <div class="section-header">
-      <div class="section-tag">a seed chooses the field</div>
-      <h2>Wave <span class="accent">field</span></h2>
-      <p class="section-desc">Two waves, one per axis, give every point a direction; sixty lines follow it until they leave the frame. The seed picks the wave shape: different fields from different seeds. Uses <code>plot.go()</code>.</p>
-    </div>
-    <div class="ex-preview">
-      <div class="ex-canvas"><iframe src="../examples/wave_field/index.html?embed" title="Wave field" loading="lazy"></iframe></div>
-<a class="ex-full-link" href="../examples/wave_field/index.html">-&gt; full example</a>
-<a class="ex-full-link editor-demo-link" href="https://editor.p5js.org/seb_prjcts.be/sketches/wngvRvgvb" target="_blank" rel="noopener noreferrer">p5.js Web Editor ↗</a>
-    </div>
-  </section>
-
-  <section id="spirograph" class="section section-dark">
-    <div class="section-header">
-      <div class="section-tag">three wheels, one unbroken line</div>
-      <h2>Spirograph</h2>
-      <p class="section-desc">Three hypotrochoids around one centre; the seed picks the gear ratios. Each curve is one unbroken polyline, with no pen lift within the curve. Uses <code>plot.go()</code>.</p>
-    </div>
-    <div class="ex-preview">
-      <div class="ex-canvas"><iframe src="../examples/spirograph/index.html?embed" title="Spirograph" loading="lazy"></iframe></div>
-<a class="ex-full-link" href="../examples/spirograph/index.html">-&gt; full example</a>
-<a class="ex-full-link editor-demo-link" href="https://editor.p5js.org/seb_prjcts.be/sketches/JxCfFpDpG" target="_blank" rel="noopener noreferrer">p5.js Web Editor ↗</a>
-    </div>
-  </section>
-
-
-  <div class="ex-page-header">
-    <h2>Inspect the planned route</h2>
-    <p>These two examples use createPlot() to record a drawing in millimetres. Check the bed preview, then click the drawing to plot.</p>
-  </div>
-
-  <section id="first_plot" class="section section-dark">
-    <div class="section-header">
-      <div class="section-tag">what the planner made of your sketch</div>
-      <h2>Plot <span class="accent">preview</span></h2>
-      <p class="section-desc">Record a hatched polygon and a circle with createPlot(), inspect their placement on A2, and click the drawing to plot.</p>
-    </div>
-    <div class="ex-preview">
-      <div class="ex-canvas"><iframe src="../examples/first_plot/index.html?embed" title="Plot preview" loading="lazy"></iframe></div>
-<a class="ex-full-link" href="../examples/first_plot/index.html">-&gt; full example</a>
-<a class="ex-full-link editor-demo-link" href="https://editor.p5js.org/seb_prjcts.be/sketches/q7FKX8z5i" target="_blank" rel="noopener noreferrer">p5.js Web Editor ↗</a>
-    </div>
-  </section>
-
+<div class="ex-page-header"><h2>Sampled waves</h2><p>The Wave plot example records rows of points, shows their placement and waits for a click to plot.</p></div>
   <section id="wave_plot" class="section">
     <div class="section-header">
       <div class="section-tag">twenty-four rows of one wave</div>
       <h2>Wave plot <span class="accent">preview</span></h2>
-      <p class="section-desc">Sample a wave formula into 24 rows of points and inspect the planned route. The adapter passes the sampled points to the engine.</p>
+      <p class="section-desc">Twenty-four rows sampled from a wave formula. Change the seed, check the bed preview, then click to plot.</p>
     </div>
     <div class="ex-preview">
       <div class="ex-canvas"><iframe src="../examples/wave_plot/index.html?embed" title="Wave plot preview" loading="lazy"></iframe></div>
@@ -143,7 +131,6 @@
 <a class="ex-full-link editor-demo-link" href="https://editor.p5js.org/seb_prjcts.be/sketches/MftL0THXh" target="_blank" rel="noopener noreferrer">p5.js Web Editor ↗</a>
     </div>
   </section>
-
   <section class="section" style="padding:3rem 2rem;">
     <div style="max-width:760px; margin:0 auto;">
       <p class="reading-note">The engine's own examples, without p5.js, are on the sister site: <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/examples.html">vanilla.penplotter examples</a>, and its <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/possibilities.html">Possibilities</a> page shows what a pen can do.</p>

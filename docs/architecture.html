@@ -46,10 +46,10 @@
 <p>Text, general Bézier curves and arbitrary p5 sketches are not captured. For transformed shapes, calculate the coordinates before passing them to the plot. The <a href="guide.html#reference">Guide</a> lists the available calls.</p>
 <h2 id="library-boundaries">Library boundaries</h2>
 <p><code>p5.penplotter</code> installs helpers on the p5 prototype and owns the canvas-to-millimetre mapping. <code>vanilla.penplotter</code> owns geometry, SVG import, cleanup, route planning, file exports, machine profiles and drivers. See the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/docs/architecture.html">core architecture</a> for those parts.</p>
-<p>Installation checks the minimum dependencies; it does not verify every version combination. <a href="setup.html">Setup</a> supplies the pinned imports and explains their load order.</p>
+<p>Installation checks the minimum dependencies; it does not verify every version combination. <a href="setup.html">Setup</a> supplies the release bundle. The module load order is described below.</p>
 <h2 id="library-development">Library development</h2>
 <h3 id="local-neighbours">Local neighbours</h3>
-<p>While working on the libraries themselves, load them from sibling folders instead of GitHub Pages. This is how the repository's own examples are wired, on localhost and on the published site alike:</p>
+<p>While working on the libraries themselves, load them from sibling folders instead of GitHub Pages. Use these imports for source-level integration. The published examples use the release bundle:</p>
 <pre><code class="language-javascript">import { PlotterEngine } from "../vanilla.penplotter/vanilla.penplotter.js";
 import * as Ebb from "../vanilla.penplotter/src/driver/ebb.js";
 import { installP5Penplotter } from "../p5.penplotter/p5.penplotter.js";</code></pre>

@@ -37,30 +37,31 @@ The browser bundle contains the adapter, core and EBB driver from one tested sou
 
 Preview and export work without connecting a plotter. Web Serial is opened only after a user gesture. The original `installP5Penplotter(p5, PlotterEngine, { driver })` API remains available from the root adapter module for explicit integrations.
 
-All four ways of wiring a sketch, with the load-order timeline behind them, are on the [Setup](https://seb-prjcts-be.github.io/p5.penplotter/docs/setup.html) page.
+The [Setup](https://seb-prjcts-be.github.io/p5.penplotter/docs/setup.html) page includes a complete editor file and the physical starting instructions. Module variants are at the end of the [Guide](https://seb-prjcts-be.github.io/p5.penplotter/docs/guide.html#advanced-setups).
 
 ## Quick start
 
-A plain global-mode sketch, with the `<script>` tags above in `index.html`:
+With the scripts above in `index.html`, use this `sketch.js`:
 
 ```js
 let plot;
 
 function setup() {
-  createCanvas(400, 250);
-  // an 80 mm wide drawing, centred on A4 paper
-  plot = createPlot({ paper: "A4", margin: 12, width: 80 });
+  createCanvas(400, 400);
+  plot = createPlot({ paper: "A2", paperX: 0, paperY: 0 });
   noLoop();
 }
 
 function draw() {
-  background(255);          // screen only: no `plot.` prefix, so it is not recorded
-  plot.clear();             // new frame, new job
-  plot.rect(10, 10, 380, 230);
-  plot.line(30, 125, 370, 125);
-  plot.go();                // the drawing is ready: click it to plot, click again to stop
+  background(255);
+  noFill();
+  plot.circle(200, 200, 300);
+  plot.showBed();
+  plot.go();
 }
 ```
+
+This example uses A2 paper with its corner at the machine origin. Set `paper` to the format on your plotter. `showBed()` displays the drawing's placement.
 
 ### Click to plot
 
@@ -173,7 +174,7 @@ Then vary the drawing:
 - `wave_field` - streamlines through a sampled direction field; a seed chooses the field
 - `spirograph` - three hypotrochoids, each one unbroken polyline
 
-To inspect a planned route on screen, without connecting a plotter:
+To check placement before clicking to plot:
 
 - `first_plot` (Plot preview) - a hatched polygon and a circle
 - `wave_plot` (Wave plot preview) - 24 rows sampled from a wave formula

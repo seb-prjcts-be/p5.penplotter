@@ -30,9 +30,9 @@
       <h1>Setup</h1>
     </header>
 
-    <h2 id="global-mode">1. Prepare the editor</h2>
+    <h2 id="global-mode">Prepare the editor</h2>
     <p>Open a sketch in the p5.js Web Editor. Replace its <code>index.html</code> with this file. For a local project, serve the folder through localhost.</p>
-    <p>The browser bundle contains the matching core and driver. Keep its release URL fixed to preserve a sketch. No GitHub lookup or separate core import is needed. This page describes version 0.2.5.</p>
+    <p>Keep the release URL fixed so the sketch continues to load the same version.</p>
     <h3>index.html</h3>
     <pre><code class="language-markup">&lt;!DOCTYPE html&gt;
 &lt;html lang="en"&gt;
@@ -50,52 +50,38 @@
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
 
-    <h2 id="editor">2. Draw a line on screen</h2>
-    <p>Replace <code>sketch.js</code> with this small test and press Run.</p>
-    <h3>sketch.js</h3>
-    <pre><code class="language-javascript">let plot;
+<h2 id="editor">Your first circle</h2>
+<p>In a sketch with p5.penplotter installed, replace <code>sketch.js</code> with this code and press Play.</p>
+<pre><code class="language-javascript">let plot;
 
 function setup() {
-  createCanvas(400, 250);
-  plot = createPlot({
-    paper: "A2",
-    paperX: 0,
-    paperY: 0,
-    margin: 12,
-    x: 12,
-    y: 12,
-    width: 120
-  });
+  createCanvas(400, 400);
+  plot = createPlot({ paper: "A2", paperX: 0, paperY: 0 });
   noLoop();
 }
 
 function draw() {
   background(255);
-  stroke(0);
-  plot.line(80, 125, 320, 125);
+  noFill();
+  plot.circle(200, 200, 300);
+  plot.showBed();
+  plot.go();
 }</code></pre>
-    <p>You should see a horizontal line. The plotter does not move yet.</p>
-
-    <h2 id="direct-plotting">3. Plot the same line on paper</h2>
-    <p>Use Chrome or Edge. Connect the plotter by USB and switch it on.</p>
-    <h3 id="machine-origin">Prepare the paper and pen</h3>
-    <figure><img src="images/animations/setup-plotter.gif?v=2" width="640" height="480" style="max-width:100%;height:auto;image-rendering:pixelated" alt="CGA-style plotter with its pen at the bottom-left starting corner and a controller card with a blinking red button."></figure>
-    <p>On my iDraw HSE / A2, the starting corner is bottom left when the long rails run away from you. With the motors off, move the carriage to that corner. The driver takes this position as zero; the machine does not find it automatically.</p>
-    <p>Use the paper already on the machine. Set <code>paper</code> in the sketch to its format. Set <code>paperX</code> and <code>paperY</code> to the paper corner's distance from the machine origin, in millimetres along each axis. Both are zero when that corner is at the origin. Set <code>x</code> and <code>y</code> to those distances plus the margin to place the drawing at the paper corner. See <a href="guide.html#paper">Paper and placement</a> for the placement options.</p>
-    <p>If your machine has a different starting corner or motor direction, confirm its origin before running this test. Moving the carriage to another corner does not change the driver's directions.</p>
-    <h3>Start the plot</h3>
-    <ol>
-      <li>Add <code>plot.go();</code> immediately after <code>plot.line(80, 125, 320, 125);</code> in the sketch above.</li>
-      <li>Press Run. The line appears on screen again.</li>
-      <li>Click the drawing. Select the plotter in the browser's port list and click Connect.</li>
-    </ol>
-    <p>The pen should draw a 72 mm line in the drawing area near the paper corner, then return to the machine origin.</p>
-    <p>Click the drawing again to stop. After a stop or error, switch off the motors and return the carriage to the starting corner before trying again.</p>
-
+<p><code>plot.circle()</code> draws the circle on screen and records it for the plotter. Its arguments are the centre and diameter, as in p5. <code>noLoop()</code> keeps the sketch from recording the circle again each frame.</p>
+<p>This example uses A2 paper with its corner at the machine origin. Set <code>paper</code> to the format already on your plotter. <code>showBed()</code> displays where the drawing will land on that sheet.</p>
+<h2 id="direct-plotting">Draw it on paper</h2>
+<p>Use Chrome or Edge. Connect the plotter by USB and switch it on.</p>
+<h3 id="machine-origin">Prepare the paper and pen</h3>
+<figure><img src="images/animations/setup-plotter.gif?v=2" width="640" height="480" style="max-width:100%;height:auto;image-rendering:pixelated" alt="CGA-style plotter with its pen at the bottom-left starting corner and a controller card with a blinking red button."></figure>
+<p>On my iDraw HSE / A2, the starting corner is bottom left when the long rails run away from you. With the motors off, move the carriage to that corner. The driver takes this position as zero; the machine does not find it automatically.</p>
+<p>Place the paper with its corner at that origin, as set by <code>paperX: 0</code> and <code>paperY: 0</code> above. Check its position in the bed preview.</p>
+<p>Click the drawing. Select the plotter in the browser's port list and click Connect. A second click on the drawing requests a stop.</p>
+<p>If your machine has a different starting corner or motor direction, confirm its origin before plotting. Moving the carriage to another corner does not change the driver's directions.</p>
+<p>After a stop or error, switch off the motors and return the carriage to the starting corner before trying again.</p>
     <h2 id="troubleshooting">If the installation fails</h2>
     <ul>
-      <li><code>createPlot is not defined</code>: check that the imports loaded and that <code>sketch.js</code> is a normal script. Call <code>createPlot()</code> inside <code>setup()</code>.</li>
-      <li><code>p5 is not defined</code>: put the p5 script before the imports and check its network request.</li>
+      <li><code>createPlot is not defined</code>: check that the module loaded and that <code>sketch.js</code> is a normal script. Call <code>createPlot()</code> inside <code>setup()</code>.</li>
+      <li><code>p5 is not defined</code>: put the p5 script before the module script and check its network request.</li>
       <li>No serial port list: use Chrome or Edge on HTTPS or localhost, then click the drawing.</li>
       <li>An older version keeps appearing: reload with Ctrl+F5.</li>
     </ul>

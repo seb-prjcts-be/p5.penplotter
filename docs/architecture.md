@@ -32,13 +32,13 @@ Text, general Bézier curves and arbitrary p5 sketches are not captured. For tra
 
 `p5.penplotter` installs helpers on the p5 prototype and owns the canvas-to-millimetre mapping. `vanilla.penplotter` owns geometry, SVG import, cleanup, route planning, file exports, machine profiles and drivers. See the [core architecture](https://seb-prjcts-be.github.io/vanilla.penplotter/docs/architecture.html) for those parts.
 
-Installation checks the minimum dependencies; it does not verify every version combination. [Setup](setup.html) supplies the pinned imports and explains their load order.
+Installation checks the minimum dependencies; it does not verify every version combination. [Setup](setup.html) supplies the release bundle. The module load order is described below.
 
 ## Library development
 
 ### Local neighbours
 
-While working on the libraries themselves, load them from sibling folders instead of GitHub Pages. This is how the repository's own examples are wired, on localhost and on the published site alike:
+While working on the libraries themselves, load them from sibling folders instead of GitHub Pages. Use these imports for source-level integration. The published examples use the release bundle:
 
 ```javascript
 import { PlotterEngine } from "../vanilla.penplotter/vanilla.penplotter.js";

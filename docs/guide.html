@@ -28,34 +28,54 @@
     <header class="page-header">
       <div class="section-tag">p5.js addon library</div>
       <h1>Guide</h1>
-      <p class="guide-intro">Start with one line, place it on paper, then choose how to plot the drawing.</p>
     </header>
 
-    <nav aria-label="On this page"><p><a href="#global-mode">Line</a> · <a href="#paper">Paper</a> · <a href="#plotting">Plot</a> · <a href="#werkwijzen">Two ways to work</a> · <a href="#change-drawing">Change</a> · <a href="#shapes">Shapes</a> · <a href="#core-access">Core</a> · <a href="#advanced-setups">Modules</a> · <a href="#reference">Reference</a></p></nav>
-
-    <h2 id="global-mode">1. Draw one line</h2>
-    <p>Copy <code>index.html</code> from <a href="setup.html#global-mode">Setup</a>, then use this <code>sketch.js</code>. It draws one line without opening a plotter connection.</p>
-    <h3>sketch.js</h3>
-    <pre><code class="language-javascript">let plot;
-
-function setup() {
-  createCanvas(400, 250);
-  plot = createPlot({ paper: "A4", margin: 12, width: 80 });
-  noLoop();
-}
-
-function draw() {
-  background(255);
-  noFill();
-  plot.clear();
-  plot.line(40, 125, 360, 125);
+<nav aria-label="On this page"><p><a href="#change-drawing">Change the drawing</a> · <a href="#paper">Paper</a> · <a href="#fills">Fills</a> · <a href="#werkwijzen">Plotting</a> · <a href="#core-access">Routes and files</a> · <a href="#advanced-setups">Modules</a> · <a href="#reference">Reference</a></p></nav>
+<p id="global-mode">Start with <a href="setup.html#editor">the circle in Setup</a>. The drawing examples below use its 400 × 400 canvas. Paper settings are introduced in the placement section.</p>
+<h2 id="change-drawing">1. Change the drawing</h2>
+<p>Replace <code>plot.circle(200, 200, 300)</code> in <code>draw()</code> with this loop. Keep <code>setup()</code>, <code>background()</code>, <code>noFill()</code>, <code>showBed()</code> and <code>go()</code>.</p>
+<pre><code class="language-javascript">for (let diameter = 60; diameter &lt;= 300; diameter += 40) {
+  plot.circle(200, 200, diameter);
 }</code></pre>
+<p>Each pass adds a circle with a larger diameter. Try changing the step from <code>40</code> to <code>20</code> to put the rings closer together.</p>
+    <h3 id="shapes">Other shapes</h3>
+    <p><code>plot.…</code> records these 2D shapes: <code>point</code>, <code>line</code>, <code>circle</code>, <code>ellipse</code>, <code>arc</code>, <code>rect</code>, <code>square</code>, <code>triangle</code>, <code>quad</code>, plus <code>polyline</code> and <code>polygon</code>, which take <code>[x, y]</code> pairs or <code>{ x, y }</code> objects. Angles follow <code>angleMode()</code>. A point is recorded as a 0.24 mm dash. Rectangles use corner coordinates; ellipse and arc coordinates refer to their centre. Rounded rectangles and screen transforms are not recorded.</p>
+    <pre><code class="language-javascript">plot.square(30, 10, 40);
+plot.triangle(80, 50, 120, 10, 160, 50);
+plot.arc(330, 30, 40, 40, 0, HALF_PI, PIE);
+plot.polygon([[0, 0], [40, 0], [40, 40]]);</code></pre>
+    <figure class="doc-animation" id="animation-shapes">
+      <img src="images/animations/shapes.svg" width="600" height="400" loading="lazy" alt="Lines, circles, rectangles and other p5 shapes are drawn on screen and paper.">
+      <figcaption>Replace the circle with <code>plot.triangle(80, 320, 200, 80, 320, 320)</code> to draw three joined points.</figcaption>
+    </figure>
 
-    <p><code>plot.line(40, 125, 360, 125)</code> joins two points in canvas pixels. The same line is drawn on screen and recorded for paper.</p>
-    <p><code>background()</code> clears the screen; <code>plot.clear()</code> starts a new recording. <code>noLoop()</code> keeps this drawing still. Use explicit coordinates; screen transforms and styling are not recorded.</p>
+    <figure class="doc-animation" id="animation-point-closeup">
+      <img src="images/animations/point-closeup.gif" width="600" height="400" loading="lazy" alt="A tiny plotted point is enlarged to reveal its short horizontal stroke.">
+      <figcaption>Zoom in on <code>plot.point()</code>: the recorded point is a 0.24 mm dash. A row of points becomes a texture, even though every mark is a very short line.</figcaption>
+    </figure>
 
+<h3>Draw a wave</h3>
+<p>Replace the drawing calls with sampled points:</p>
+<pre><code class="language-javascript">let points = [];
+for (let x = 40; x &lt;= 360; x += 4) {
+  points.push([x, 200 + 40 * Math.sin(x * 0.04)]);
+}
+plot.polyline(points);</code></pre>
+<p><code>Math.sin()</code> gives each point its height. Change <code>40</code> to <code>10</code> for a shallower wave. The <a href="../examples/direct_plot/index.html">Wave lines example</a> repeats a wave across several rows.</p>
+<h3>Redraw a sketch</h3>
+<p><code>background()</code> clears the screen. Add <code>plot.clear()</code> before the drawing calls when a key or button redraws your sketch; it replaces the previous recording. Without it, each redraw adds more shapes to the same plot. Keep <code>noLoop()</code> for a drawing that changes only when requested.</p>
     <h2 id="paper">2. Paper and placement</h2>
     <p>Your sketch uses pixels. The plotter uses millimetres. <code>createPlot()</code> sets the size and position of the drawing on your paper.</p>
+    <h3>Let the library fit the drawing</h3>
+    <p>The circle sketch leaves out <code>width</code>, <code>x</code> and <code>y</code>. The library fits the canvas inside the margin and centres it on the paper:</p>
+    <pre><code class="language-javascript">plot = createPlot({
+  paper: "A2",
+  paperX: 0,
+  paperY: 0,
+  margin: 12
+});</code></pre>
+    <h3>Set the drawing size</h3>
+<p>Add <code>width: 120</code> to <code>createPlot()</code> to make the 400-pixel canvas 120 mm wide on paper. The circle's diameter becomes 90 mm. Leave out <code>x</code> and <code>y</code> to keep the drawing centred on the sheet.</p>
     <h3>Use the paper on your machine</h3>
     <p>Set <code>paper</code> to its format. <code>paperX</code> and <code>paperY</code> locate the paper corner from the machine's starting point. Use zero when the paper starts at that point.</p>
     <p>In my setup, X runs along the long rails and Y across them. The pen starts at the lower-left corner. The <a href="setup.html#machine-origin">starting point</a> stays fixed when you move the paper.</p>
@@ -75,58 +95,50 @@ function draw() {
       <img src="images/animations/paper-placement.gif" width="640" height="480" style="max-width:100%;height:auto;image-rendering:pixelated" alt="CGA drawing of the plotter seen from above, with the pen at the lower-left origin, X along the rails, Y across the bed and a small drawing area near the paper corner.">
     </figure>
     <p>If the paper starts elsewhere, enter its position in <code>paperX</code> and <code>paperY</code>. For the same corner placement, set <code>x</code> to <code>paperX + margin</code> and <code>y</code> to <code>paperY + margin</code>. These are distances from the machine origin, not from the paper corner.</p>
-    <h3>Let the library fit the drawing</h3>
-    <p>Leave out <code>width</code>, <code>x</code> and <code>y</code> to fit the canvas inside the margin and centre it on the paper:</p>
-    <pre><code class="language-javascript">plot = createPlot({
-  paper: "A2",
-  paperX: 0,
-  paperY: 0,
-  margin: 12
-});</code></pre>
-    <p>Keep <code>width</code> if you want a fixed drawing size. Leave out only <code>x</code> and <code>y</code> to centre that size on the paper.</p>
     <h3>Check the placement</h3>
-    <p>Add this after the drawing calls:</p>
+    <p>Keep this after the drawing calls, before <code>plot.go()</code>:</p>
     <pre><code class="language-javascript">plot.showBed();</code></pre>
     <p>The preview shows the paper and the recorded drawing. Its red cross marks the machine origin. The preview turns X to the right and Y down; on my physical machine, X runs up the rails and Y to the right. Match the axes when you compare it with the machine.</p>
     <p><code>margin</code> leaves space around the drawing. Paper or drawings that do not fit are refused before plotting. <code>orientation: "auto"</code> chooses an orientation that fits; use <code>"portrait"</code> or <code>"landscape"</code> to specify it. The resolved paper settings are available in <code>plot.paper</code>.</p>
 
-    <h2 id="plotting">3. Plot the line</h2>
-    <p>Add <code>plot.go()</code> at the end of <code>draw()</code>, after recording every shape. It waits for your click; it does not start a machine while the page loads. Check the <a href="setup.html#direct-plotting">connection requirements</a> before the first plot. Park the carriage at the <a href="setup.html#machine-origin">physical origin that matches the driver</a>, place the paper to match the preview, then click the drawing and choose the serial port. The click confirms the plot. Another click requests a stop.</p>
-    <p>After a stop or error, check the machine and park the carriage at home before starting another job.</p>
+<h2 id="fills">3. Fills</h2>
+<p>Replace the circle call with the square below. Keep <code>noFill()</code> for the screen drawing.</p>
+    <p>Fills come from the core and are drawn back on the canvas, so screen and paper show the same hatching. Spacing is in millimetres on the bed.</p>
+    <pre><code class="language-javascript">let square = [[100, 100], [300, 100], [300, 300], [100, 300]];
+plot.hatch(square, 3, PI / 4);   // spacing in mm, angle
+plot.polygon(square);</code></pre>
+
+    <figure class="doc-animation" id="animation-fills">
+      <img src="images/animations/fills.svg" width="600" height="400" loading="lazy" alt="Hatch, cross-hatch and stipple appear on the p5 canvas and on paper.">
+      <figcaption>The pen has no paint bucket. Try doubling the hatch spacing above: the same shape uses fewer lines and reads lighter. A fixed stipple seed puts the same tiny marks in the same places.</figcaption>
+    </figure>
+
+<p>Replace <code>plot.hatch(square, 3, PI / 4)</code> with <code>plot.crossHatch(square, 4)</code> for lines in two directions, or with <code>plot.stipple(square, 150, 3)</code> for 150 small marks. The last stipple argument is a seed; keeping it gives the same positions.</p>
+<h2 id="werkwijzen">4. Plotting the drawing</h2>
+<p>p5.penplotter can send your recorded drawing to the plotter through the browser's USB connection. This is what direct plotting means here.</p>
+<h3 id="draw-then-plot">Draw everything, then plot</h3>
+<p>Use <code>plot.go()</code> after the drawing calls, as in the circle sketch. You can add more shapes before it. They appear on screen, and a click starts the recorded drawing on paper.</p>
+<p id="plotting">For the physical starting corner, paper and connection, follow <a href="setup.html#direct-plotting">Setup</a>.</p>
     <figure class="doc-animation" id="animation-plot-go">
       <img src="images/animations/plot-go.svg" width="600" height="400" loading="lazy" alt="A p5 drawing is prepared on screen and then drawn by a plotter.">
       <figcaption>Draw first, then click to plot. Click again to stop. This is an illustration of a complete drawing; machine speed and placement are schematic.</figcaption>
     </figure>
 
-    <h2 id="werkwijzen">4. Two ways to work</h2>
-  <div class="workflow-pair" aria-label="Two ways to plot">
-    <figure>
-      <img src="images/animations/workflow-draw-then-plot.gif" width="600" height="400" alt="All three objects appear on the p5 canvas before the plotter draws them on paper. It returns home after the drawing.">
-      <figcaption>
-        <h3 id="draw-then-plot"><a href="../examples/direct_plot/index.html">Draw everything, then plot</a></h3>
-        <p>Use <code>plot.go()</code> after drawing all the objects. Click the drawing to start plotting.</p>
-      </figcaption>
-    </figure>
-    <figure>
-      <img src="images/animations/workflow-object-by-object.gif" width="600" height="400" alt="The sketch draws one object, plots it and waits before drawing the next. The plotter keeps its position between objects and returns home after the last one.">
-      <figcaption>
-        <h3 id="object-by-object"><a href="../examples/chaos_game/index.html">Draw one object, plot it, then the next</a></h3>
-        <p>Use <code>plot.sequence()</code> to draw and plot one object at a time. It waits until each object finishes before preparing the next.</p>
-      </figcaption>
-    </figure>
-  </div>
-    <p><code>go()</code> keeps the recording. <code>sequence()</code> clears it automatically before asking for the next object. Clearing changes the recording; it does not remove ink or clear the p5 canvas.</p>
-    <p>For a sequence, keep the first sketch's <code>setup()</code> and replace <code>draw()</code> below. The function receives an index starting at zero. It draws one object, waits for it to finish, then receives the next index. Return <code>false</code> to finish. The carriage returns home after the last object.</p>
-    <pre><code class="language-javascript">function draw() {
+<h3 id="object-by-object">Draw one object, then the next</h3>
+<p>Use <code>plot.sequence()</code> when you want the sketch to prepare one object, plot it, then prepare the next. The library waits for the plotter to finish each object before asking your drawing function for another. The carriage keeps its position between objects and returns home after the last one.</p>
+<p>A sequence clears the recording before each object. The marks already drawn on screen and paper remain. New strokes arriving while the plotter is moving are not supported.</p>
+<p>Keep the circle sketch's <code>setup()</code> and replace <code>draw()</code> with this function:</p>
+<pre><code class="language-javascript">function draw() {
   background(255);
   noFill();
   plot.sequence(index =&gt; {
     if (index === 5) return false;
-    plot.circle(50 + index * 60, 100, 30);
+    plot.circle(80 + index * 60, 200, 40);
     return true;
   }).catch(console.error);
 }</code></pre>
-    <p>A sequence uses one pen. New lines arriving while the machine is drawing are not supported. With <code>go()</code>, use <code>plot.go({ plan: { strategy: "drawn" } })</code> to keep the drawing order.</p>
+<p>The index starts at zero. Each call records one circle and returns <code>true</code> to continue. Returning <code>false</code> ends the sequence. Prepare the paper and pen as in Setup, press Play, then click the drawing to start. The <a href="../examples/chaos_game/index.html">Chaos game</a> uses this to plot one point at a time.</p>
+<p>With <code>go()</code>, use <code>plot.go({ plan: { strategy: "drawn" } })</code> to keep the drawing order.</p>
     <details>
       <summary>Separate plots with go()</summary>
       <p>Keep the same plot and paper settings. Wait for each <code>go()</code> to complete, clear the recording, then draw the next object. Each separate plot returns home and can ask for another click.</p>
@@ -143,52 +155,8 @@ async function plotTwoObjects() {
       <p>Call <code>plotTwoObjects()</code> from a button or key handler after creating <code>plot</code>. Check <code>status: "complete"</code> before continuing.</p>
     </details>
 
-    <h2 id="change-drawing">5. Change the drawing</h2>
-    <p>Replace <code>plot.line()</code> in <code>draw()</code> with this loop. Keep <code>setup()</code>, <code>background()</code>, <code>noFill()</code> and <code>plot.clear()</code>.</p>
-    <pre><code class="language-javascript">const points = [];
-for (let x = 40; x &lt;= 360; x += 4) {
-  points.push({
-    x,
-    y: 125 + 40 * Math.sin(x * 0.04)
-  });
-}
-plot.polyline(points);</code></pre>
-
-    <figure class="doc-animation" id="animation-waves">
-      <img src="images/animations/waves.svg" width="600" height="400" loading="lazy" alt="Different wave shapes are sampled and recorded as pen lines.">
-      <figcaption>A wave gives you a number; your loop decides where the line goes. Try changing the amplitude multiplier <code>40</code> above to <code>10</code>. For a different use of the same idea, open the <a href="../examples/wave_field/index.html">wave field</a> and press R for another seed.</figcaption>
-    </figure>
-
-    <h2 id="shapes">Shapes and fills</h2>
-    <p><code>plot.…</code> records these 2D shapes: <code>point</code>, <code>line</code>, <code>circle</code>, <code>ellipse</code>, <code>arc</code>, <code>rect</code>, <code>square</code>, <code>triangle</code>, <code>quad</code>, plus <code>polyline</code> and <code>polygon</code>, which take <code>[x, y]</code> pairs or <code>{ x, y }</code> objects. Angles follow <code>angleMode()</code>. A point is recorded as a 0.24 mm dash. Rectangles use corner coordinates; ellipse and arc coordinates refer to their centre. Rounded rectangles and screen transforms are not recorded.</p>
-    <pre><code class="language-javascript">plot.square(30, 10, 40);
-plot.triangle(80, 50, 120, 10, 160, 50);
-plot.arc(330, 30, 40, 40, 0, HALF_PI, PIE);
-plot.polygon([[0, 0], [40, 0], [40, 40]]);</code></pre>
-    <figure class="doc-animation" id="animation-shapes">
-      <img src="images/animations/shapes.svg" width="600" height="400" loading="lazy" alt="Lines, circles, rectangles and other p5 shapes are drawn on screen and paper.">
-      <figcaption>Try replacing a circle with a triangle. Keep the coordinates; change what joins them.</figcaption>
-    </figure>
-
-    <p>Fills come from the core and are drawn back on the canvas, so screen and paper show the same hatching. Spacing is in millimetres on the bed.</p>
-    <pre><code class="language-javascript">let square = [[20, 80], [120, 80], [120, 180], [20, 180]];
-plot.hatch(square, 3, PI / 4);   // spacing in mm, angle
-plot.crossHatch(square, 4);      // second direction at right angles
-plot.stipple(square, 150, 3);    // count, seed</code></pre>
-
-    <figure class="doc-animation" id="animation-fills">
-      <img src="images/animations/fills.svg" width="600" height="400" loading="lazy" alt="Hatch, cross-hatch and stipple appear on the p5 canvas and on paper.">
-      <figcaption>The pen has no paint bucket. Try doubling the hatch spacing above: the same shape uses fewer lines and reads lighter. A fixed stipple seed puts the same tiny marks in the same places.</figcaption>
-    </figure>
-
-    <figure class="doc-animation" id="animation-point-closeup">
-      <img src="images/animations/point-closeup.gif" width="600" height="400" loading="lazy" alt="A tiny plotted point is enlarged to reveal its short horizontal stroke.">
-      <figcaption>Zoom in on <code>plot.point()</code>: the recorded point is a 0.24 mm dash. A row of points becomes a texture, even though every mark is a very short line.</figcaption>
-    </figure>
-
-    <p>For complete sketches to copy and change, open <a href="examples.html">Examples</a>.</p>
-    <h2 id="core-access">Core access and route planning</h2>
-    <p><code>plot.engine</code> gives you the core: layers, pens, cleanup, route planning and exports. <code>createPlotterEngine()</code> creates a core engine directly; its shapes are recorded but not drawn on screen.</p>
+    <h2 id="core-access">5. Routes and file exports</h2>
+    <p><code>plot.engine</code> gives you the core: layers, pens, cleanup, route planning and exports. <code>createPlotterEngine()</code> creates a separate core engine; its shapes are recorded but not drawn on screen.</p>
 
     <figure class="doc-animation" id="animation-route">
       <img src="images/animations/route.gif?v=20261002-colour" width="600" height="400" loading="lazy" alt="The pen follows a planned route with less pen-up travel.">
@@ -205,6 +173,7 @@ plot.stipple(square, 150, 3);    // count, seed</code></pre>
       <figcaption>Ochre shows the imported geometry becoming pen strokes. Sage connectors lead from one plan to three export formats; those connectors explain the workflow and are not plotter travel. A file can be a starting point too. <code>plot.engine.importSVG()</code> reads supported SVG geometry; the engine can then export SVG, HPGL or G-code. Try the engine’s <a href="../../vanilla.penplotter/examples/svg_to_pen/index.html">SVG to pen</a> page with a simple drawing of your own.</figcaption>
     </figure>
 
+<p>To save the recorded drawing as SVG, use <code>plot.engine.exportSVG()</code>. It returns SVG text which you can save as a file. Exporting does not open the plotter connection.</p>
     <details class="module-setups">
       <summary>Using JavaScript modules</summary>
     <h2 id="advanced-setups">Using JavaScript modules</h2>
@@ -239,13 +208,7 @@ new p5(function sketch(p) {
     plot.go();   // ready: click the drawing to plot, click again to stop
   };
 });</code></pre>
-    <h4>Why choose it</h4>
-    <ul>
-      <li>One file holds everything: what is imported, which version, and the sketch. No hidden wiring in <code>index.html</code>.</li>
-      <li>Imports finish before the sketch is created.</li>
-      <li>Several sketches on one page, each with its own <code>plot</code>.</li>
-      <li>The same file runs under a bundler or in a test without changes.</li>
-    </ul>
+    <p>Instance mode keeps each sketch's p5 calls on its own <code>p</code> object. Use it for several sketches on one page or when the sketch already uses modules.</p>
 
 
     <h3 id="module-globals">Global mode from a module</h3>
@@ -302,6 +265,7 @@ install(p5);</code></pre>
     </details>
 
     <h2 id="reference">Adapter reference</h2>
+    <div class="table-wrap">
     <table><thead><tr><th>Call or option</th><th>Units and behaviour</th></tr></thead><tbody>
       <tr><td><code>createPlot(options)</code></td><td>Returns a <code>P5Plot</code>. Shape coordinates are canvas pixels. <code>width</code>, <code>x</code> and <code>y</code> are millimetres; without paper or scale options, one pixel maps to one millimetre.</td></tr>
       <tr><td><code>paper, margin, orientation</code></td><td>A0–A6; default margin 12 mm and orientation <code>auto</code>. Fits and centres the canvas. <code>width</code> or <code>mmPerPixel</code> overrides fitting; <code>paperX/paperY</code> move the sheet.</td></tr>
@@ -312,6 +276,7 @@ install(p5);</code></pre>
       <tr><td><code>go(), stop()</code></td><td>Go from setup/draw waits for a click and needs the installed driver. Stop requests an abort; neither is a preview method.</td></tr>
       <tr><td><code>createPlotterEngine(), drawRoute(plan)</code></td><td>Advanced core route. Engine geometry uses document units; its circle takes a radius. DrawRoute displays plan coordinates directly as pixels; it does not convert millimetres back to sketch pixels. Use showBed for a physical placement preview.</td></tr>
     </tbody></table>
+    </div>
     <p><a href="architecture.html">Architecture</a> describes the recording limits.</p>
   </main>
   <footer>
