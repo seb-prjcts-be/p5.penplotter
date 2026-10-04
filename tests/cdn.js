@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import { extractModule } from "../examples/code.js";
 
 const page = fs.readFileSync(new URL("../examples/spirograph/index_cdn.html", import.meta.url), "utf8");
 const snippet = page.match(/<script type="module">([\s\S]*?)<\/script>/)[1];
@@ -11,8 +12,11 @@ for (const example of ["direct_plot", "molnar_grid", "spirograph", "wave_field",
   const index = fs.readFileSync(new URL("index.html", folder), "utf8");
   const cdn = fs.readFileSync(new URL("index_cdn.html", folder), "utf8");
   assert.ok(index.includes('data-src="index_cdn.html"'), `${example}: show the actual CDN file`);
+  assert.ok(index.includes('data-src="index_cdn.html" data-part="module"'), `${example}: show only the module block`);
+  assert.equal(extractModule(cdn), `<script type="module">${snippet}</script>`);
   assert.equal(cdn.match(/<script type="module">([\s\S]*?)<\/script>/)[1], snippet, `${example}: same tested startup`);
 }
+assert.throws(() => extractModule('<script src="sketch.js"></script>'), /No.*module/);
 
 async function checkLoad(coreSha, adapterSha) {
   const urls = [];
