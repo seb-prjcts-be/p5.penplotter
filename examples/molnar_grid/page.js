@@ -8,7 +8,7 @@ setup = async function () {
   document.querySelector("#sheet").textContent = `${plot.paper.format} · ${plot.paper.width} × ${plot.paper.height} mm`;
   document.querySelector("#sheet-position").textContent = `X ${plot.paper.x} / Y ${plot.paper.y} mm`;
   document.querySelector("#p5-preview").appendChild(document.querySelector("canvas.p5Canvas"));
-  document.querySelector("#size").textContent = "300 × 300 mm";
+  document.querySelector("#size").textContent = "Fits the chosen paper";
 };
 
 draw = function () {

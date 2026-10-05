@@ -7,7 +7,7 @@
 body{font:16px system-ui;max-width:860px;margin:32px auto;padding:0 16px;color:#222}label{display:inline-block;margin:8px}input{width:80px;padding:6px}button{padding:10px;margin:4px}pre{background:#f3f3f3;padding:16px;white-space:pre-wrap}canvas{border:1px solid #ccc}#stop{background:#a22;color:white}
 </style>
 <h1>A3 H DrawCore: test</h1>
-<p>Deze pagina gebruikt p5.penplotter v0.3.0. Herkenning en statusuitlezing bewegen de machine niet. De Z-startwaarden komen uit de onderzochte iDraw-extensie; ze zijn nog niet op jouw machine gekalibreerd.</p>
+<p>Deze pagina gebruikt p5.penplotter v0.3.1. Herkenning en statusuitlezing bewegen de machine niet. De Z-startwaarden komen uit de onderzochte iDraw-extensie; ze zijn nog niet op jouw machine gekalibreerd.</p>
 <fieldset id="settings"><legend>Machine-instellingen</legend>
 <label>Bereik X (mm) <input id="travelX" type="number" value="420" min="1"></label>
 <label>Bereik Y (mm) <input id="travelY" type="number" value="297" min="1"></label>
@@ -31,13 +31,13 @@ body{font:16px system-ui;max-width:860px;margin:32px auto;padding:0 16px;color:#
 <button id="square">Vierkant van 10 mm</button>
 <button id="disconnect">Verbinding sluiten</button>
 </div>
-<button id="stop">Stop: feed-hold aanvragen</button>
+<button id="stop">Stop: beweging afronden en pen omhoog</button>
 <button id="save">Log downloaden</button>
-<p>Feed-hold pauzeert de controller en kan bewegingen in de wachtrij laten staan. Deze test hervat of reset de controller niet automatisch en belooft geen penlift na stoppen. Controleer de status voordat je verdergaat.</p>
+<p>Stop verstuurt geen nieuwe tekencommando’s. Geaccepteerde bewegingen lopen uit; daarna gaat de pen omhoog en wordt Idle bevestigd. Dit is geen onmiddellijke noodstop. Bij fouten wordt feed-hold aangevraagd; daarbij is penlift niet gegarandeerd. Het nieuwste stopgedrag is nog niet fysiek getest.</p>
 <div id="canvas"></div><pre id="log" aria-live="polite"></pre>
 <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.min.js"></script>
 <script type="module">
-import { install, Driver, P5Plot, PlotterEngine, metadata } from '../dist/p5.penplotter.js';
+import { install, Driver, P5Plot, PlotterEngine, metadata } from '../dist/p5.penplotter.js?v=0.3.1';
 install(p5);
 const $ = id => document.getElementById(id);
 let transport, driver, busy = false;
@@ -138,7 +138,7 @@ action('jogY',()=>jog('Y'),true);
 action('line',()=>shape(false),true);
 action('square',()=>shape(true),true);
 action('disconnect',async()=>{if(transport)await transport.close();transport=null;driver=null;say('Verbinding gesloten.');});
-$('stop').onclick=()=>{if(driver){driver.abort();say('Feed-hold aangevraagd; status en penpositie moeten worden gecontroleerd.');}};
+$('stop').onclick=()=>{if(driver){driver.abort();say('Stop aangevraagd: geaccepteerde bewegingen afronden, pen omhoog, daarna Idle bevestigen.');}};
 $('save').onclick=()=>{const url=URL.createObjectURL(new Blob([entries.join('\n')],{type:'text/plain'}));const a=document.createElement('a');a.href=url;a.download='drawcore-test-log.txt';a.click();URL.revokeObjectURL(url);};
 </script>
 </html>

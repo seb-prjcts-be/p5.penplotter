@@ -22,12 +22,12 @@ Each job is prepared before plotting. `plot.sequence()` calculates one object, p
 
 ## Install
 
-The current browser bundle is v0.3.0. Load it from the fixed release URL below.
+The current browser bundle is v0.3.1. Load it from the fixed release URL below.
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
 <script type="module">
-  import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.3.0/dist/p5.penplotter.js";
+  import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.3.1/dist/p5.penplotter.js";
   install(p5);
 </script>
 <script src="sketch.js"></script>
@@ -48,7 +48,7 @@ let plot;
 
 function setup() {
   createCanvas(400, 400);
-  plot = createPlot({ paper: "A2", paperX: 0, paperY: 0, width: 100 });
+  plot = createPlot({ paper: "A4", width: 100 });
   noLoop();
 }
 
@@ -61,7 +61,7 @@ function draw() {
 }
 ```
 
-This example uses A2 paper with its corner at the machine origin. Set `paper` to the format on your plotter. `showBed()` displays the drawing's placement.
+This example centres A4 paper on the configured machine bed. Set `paper` to the format on your plotter. `showBed()` displays the drawing's placement.
 
 `width: 100` makes the canvas 100 mm wide on paper. This circle has a diameter of 75 mm.
 
@@ -81,15 +81,19 @@ The plot contains the shape calls recorded since the last `plot.clear()`. Clear 
 
 Tested on iDraw HSE / A2 (EBB firmware 3.0.2) on 2026-09-21. Plotted from the p5.js Web Editor on 2026-10-01. Small DrawCore tests on an A3 H passed on 2026-10-05.
 
+Examples start on A4 and fit the canvas inside its margins. Change `paper` to use another sheet; optional machine settings are shown as comments in the sketches. Paper dimensions do not set the machine travel. The calibration sheet keeps a fixed 200 × 280 mm canvas so its ruler stays in millimetres.
+
+Automatic paper placement is recalculated after connecting, using the selected driver's configured bed. Recorded geometry moves with the paper without changing scale. Explicit `paperX`, `paperY`, `x` and `y` remain unchanged; positions that do not fit are rejected before plotting.
+
 ## A3 H with DrawCore
 
-The same brand can contain a different controller. When you connect, the library reads its version and chooses the EBB or DrawCore driver. `paper: "A3"` sets the paper; the machine settings below set its movement and pen heights.
+The same brand can contain a different controller. When you connect, the library reads its version and chooses the EBB or DrawCore driver. `paper: "A4"` sets the default paper; the machine settings below set its movement and pen heights.
 
 Replace the `createPlot()` line in `setup()` with this configuration for the tested A3 H:
 
 ```js
 plot = createPlot({
-  paper: "A3", paperX: 0, paperY: 0, margin: 12,
+  paper: "A4", margin: 12,
   drawcore: {
     travel: { width: 420, height: 297 },
     penUp: 0.5, penDown: 5, penFeed: 1000,
@@ -101,7 +105,7 @@ plot = createPlot({
 
 Leave `width` out to fit the drawing inside the paper margins. Your drawing calls and `plot.go()` stay the same. Set the XY work origin before plotting; DrawCore does not take the carriage's current position as zero automatically. The [A3 H test page](docs/drawcore-test.html) lets you read the controller, test the pen and set that origin before trying a short line.
 
-A 10 mm line and square, pen movement and return to the origin were tested with DrawCore V2.09. Larger drawings and stopping during motion still need a physical test. Stop requests feed-hold; queued moves can remain paused and the pen can remain down. DrawCore supports one drawing at a time; `plot.sequence()` and automatic resume are not implemented for it.
+A 10 mm line and square, pen movement and return to the origin were tested with DrawCore V2.09. Larger drawings and stopping during motion still need a physical test. Stop lets accepted moves finish, raises the pen, then confirms Idle. This is a controlled stop, not an immediate emergency stop. Errors and emergencyStop request feed-hold, which does not guarantee penlift. Plot commands use `commandTimeoutMs` (default 120000 ms); identity and status queries retain short timeouts. The newest controlled stop with penlift has not been physically confirmed. DrawCore supports one drawing at a time; `plot.sequence()` and automatic resume are not implemented for it.
 
 ## Requirements
 
@@ -117,7 +121,7 @@ The browser examples use the bundled core. Building and source-level integration
 | direct plotting | iDraw HSE / A2 (EBB 3.0.2), A3 H (DrawCore V2.09) | HSE/A2 profile tested; A3 H small plots tested with explicit settings |
 | examples | wave formulas, vanilla.waves (pinned commit) | examples only; neither library depends on them |
 
-The release bundles `vanilla.penplotter` 0.5.0 with `p5.penplotter` 0.3.0. Automated comparisons cover plans, SVG and EBB commands against adapter 0.2.2. The A3 H physical test used the development bundle before the release; its log is kept in vanilla.penplotter.
+The release bundles `vanilla.penplotter` 0.5.0 with `p5.penplotter` 0.3.1. Automated comparisons cover plans, SVG and EBB commands against adapter 0.2.2. The A3 H physical test used the development bundle before the release; its log is kept in vanilla.penplotter.
 
 The browser examples load the fixed release bundle, which includes its core and driver. They do not load a sibling library or resolve the latest commits at startup.
 <!-- vereisten:end -->
@@ -125,7 +129,7 @@ The browser examples load the fixed release bundle, which includes its core and 
 ## Instance mode
 
 ```js
-import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.3.0/dist/p5.penplotter.js";
+import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.3.1/dist/p5.penplotter.js";
 install(p5);
 
 new p5(function sketch(p) {
@@ -133,7 +137,7 @@ new p5(function sketch(p) {
 
   p.setup = function () {
     p.createCanvas(400, 400);
-    plot = p.createPlot({ paper: "A2", paperX: 0, paperY: 0, width: 100 });
+    plot = p.createPlot({ paper: "A4", width: 100 });
     p.noLoop();
   };
 

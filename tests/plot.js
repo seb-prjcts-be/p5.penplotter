@@ -423,7 +423,7 @@ async function testSequence() {
   assert.equal(plot.busy, false);
   await assert.rejects(plot.sequence(() => true, { returnHome: false }), /return home/);
   delete plot.driver.session;
-  await assert.rejects(plot.sequence(() => { throw Error("must not prepare"); }), /core driver with session/);
+  await assert.rejects(plot.sequence(() => { throw Error("must not prepare"); }), /EBB sessions/);
 }
 await testSequence();
 console.log("p5.penplotter plot: ok");

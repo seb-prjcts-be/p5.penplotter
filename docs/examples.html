@@ -26,7 +26,7 @@
   </nav>
     <main>
   <div class="ex-page-header">
-    <div class="section-tag">p5.js addon library · v0.3.0</div>
+    <div class="section-tag">p5.js addon library · v0.3.1</div>
     <h1>Examples</h1>
     <p>Open a drawing, copy its sketch and try changing it. Keep the <code>index.html</code> from <a href="setup.html">Setup</a>. The <a href="guide.html#werkwijzen">Guide</a> explains the two ways to plot.</p>
   </div>
@@ -84,7 +84,7 @@
     <div class="section-header">
       <div class="section-tag">a polygon, a circle and their placement</div>
       <h2>Plot <span class="accent">preview</span></h2>
-      <p class="section-desc">A hatched polygon and a circle. Check their placement on A2, then click the drawing to plot.</p>
+      <p class="section-desc">A hatched polygon and a circle. Check their placement on A4, then click the drawing to plot.</p>
     </div>
     <div class="ex-preview">
       <div class="ex-canvas"><iframe src="../examples/first_plot/index.html?embed" title="Plot preview" loading="lazy"></iframe></div>
@@ -104,7 +104,7 @@
 <a class="ex-full-link editor-demo-link" href="https://editor.p5js.org/seb_prjcts.be/sketches/O5rbfSNiU" target="_blank" rel="noopener noreferrer">p5.js Web Editor ↗</a>
     </div>
   </section>
-<div class="ex-page-header"><h2>One object at a time</h2><p>The Chaos game uses <code>plot.sequence()</code> to prepare each point after the previous one finishes.</p></div>
+<div class="ex-page-header"><h2>One object at a time</h2><p>This example requires EBB; DrawCore sessions are not supported. The Chaos game uses <code>plot.sequence()</code> to prepare each point after the previous one finishes.</p></div>
   <section id="chaos_game" class="section">
     <div class="section-header">
       <div class="section-tag">one point at a time</div>
@@ -149,7 +149,7 @@
 
 function setup() {
   createCanvas(600, 600);
-  plot = createPlot({ paper: "A2", paperX: 0, paperY: 0, margin: 12, width: 300 });   // 300 mm wide, centred on A2
+  plot = createPlot({ paper: "A4", margin: 12 });   // fits the chosen sheet
   noLoop();
 }
 
@@ -165,7 +165,7 @@ function draw() {
 
 function setup() {
   createCanvas(600, 600);
-  plot = createPlot({ paper: "A2", paperX: 0, paperY: 0, margin: 12, width: 300 });
+  plot = createPlot({ paper: "A4", margin: 12 });
   noLoop();
 }
 
@@ -187,7 +187,7 @@ function draw() {
 
 function setup() {
   createCanvas(600, 600);
-  plot = createPlot({ paper: "A2", paperX: 0, paperY: 0, margin: 12, width: 300 });
+  plot = createPlot({ paper: "A4", margin: 12 });
   noLoop();
 }
 
@@ -207,7 +207,7 @@ function draw() {
   </main>
   <footer>
     <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; Sebastien Vanblaere &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine</p>
-    <p class="footer-sub">MIT License &middot; v0.3.0</p>
+    <p class="footer-sub">MIT License &middot; v0.3.1</p>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
 </body>

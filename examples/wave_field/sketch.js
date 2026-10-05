@@ -9,8 +9,17 @@ async function setup() {
   // Load the wave sampler used by this sketch.
   await import("https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.waves@v3.4.0/p5.waves.min.js");
   createCanvas(600, 600);
-  // 300 x 300 mm, centred on A2 paper
-  plot = createPlot({ paper: "A2", paperX: 0, paperY: 0, margin: 12, width: 300, log: say });
+  // Change paper to "A3" or "A2"; the drawing fits the chosen sheet.
+  // Add width: 120 for a fixed drawing width in mm (it must fit the margins).
+  // Add paperX: 0, paperY: 0 to place the sheet at the machine origin.
+  // For an A3 H with DrawCore, add these explicit machine settings:
+  // drawcore: {
+  //   travel: { width: 420, height: 297 },
+  //   axes: { swapXY: true, xDirection: -1, yDirection: -1 },
+  //   penUp: 0.5, penDown: 5, penFeed: 1000,
+  //   drawFeed: 600, travelFeed: 900
+  // }
+  plot = createPlot({ paper: "A4", margin: 12, log: say });
   noLoop();
 }
 

@@ -109,7 +109,7 @@ export class P5Plot {
       if (!(Number.isFinite(p.width) && p.width > 0 && Number.isFinite(p.height) && p.height > 0)) {
         throw new RangeError("Create a canvas with positive dimensions before choosing paper.");
       }
-      const bed = this.options.drawcore?.travel || this.kit?.EBB_PROFILES?.[this.profileId]?.travel;
+      const bed = options._bed || this.options.drawcore?.travel || this.kit?.EBB_PROFILES?.[this.profileId]?.travel;
       const requested = options.orientation ?? "auto";
       if (!["auto", "portrait", "landscape"].includes(requested)) throw new RangeError("Use auto, portrait or landscape for paper orientation.");
       let orientation = requested === "auto" ? (p.width >= p.height ? "landscape" : "portrait") : requested;
@@ -140,8 +140,35 @@ export class P5Plot {
     this.clear();
   }
 
+  machineBed() {
+    if (this.driver?.identity?.protocol === "drawcore") return this.options.drawcore?.travel;
+    if (this.driver) return this.kit?.EBB_PROFILES?.[this.profileId]?.travel;
+    return this.options._bed || this.options.drawcore?.travel || this.kit?.EBB_PROFILES?.[this.profileId]?.travel;
+  }
+
+  updatePlacement() {
+    const bed = this.machineBed();
+    if (!bed || !this.engine.document) return;
+    if (this.paper) {
+      const placed = new P5Plot(this.p, this.EngineClass, { ...this.options, width: this.scale * this.p.width, _bed: bed });
+      const dx = placed.offset.x - this.offset.x;
+      const dy = placed.offset.y - this.offset.y;
+      // Move recorded geometry with the sheet; its physical scale stays fixed.
+      for (const layer of this.engine.document.layers) {
+        for (const path of layer.paths) for (const point of path.points) {
+          point.x += dx;
+          point.y += dy;
+        }
+      }
+      this.offset = placed.offset;
+      this.paper = placed.paper;
+    }
+    this.engine.document.page = { ...bed };
+    if (this.bedPreview) this.showBed();
+  }
+
   clear() {
-    const travel = this.options.drawcore?.travel || this.kit?.EBB_PROFILES?.[this.profileId]?.travel;
+    const travel = this.machineBed();
     this.engine = new this.EngineClass({
       units: "mm",
       page: travel
@@ -299,7 +326,7 @@ export class P5Plot {
     if (typeof this.engine.drawBed !== "function") {
       throw new Error("plot.drawBed() needs a vanilla.penplotter build with drawBed(). See Setup for current-source imports.");
     }
-    const bed = this.kit?.EBB_PROFILES?.[this.profileId]?.travel || this.engine.document.page;
+    const bed = this.machineBed() || this.engine.document.page;
     const sheet = options.sheet ?? this.paper ?? { x: this.offset.x, y: this.offset.y, width: this.p.width * this.scale, height: this.p.height * this.scale };
     this.plan();
     const context = typeof canvas.getContext === "function" ? canvas.getContext("2d") : canvas;
@@ -312,7 +339,7 @@ export class P5Plot {
     const document = this.p.canvas?.ownerDocument || globalThis.document;
     if (!document) throw new Error("plot.showBed() needs a browser document.");
     if (!canvas) {
-      const bed = this.kit?.EBB_PROFILES?.[this.profileId]?.travel || this.engine.document.page;
+      const bed = this.machineBed() || this.engine.document.page;
       canvas = document.createElement("canvas");
       canvas.width = Math.ceil(bed.width) + 20;
       canvas.height = Math.ceil(bed.height) + 20;
@@ -370,8 +397,10 @@ export class P5Plot {
       this.driver = this.kit.detectDriver
         ? await this.kit.detectDriver(transport, { profile: this.profileId, drawcore: this.options.drawcore })
         : new this.kit.EbbDriver({ transport, profile: this.profileId });
+      this.updatePlacement();
     } catch (error) {
       await transport.close();
+      this.driver = null;
       throw error;
     }
     this.transport = transport;
@@ -421,8 +450,9 @@ export class P5Plot {
 
   async start(options, clicked) {
     const confirm = this.options.confirm || ((text) => globalThis.confirm(text));
-    const plan = this.plan(options.plan);
+    this.plan(options.plan); // Reject invalid recorded geometry before opening serial.
     await this.connect();
+    const plan = this.plan(options.plan);
     if (!clicked) {
       const ok = confirm([
         "Plot now?",
@@ -478,7 +508,7 @@ export class P5Plot {
         if (target) target.addEventListener("click", stopOnClick);
         await this.connect();
         if (typeof this.driver.session !== "function") {
-          throw new Error("plot.sequence() needs a core driver with session(). Update both imports from Setup.");
+          throw new Error("plot.sequence() requires EBB sessions; DrawCore sessions are not supported.");
         }
         await this.driver.session(async session => {
           while (!this.sequenceStopped) {
@@ -520,7 +550,9 @@ export class P5Plot {
   stop() {
     this.sequenceStopped = true;
     if (this.driver) this.driver.abort();
-    this.say("stop requested");
+    this.say(this.driver?.identity?.protocol === "drawcore"
+      ? "Stop requested: accepted moves finish, then the pen lifts and Idle is confirmed."
+      : "stop requested");
     return this;
   }
 }
@@ -557,7 +589,7 @@ export function installP5Penplotter(p5Constructor, EngineClass, installOptions =
 }
 
 export const P5Penplotter = Object.freeze({
-  version: "0.3.0",
+  version: "0.3.1",
   requires: REQUIRES,
   install: installP5Penplotter,
   draw: drawPlanWithP5

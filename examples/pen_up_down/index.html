@@ -8,7 +8,8 @@
   <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
 </head>
 <body>
-  <h1>Pen up and down</h1>
+  <p>EBB only. For DrawCore, use the <a href="../../docs/drawcore-test.html">A3 H test page</a>.</p>
+    <h1>Pen up and down</h1>
   <p>Click the sketch, then press U to raise the pen or D to lower it. The browser asks for a port on the first keypress. Use Chrome or Edge on localhost or HTTPS.</p>
   <p>This sketch sends no XY moves and keeps the board's existing servo calibration. D leaves the pen down: press U promptly when testing over paper. If U does not lift it, switch the plotter off.</p>
   <p><a href="sketch.js">Copy sketch.js</a> · <a href="../../docs/setup.html">Setup</a></p>
@@ -17,7 +18,7 @@
   <pre><code class="language-markup" data-src="index_cdn.html" data-part="module">Loading module...</code></pre>
   <script type="module" src="../code.js"></script>
   <script type="module">
-    import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.3.0/dist/p5.penplotter.js";
+    import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.3.1/dist/p5.penplotter.js";
     install(p5);
   </script>
   <script src="sketch.js"></script>

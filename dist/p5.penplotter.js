@@ -1947,14 +1947,24 @@ var DrawCoreDriver = class {
   }
   abort() {
     this.aborted = true;
-    this.stopPromise = this.transport.writeRealtime("!").then(() => true, () => false);
   }
   async safeStop() {
-    this.abort();
-    await this.stopPromise;
+    this.aborted = true;
+    return this.transport.writeRealtime("!").then(() => true, () => false);
   }
   async emergencyStop() {
-    await this.safeStop();
+    return this.safeStop();
+  }
+  async finishAbort(settings) {
+    if (!this.stopPromise) this.stopPromise = (async () => {
+      await this.waitIdle(settings.idleTimeoutMs ?? 12e4, true);
+      await this.transport.send(`G1 Z${Number(settings.penUp.toFixed(4))} F${settings.penFeed ?? 1e3}`, {
+        timeoutMs: settings.commandTimeoutMs ?? 12e4
+      });
+      await this.waitIdle(settings.idleTimeoutMs ?? 12e4, true);
+      return { status: "aborted", penRaised: true };
+    })();
+    return this.stopPromise;
   }
   async status() {
     const status = parseGrblStatus(await this.transport.send("?"));
@@ -1962,10 +1972,10 @@ var DrawCoreDriver = class {
     if (!status.position && status.machinePosition && this.offset) status.position = status.machinePosition.map((n, i) => n - this.offset[i]);
     return status;
   }
-  async waitIdle(timeoutMs) {
+  async waitIdle(timeoutMs, stopping = false) {
     const until = Date.now() + timeoutMs;
     while (Date.now() < until) {
-      if (this.aborted) return;
+      if (this.aborted && !stopping) return;
       const status = await this.status();
       if (status.state === "Idle") return;
       if (status.state !== "Run") throw new Error(`Controller is ${status.state}; job cannot continue.`);
@@ -1978,13 +1988,15 @@ var DrawCoreDriver = class {
     if (this.busy) throw new Error("The DrawCore driver is already running.");
     const settings = { ...this.options, ...options };
     const compiled = compileDrawCorePlan(plan, settings);
+    const commandTimeoutMs = positive3(settings.commandTimeoutMs ?? 12e4, "Command timeout");
     this.busy = true;
     this.aborted = false;
+    this.stopPromise = null;
     this.offset = null;
     try {
       let initial = await this.status();
       for (let attempt = 0; initial.state === "Idle" && !initial.position && attempt < 12; attempt++) {
-        if (this.aborted) return { status: "aborted", holdRequested: await this.stopPromise };
+        if (this.aborted) return await this.finishAbort(settings);
         await delay2(100);
         initial = await this.status();
       }
@@ -1994,11 +2006,11 @@ var DrawCoreDriver = class {
       }
       for (const command of compiled.commands) {
         if (this.aborted) break;
-        await this.transport.send(command);
+        await this.transport.send(command, { timeoutMs: commandTimeoutMs });
       }
       if (!this.aborted) await this.waitIdle(settings.idleTimeoutMs ?? 12e4);
       if (this.aborted) {
-        return { status: "aborted", holdRequested: await this.stopPromise };
+        return await this.finishAbort(settings);
       }
       return { status: "complete", commands: compiled.commands.length };
     } catch (error) {
@@ -2506,7 +2518,7 @@ function ellipsePoints(x, y, w, h, start, stop) {
   return points;
 }
 var POINT_RADIUS_MM = 0.12;
-var P5Plot = class {
+var P5Plot = class _P5Plot {
   constructor(p, EngineClass, options = {}) {
     this.p = p;
     this.EngineClass = EngineClass;
@@ -2523,7 +2535,7 @@ var P5Plot = class {
       if (!(Number.isFinite(p.width) && p.width > 0 && Number.isFinite(p.height) && p.height > 0)) {
         throw new RangeError("Create a canvas with positive dimensions before choosing paper.");
       }
-      const bed = this.options.drawcore?.travel || this.kit?.EBB_PROFILES?.[this.profileId]?.travel;
+      const bed = options._bed || this.options.drawcore?.travel || this.kit?.EBB_PROFILES?.[this.profileId]?.travel;
       const requested = options.orientation ?? "auto";
       if (!["auto", "portrait", "landscape"].includes(requested)) throw new RangeError("Use auto, portrait or landscape for paper orientation.");
       let orientation = requested === "auto" ? p.width >= p.height ? "landscape" : "portrait" : requested;
@@ -2553,8 +2565,32 @@ var P5Plot = class {
     this.status = "idle";
     this.clear();
   }
+  machineBed() {
+    if (this.driver?.identity?.protocol === "drawcore") return this.options.drawcore?.travel;
+    if (this.driver) return this.kit?.EBB_PROFILES?.[this.profileId]?.travel;
+    return this.options._bed || this.options.drawcore?.travel || this.kit?.EBB_PROFILES?.[this.profileId]?.travel;
+  }
+  updatePlacement() {
+    const bed = this.machineBed();
+    if (!bed || !this.engine.document) return;
+    if (this.paper) {
+      const placed = new _P5Plot(this.p, this.EngineClass, { ...this.options, width: this.scale * this.p.width, _bed: bed });
+      const dx = placed.offset.x - this.offset.x;
+      const dy = placed.offset.y - this.offset.y;
+      for (const layer of this.engine.document.layers) {
+        for (const path of layer.paths) for (const point2 of path.points) {
+          point2.x += dx;
+          point2.y += dy;
+        }
+      }
+      this.offset = placed.offset;
+      this.paper = placed.paper;
+    }
+    this.engine.document.page = { ...bed };
+    if (this.bedPreview) this.showBed();
+  }
   clear() {
-    const travel = this.options.drawcore?.travel || this.kit?.EBB_PROFILES?.[this.profileId]?.travel;
+    const travel = this.machineBed();
     this.engine = new this.EngineClass({
       units: "mm",
       page: travel ? { ...travel } : { width: this.paper ? this.paper.x + this.paper.width : this.offset.x + this.p.width * this.scale, height: this.paper ? this.paper.y + this.paper.height : this.offset.y + this.p.height * this.scale }
@@ -2690,7 +2726,7 @@ var P5Plot = class {
     if (typeof this.engine.drawBed !== "function") {
       throw new Error("plot.drawBed() needs a vanilla.penplotter build with drawBed(). See Setup for current-source imports.");
     }
-    const bed = this.kit?.EBB_PROFILES?.[this.profileId]?.travel || this.engine.document.page;
+    const bed = this.machineBed() || this.engine.document.page;
     const sheet = options.sheet ?? this.paper ?? { x: this.offset.x, y: this.offset.y, width: this.p.width * this.scale, height: this.p.height * this.scale };
     this.plan();
     const context = typeof canvas.getContext === "function" ? canvas.getContext("2d") : canvas;
@@ -2702,7 +2738,7 @@ var P5Plot = class {
     const document = this.p.canvas?.ownerDocument || globalThis.document;
     if (!document) throw new Error("plot.showBed() needs a browser document.");
     if (!canvas) {
-      const bed = this.kit?.EBB_PROFILES?.[this.profileId]?.travel || this.engine.document.page;
+      const bed = this.machineBed() || this.engine.document.page;
       canvas = document.createElement("canvas");
       canvas.width = Math.ceil(bed.width) + 20;
       canvas.height = Math.ceil(bed.height) + 20;
@@ -2755,8 +2791,10 @@ var P5Plot = class {
     }
     try {
       this.driver = this.kit.detectDriver ? await this.kit.detectDriver(transport, { profile: this.profileId, drawcore: this.options.drawcore }) : new this.kit.EbbDriver({ transport, profile: this.profileId });
+      this.updatePlacement();
     } catch (error) {
       await transport.close();
+      this.driver = null;
       throw error;
     }
     this.transport = transport;
@@ -2801,8 +2839,9 @@ var P5Plot = class {
   }
   async start(options, clicked) {
     const confirm = this.options.confirm || ((text) => globalThis.confirm(text));
-    const plan = this.plan(options.plan);
+    this.plan(options.plan);
     await this.connect();
+    const plan = this.plan(options.plan);
     if (!clicked) {
       const ok = confirm([
         "Plot now?",
@@ -2857,7 +2896,7 @@ var P5Plot = class {
         if (target) target.addEventListener("click", stopOnClick);
         await this.connect();
         if (typeof this.driver.session !== "function") {
-          throw new Error("plot.sequence() needs a core driver with session(). Update both imports from Setup.");
+          throw new Error("plot.sequence() requires EBB sessions; DrawCore sessions are not supported.");
         }
         await this.driver.session(async (session) => {
           while (!this.sequenceStopped) {
@@ -2898,7 +2937,7 @@ var P5Plot = class {
   stop() {
     this.sequenceStopped = true;
     if (this.driver) this.driver.abort();
-    this.say("stop requested");
+    this.say(this.driver?.identity?.protocol === "drawcore" ? "Stop requested: accepted moves finish, then the pen lifts and Idle is confirmed." : "stop requested");
     return this;
   }
 };
@@ -2928,7 +2967,7 @@ function installP5Penplotter(p5Constructor, EngineClass, installOptions = {}) {
   return p5Constructor;
 }
 var P5Penplotter = Object.freeze({
-  version: "0.3.0",
+  version: "0.3.1",
   requires: REQUIRES,
   install: installP5Penplotter,
   draw: drawPlanWithP5
@@ -2939,7 +2978,7 @@ var metadata = Object.freeze({
   version: P5Penplotter.version,
   development: false,
   coreVersion: PlotterEngine.version,
-  coreCommit: "7371fab23382b9a2e6ab08a008560fd5c0ba675c"
+  coreCommit: "131efc79ebf9341dcc13dced550d6877e831ba6b"
 });
 var installation = /* @__PURE__ */ Symbol.for("p5.penplotter.installation");
 function install(p5Constructor) {

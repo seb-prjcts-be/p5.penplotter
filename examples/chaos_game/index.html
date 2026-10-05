@@ -11,7 +11,7 @@
   <script>if (location.search.includes("embed")) document.documentElement.classList.add("embed");</script>
   <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
   <script type="module">
-    import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.3.0/dist/p5.penplotter.js";
+    import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.3.1/dist/p5.penplotter.js";
     install(p5);
   </script>
   <script src="sketch.js"></script>
@@ -35,7 +35,8 @@
     <main class="demo-page">
     <div class="demo-header">
       <div class="demo-number">Chaos game</div>
-      <h1>Chaos game</h1>
+      <p>EBB only. DrawCore does not support sessions.</p>
+    <h1>Chaos game</h1>
       <p>The chaos game is a simple maths trick anyone with a little patience and a sharp pencil can try. Start with a point inside a triangle. Choose one of its three corners at random, move halfway towards it and mark a dot. Repeat the same rule, and a Sierpinski triangle gradually appears: a simple rule revealing a beautiful, complex structure.</p>
       <p>Here, the sketch calculates one point, plots it and waits before calculating the next. Try the screen demo, or click the drawing to start your plotter. The carriage returns home after the last point.</p>
       <p>Thank you to Ben Sparks and Numberphile for their explanation in <a href="https://www.youtube.com/watch?v=kbKtFN71Lfs">Chaos Game</a>.</p>
@@ -71,7 +72,7 @@
   </main>
   <footer>
     <p><a href="../../docs/examples.html">&larr; All examples</a> &nbsp;&middot;&nbsp; <a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter on GitHub</a></p>
-    <p class="footer-sub">p5.penplotter v0.3.0 &nbsp;&middot;&nbsp; p5.js v2.2.2 &nbsp;&middot;&nbsp; iDraw HSE / A2</p>
+    <p class="footer-sub">p5.penplotter v0.3.1 &nbsp;&middot;&nbsp; p5.js v2.2.2 &nbsp;&middot;&nbsp; iDraw HSE / A2</p>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
   <script type="module" src="../code.js"></script>

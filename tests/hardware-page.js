@@ -12,7 +12,7 @@ const server = http.createServer((request, response) => {
     response.end(fs.readFileSync(path.join(root, "docs/drawcore-test.html")));
     return;
   }
-  if (request.url === "/dist/p5.penplotter.js") {
+  if (new URL(request.url, "http://localhost").pathname === "/dist/p5.penplotter.js") {
     response.setHeader("Content-Type", "text/javascript");
     response.end(fs.readFileSync(path.join(root, "dist/p5.penplotter.js")));
     return;
@@ -48,6 +48,10 @@ try {
       writable: new WritableStream({ write(bytes) {
         const command = new TextDecoder().decode(bytes);
         window.sentCommands.push(command);
+        if (window.stopDuringPenDown && command === "G1 Z5 F1000\r") {
+          window.stopDuringPenDown = false;
+          document.querySelector("#stop").click();
+        }
         const reply = command === "V\r" ? "DrawCore V2.09\r\n" : command === "?" ? "<Idle|WPos:0,0,0>\r\n" : command === "!" ? "" : "ok\r\n";
         if (reply) input.enqueue(new TextEncoder().encode(reply));
       } }),
@@ -84,9 +88,13 @@ try {
   assert(!commands.some(command => /^(SP|SM|LM|EM|ES|\$H|M3|M5)/.test(command)));
   assert(!await page.locator("#log").evaluate(node => node.textContent.includes("Fout:")));
   assert.deepEqual(errors, []);
+  await page.evaluate(() => { window.stopDuringPenDown = true; });
+  await page.click("#line");
+  await page.waitForFunction(() => document.querySelector("#log").textContent.includes('Resultaat {"status":"aborted","penRaised":true}'));
   await page.click("#stop");
-  await page.waitForFunction(() => sentCommands.includes("!"));
-  console.log(`${siteMode ? "Release site" : "Development"} hardware test page: real p5 canvas, automatic DrawCore selection, read-only status, explicit origin, Z lift, 10 mm line/square and feed-hold verified in Chromium with simulated serial.`);
+  assert(!(await page.evaluate(() => sentCommands)).includes("!"), "ordinary Stop never sends feed-hold");
+  await page.waitForFunction(() => document.querySelector("#log").textContent.includes("Stop aangevraagd:"));
+  console.log(`${siteMode ? "Release site" : "Development"} hardware test page: real p5 canvas, automatic DrawCore selection, read-only status, explicit origin, Z lift, 10 mm line/square and controlled Stop text verified in Chromium with simulated serial.`);
 } finally {
   if (browser) await browser.close();
   await new Promise(resolve => server.close(resolve));

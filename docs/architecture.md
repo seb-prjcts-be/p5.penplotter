@@ -28,7 +28,7 @@ When you connect, vanilla.penplotter reads the controller response and selects E
 
 For DrawCore, supply these in the `drawcore` options of `createPlot()`. They also set the bed used for paper placement. `paper: "A3"` selects the sheet. The [Setup page](setup.html#drawcore) uses the settings from the small A3 H hardware test.
 
-DrawCore waits for physical idle before finishing a drawing. Its stop is GRBL feed-hold, which can leave the pen down and movements paused in the controller. Object-by-object sessions remain available through the EBB driver.
+DrawCore waits for physical idle before finishing a drawing. Normal Stop waits for accepted motion, raises the pen and confirms Idle. Errors and emergencyStop request feed-hold; penlift is not guaranteed. Object-by-object sessions remain available through the EBB driver.
 
 ## Recording limits
 

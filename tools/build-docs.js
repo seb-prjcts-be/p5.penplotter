@@ -154,7 +154,7 @@ export function buildDocs(write = true) {
   }
   const testPage = fs.readFileSync(path.join(root, "tools/drawcore-test.html"), "utf8")
     .replace('src="p5.min.js"', 'src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.min.js"')
-    .replace("from './p5.penplotter.js'", "from '../dist/p5.penplotter.js'")
+    .replace("from './p5.penplotter.js'", `from '../dist/p5.penplotter.js?v=${VERSION}'`)
     .replace("Deze pagina gebruikt de lokaal opgebouwde ontwikkelversie.", `Deze pagina gebruikt p5.penplotter v${VERSION}.`);
   const testTarget = path.join(root, "docs/drawcore-test.html");
   const currentTest = fs.existsSync(testTarget) ? fs.readFileSync(testTarget, "utf8") : null;

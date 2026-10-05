@@ -26,7 +26,7 @@
   </nav>
   <main class="page">
     <header class="page-header">
-      <div class="section-tag">p5.js addon library · v0.3.0</div>
+      <div class="section-tag">p5.js addon library · v0.3.1</div>
       <h1>Guide</h1>
     </header>
 
@@ -78,7 +78,7 @@ plot.polyline(points);</code></pre>
     <h3>Let the library fit the drawing</h3>
     <p>Remove <code>width: 100</code> from the circle sketch to let the library fit the canvas inside the margin and centre it on the paper:</p>
     <pre><code class="language-javascript">plot = createPlot({
-  paper: "A2",
+  paper: "A4",
   paperX: 0,
   paperY: 0,
   margin: 12
@@ -96,7 +96,7 @@ plot.polyline(points);</code></pre>
       <summary>Place the drawing near the paper corner</summary>
     <p>Replace <code>createPlot()</code> in the first sketch with:</p>
     <pre><code class="language-javascript">plot = createPlot({
-  paper: "A2",
+  paper: "A4",
   paperX: 0,
   paperY: 0,
   margin: 12,
@@ -190,7 +190,7 @@ async function plotTwoObjects() {
 
     <figure class="doc-animation" id="animation-pens-and-layers">
       <img src="images/animations/pens-and-layers.gif?v=20261002-colour" width="600" height="400" loading="lazy" alt="Two pens draw separate layers; one layer can be excluded.">
-      <figcaption>Sage is pen A; ochre is pen B. Each colour follows its assigned paths. The second pass hides one layer; it does not erase the source paths. One pen can draw the outline; another can draw the texture. Use <code>plot.engine.pen()</code> and <code>plot.engine.layer()</code>, and set the p5 screen colour separately with <code>stroke()</code>. Assigning a pen does not pause the machine. For direct plotting with multiple pens, supply an <code>onToolChange</code> callback to <code>plot.go()</code> that waits for you to finish each physical pen change.</figcaption>
+      <figcaption>Sage is pen A; ochre is pen B. Each colour follows its assigned paths. The second pass hides one layer; it does not erase the source paths. One pen can draw the outline; another can draw the texture. Use <code>plot.engine.pen()</code> and <code>plot.engine.layer()</code>, and set the p5 screen colour separately with <code>stroke()</code>. Assigning a pen does not pause the machine. Multiple pens are supported by EBB only. For direct plotting with multiple pens, supply an <code>onToolChange</code> callback to <code>plot.go()</code> that waits for you to finish each physical pen change.</figcaption>
     </figure>
 <p class="editor-demo-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/6towL4jTb" target="_blank" rel="noopener noreferrer">p5.js Web Editor</a></p>
 
@@ -214,7 +214,7 @@ async function plotTwoObjects() {
     <pre><code class="language-markup">&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
 &lt;script type="module" src="sketch.js"&gt;&lt;/script&gt;</code></pre>
     <h4>sketch.js</h4>
-    <pre><code class="language-javascript">import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.3.0/dist/p5.penplotter.js";
+    <pre><code class="language-javascript">import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.3.1/dist/p5.penplotter.js";
 install(p5);
 
 new p5(function sketch(p) {
@@ -222,7 +222,7 @@ new p5(function sketch(p) {
 
   p.setup = function () {
     p.createCanvas(400, 400);
-    plot = p.createPlot({ paper: "A2", paperX: 0, paperY: 0, width: 100 });
+    plot = p.createPlot({ paper: "A4", width: 100 });
     p.noLoop();
   };
 
@@ -247,14 +247,14 @@ new p5(function sketch(p) {
     <pre><code class="language-markup">&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
 &lt;script type="module" src="sketch.js"&gt;&lt;/script&gt;</code></pre>
     <h4>sketch.js</h4>
-    <pre><code class="language-javascript">import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.3.0/dist/p5.penplotter.js";
+    <pre><code class="language-javascript">import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.3.1/dist/p5.penplotter.js";
 install(p5);
 
 let plot;
 
 function setup() {
   createCanvas(400, 400);
-  plot = createPlot({ paper: "A2", paperX: 0, paperY: 0, width: 100 });
+  plot = createPlot({ paper: "A4", width: 100 });
   noLoop();
 }
 
@@ -283,7 +283,7 @@ window.draw = draw;</code></pre>
 &lt;script type="importmap"&gt;
 {
   "imports": {
-    "p5.penplotter": "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.3.0/dist/p5.penplotter.js"
+    "p5.penplotter": "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.3.1/dist/p5.penplotter.js"
   }
 }
 &lt;/script&gt;
@@ -320,7 +320,7 @@ install(p5);</code></pre>
   </main>
   <footer>
     <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; Sebastien Vanblaere &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine</p>
-    <p class="footer-sub">MIT License &middot; v0.3.0</p>
+    <p class="footer-sub">MIT License &middot; v0.3.1</p>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
 </body>

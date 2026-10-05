@@ -4,7 +4,17 @@ let busy = false;
 
 function setup() {
   createCanvas(400, 180);
-  plot = createPlot({ x: 100, y: 100, width: 80, log: console.log });
+  // Change paper to "A3" or "A2"; the drawing fits the chosen sheet.
+  // Add width: 120 for a fixed drawing width in mm (it must fit the margins).
+  // Add paperX: 0, paperY: 0 to place the sheet at the machine origin.
+  // For an A3 H with DrawCore, add these explicit machine settings:
+  // drawcore: {
+  //   travel: { width: 420, height: 297 },
+  //   axes: { swapXY: true, xDirection: -1, yDirection: -1 },
+  //   penUp: 0.5, penDown: 5, penFeed: 1000,
+  //   drawFeed: 600, travelFeed: 900
+  // }
+  plot = createPlot({ paper: "A4", margin: 12, width: 80, log: console.log });
   noLoop();
 }
 
@@ -25,6 +35,7 @@ async function keyPressed() {
   busy = true;
   try {
     await plot.connect();
+    if (plot.driver.identity?.protocol === "drawcore") throw new Error("This example sends EBB pen commands. Use the A3 H test page for DrawCore.");
     const up = pressed === "u";
     const command = up ? "SP,1,300" : "SP,0,300";
     console.log(up ? "Pen up." : "Pen down.");

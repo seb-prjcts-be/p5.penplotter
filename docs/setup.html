@@ -26,7 +26,7 @@
   </nav>
   <main class="page">
     <header class="page-header">
-      <div class="section-tag">p5.js addon library · v0.3.0</div>
+      <div class="section-tag">p5.js addon library · v0.3.1</div>
       <h1>Setup</h1>
     </header>
 
@@ -41,7 +41,7 @@
   &lt;title&gt;penplotter start&lt;/title&gt;
   &lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
   &lt;script type="module"&gt;
-    import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.3.0/dist/p5.penplotter.js";
+    import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.3.1/dist/p5.penplotter.js";
     install(p5);
   &lt;/script&gt;
   &lt;script src="sketch.js"&gt;&lt;/script&gt;
@@ -56,7 +56,7 @@
 
 function setup() {
   createCanvas(400, 400);
-  plot = createPlot({ paper: "A2", paperX: 0, paperY: 0, width: 100 });
+  plot = createPlot({ paper: "A4", width: 100 });
   noLoop();
 }
 
@@ -70,7 +70,7 @@ function draw() {
 <p class="editor-demo-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/qMN6UFSIE" target="_blank" rel="noopener noreferrer">p5.js Web Editor</a></p>
 
 <p><code>plot.circle()</code> draws the circle on screen and records it for the plotter. Its arguments are the centre and diameter, as in p5. <code>noLoop()</code> keeps the sketch from recording the circle again each frame.</p>
-<p>This example uses A2 paper with its corner at the machine origin. Set <code>paper</code> to the format already on your plotter. <code>showBed()</code> displays where the drawing will land on that sheet.</p>
+<p>This example centres A4 paper on the configured machine bed. Set <code>paper</code> to the format already on your plotter. <code>showBed()</code> displays where the drawing will land on that sheet.</p>
 <p><code>width: 100</code> makes the canvas 100 mm wide on paper. This circle has a diameter of 75 mm.</p>
 <h2 id="direct-plotting">Draw it on paper</h2>
 <p>Use Chrome or Edge. Connect the plotter by USB and switch it on.</p>
@@ -81,10 +81,11 @@ function draw() {
 <p>Click the drawing. Select the plotter in the browser's port list and click Connect. A second click on the drawing requests a stop.</p>
 <p>If your machine has a different starting corner or motor direction, confirm its origin before plotting. Moving the carriage to another corner does not change the driver's directions.</p>
 <p>After an EBB stop or error, switch off the motors and return the carriage to the starting corner before trying again.</p>
+<p>Examples start on A4 and fit the chosen sheet. Change <code>paper</code> for another format. Paper and machine travel are separate settings. Automatic placement is recalculated after connection; explicit paper and drawing offsets remain unchanged. The calibration sheet keeps a fixed physical scale.</p>
 <h2 id="drawcore">A3 H with DrawCore</h2>
 <p>For the tested A3 H, replace the <code>createPlot()</code> line in <code>setup()</code> with:</p>
 <pre><code class="language-javascript">plot = createPlot({
-  paper: "A3", paperX: 0, paperY: 0, margin: 12,
+  paper: "A4", margin: 12,
   drawcore: {
     travel: { width: 420, height: 297 },
     penUp: 0.5, penDown: 5, penFeed: 1000,
@@ -94,7 +95,7 @@ function draw() {
 });</code></pre>
 <p>Keep the drawing calls and <code>plot.go()</code>. Without <code>width</code>, the canvas fits inside the paper margins. A 300 mm square does not fit on A3 with a 12 mm margin.</p>
 <p>Open the <a href="drawcore-test.html">A3 H test page</a> in Chrome or Edge on the computer connected to the plotter. Click Connect, read Status and Controller settings, then try Pen up. With the carriage at your starting point, use the XY-origin button and test the 1 mm moves before drawing the 10 mm line. The page can save its command log.</p>
-<p>The library recognises DrawCore from the controller response. The pen heights and axis directions above were tested with DrawCore V2.09 on one A3 H. Stop requests feed-hold; the controller may retain paused moves and the pen may stay down. It does not reset or resume automatically.</p>
+<p>The library recognises DrawCore from the controller response. The pen heights and axis directions above were tested with DrawCore V2.09 on one A3 H. Stop lets accepted moves finish, raises the pen and confirms Idle. It is not an immediate emergency stop. Errors and emergencyStop request feed-hold; penlift is not guaranteed. The latest stop with penlift has not been physically tested. Plot commands use <code>commandTimeoutMs</code>, default 120000 ms; identity and status checks keep short timeouts. It does not reset or resume automatically.</p>
     <h2 id="troubleshooting">If the installation fails</h2>
     <ul>
       <li><code>createPlot is not defined</code>: check that the module loaded and that <code>sketch.js</code> is a normal script. Call <code>createPlot()</code> inside <code>setup()</code>.</li>
@@ -106,7 +107,7 @@ function draw() {
   </main>
   <footer>
     <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; Sebastien Vanblaere &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine</p>
-    <p class="footer-sub">MIT License &middot; v0.3.0</p>
+    <p class="footer-sub">MIT License &middot; v0.3.1</p>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
 </body>
