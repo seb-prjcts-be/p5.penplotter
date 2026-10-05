@@ -13,7 +13,7 @@ Load p5.js 2.2.2 before the module block. The module bundle supplies the matchin
 </script>
 ```
 
-Use the fixed release URL above. Fixed URLs preserve the code used by a sketch. There is no GitHub API request, automatic main lookup or setup wrapper.
+Use the fixed release URL above to preserve a sketch, or the [stable CDN imports](cdn-stable.md) to follow tested releases. Fixed URLs preserve the code used by a sketch. There is no GitHub API request, automatic main lookup or setup wrapper.
 
 The classic `dist/p5.penplotter.browser.js` file is an alternative: load it with a normal script tag after p5.js and before sketch.js. It installs synchronously. Do not load the explicit adapter installation and a bundle in the same sketch. Reinstalling the same bundle is harmless; a conflicting installation throws an error.
 

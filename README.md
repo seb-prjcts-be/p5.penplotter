@@ -258,3 +258,7 @@ Sebastien Vanblaere
 ## Build and validate the browser bundle
 
 See [the bundle workflow](docs/cdn-bundle.md). The build pins its core commit in `browser/core-source.json`. Use Node 22 or newer and `npm ci --legacy-peer-deps`; the core is supplied by its sibling Git checkout rather than the npm registry.
+
+## Stable CDN
+
+Use the [stable CDN imports](docs/cdn-stable.md) to follow tested releases. Existing editor sketches need their import changed once. Keep a versioned URL for drawings that must reproduce the same code. The p5 bundle includes its own tested vanilla core.
