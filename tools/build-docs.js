@@ -152,10 +152,18 @@ export function buildDocs(write = true) {
     if (current !== html) stale.push(page.target);
     if (write) fs.writeFileSync(target, html);
   }
+  const testPage = fs.readFileSync(path.join(root, "tools/drawcore-test.html"), "utf8")
+    .replace('src="p5.min.js"', 'src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.min.js"')
+    .replace("from './p5.penplotter.js'", "from '../dist/p5.penplotter.js'")
+    .replace("Deze pagina gebruikt de lokaal opgebouwde ontwikkelversie.", `Deze pagina gebruikt p5.penplotter v${VERSION}.`);
+  const testTarget = path.join(root, "docs/drawcore-test.html");
+  const currentTest = fs.existsSync(testTarget) ? fs.readFileSync(testTarget, "utf8") : null;
+  if (currentTest !== testPage) stale.push("docs/drawcore-test.html");
+  if (write) fs.writeFileSync(testTarget, testPage);
   return stale;
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const stale = buildDocs(true);
-  console.log(`docs: ${PAGES.length} page rendered${stale.length ? ` (${stale.join(", ")} updated)` : " (already current)"}`);
+  console.log(`docs: ${PAGES.length + 1} pages rendered${stale.length ? ` (${stale.join(", ")} updated)` : " (already current)"}`);
 }

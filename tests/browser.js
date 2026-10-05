@@ -7,7 +7,9 @@ import { promisify } from "node:util";
 import { chromium } from "playwright-core";
 
 const root = path.resolve(import.meta.dirname, "..");
+const { version } = JSON.parse(fs.readFileSync(path.join(root, "package.json")));
 const core = path.resolve(root, "..", "vanilla.penplotter");
+const bundleDirectory = process.env.PENPLOTTER_TEST_BUNDLE_DIR || path.join(root, "dist");
 const { stdout: baseline } = await promisify(execFile)("git", ["show", "v0.2.2:p5.penplotter.js"], { cwd: root });
 const baselineSetup = `<script type="module">
 import { PlotterEngine } from "/core/vanilla.penplotter.js";
@@ -19,6 +21,11 @@ const contentType = file => file.endsWith(".js") ? "text/javascript" : file.ends
 const server = http.createServer((request, response) => {
   try {
     const url = new URL(request.url, "http://localhost");
+    if (["/dist/p5.penplotter.js", "/dist/p5.penplotter.browser.js"].includes(url.pathname)) {
+      response.setHeader("Content-Type", "text/javascript");
+      response.end(fs.readFileSync(path.join(bundleDirectory, path.basename(url.pathname))));
+      return;
+    }
     if (url.pathname === "/baseline-adapter.js") { response.setHeader("Content-Type", "text/javascript"); response.end(baseline); return; }
     if (url.pathname === "/fixture.html") {
       const mode = url.searchParams.get("mode");
@@ -34,7 +41,7 @@ const server = http.createServer((request, response) => {
     if (!file.startsWith(base + path.sep)) { response.writeHead(403).end(); return; }
     let data = fs.readFileSync(file);
     if (file.endsWith("index.html") && url.searchParams.has("baseline")) {
-      data = Buffer.from(data.toString().replace(/<script type="module">\s*import \{ install \} from "(?:\.\.\/\.\.\/dist\/p5\.penplotter\.js|https:\/\/cdn\.jsdelivr\.net\/gh\/seb-prjcts-be\/p5\.penplotter@v0\.2\.5\/dist\/p5\.penplotter\.js)";\s*install\(p5\);\s*<\/script>/, baselineSetup));
+      data = Buffer.from(data.toString().replace(/<script type="module">\s*import \{ install \} from "(?:\.\.\/\.\.\/dist\/p5\.penplotter\.js|https:\/\/cdn\.jsdelivr\.net\/gh\/seb-prjcts-be\/p5\.penplotter@v[0-9.]+\/dist\/p5\.penplotter\.js)";\s*install\(p5\);\s*<\/script>/, baselineSetup));
     }
     response.setHeader("Content-Type", contentType(file) + "; charset=utf-8");
     response.end(data);
@@ -60,7 +67,7 @@ try {
       // network is needed for these local browser equivalence checks.
       await page.route("https://**/*", async route => {
         const url = route.request().url();
-        if (url === "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5/dist/p5.penplotter.js") return route.fulfill({ path: path.join(root, "dist/p5.penplotter.js"), contentType: "text/javascript" });
+        if (url === `https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v${version}/dist/p5.penplotter.js`) return route.fulfill({ path: path.join(bundleDirectory, "p5.penplotter.js"), contentType: "text/javascript" });
         if (url.includes("/npm/p5@2.2.2/")) return route.fulfill({ path: path.join(root, "node_modules/p5/lib/p5.min.js"), contentType: "text/javascript" });
         if (url.includes("/p5.waves@v3.4.0/")) return route.fulfill({ path: path.join(root, "tests/fixtures/p5.waves-3.4.0.min.js"), contentType: "text/javascript" });
         if (url.includes("prismjs")) return route.fulfill({ body: "", contentType: "text/javascript" });

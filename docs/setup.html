@@ -26,7 +26,7 @@
   </nav>
   <main class="page">
     <header class="page-header">
-      <div class="section-tag">p5.js addon library · v0.2.5</div>
+      <div class="section-tag">p5.js addon library · v0.3.0</div>
       <h1>Setup</h1>
     </header>
 
@@ -41,7 +41,7 @@
   &lt;title&gt;penplotter start&lt;/title&gt;
   &lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
   &lt;script type="module"&gt;
-    import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5/dist/p5.penplotter.js";
+    import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.3.0/dist/p5.penplotter.js";
     install(p5);
   &lt;/script&gt;
   &lt;script src="sketch.js"&gt;&lt;/script&gt;
@@ -80,7 +80,21 @@ function draw() {
 <p>Place the paper with its corner at that origin, as set by <code>paperX: 0</code> and <code>paperY: 0</code> above. Check its position in the bed preview.</p>
 <p>Click the drawing. Select the plotter in the browser's port list and click Connect. A second click on the drawing requests a stop.</p>
 <p>If your machine has a different starting corner or motor direction, confirm its origin before plotting. Moving the carriage to another corner does not change the driver's directions.</p>
-<p>After a stop or error, switch off the motors and return the carriage to the starting corner before trying again.</p>
+<p>After an EBB stop or error, switch off the motors and return the carriage to the starting corner before trying again.</p>
+<h2 id="drawcore">A3 H with DrawCore</h2>
+<p>For the tested A3 H, replace the <code>createPlot()</code> line in <code>setup()</code> with:</p>
+<pre><code class="language-javascript">plot = createPlot({
+  paper: "A3", paperX: 0, paperY: 0, margin: 12,
+  drawcore: {
+    travel: { width: 420, height: 297 },
+    penUp: 0.5, penDown: 5, penFeed: 1000,
+    drawFeed: 600, travelFeed: 900,
+    axes: { swapXY: true, xDirection: -1, yDirection: -1 }
+  }
+});</code></pre>
+<p>Keep the drawing calls and <code>plot.go()</code>. Without <code>width</code>, the canvas fits inside the paper margins. A 300 mm square does not fit on A3 with a 12 mm margin.</p>
+<p>Open the <a href="drawcore-test.html">A3 H test page</a> in Chrome or Edge on the computer connected to the plotter. Click Connect, read Status and Controller settings, then try Pen up. With the carriage at your starting point, use the XY-origin button and test the 1 mm moves before drawing the 10 mm line. The page can save its command log.</p>
+<p>The library recognises DrawCore from the controller response. The pen heights and axis directions above were tested with DrawCore V2.09 on one A3 H. Stop requests feed-hold; the controller may retain paused moves and the pen may stay down. It does not reset or resume automatically.</p>
     <h2 id="troubleshooting">If the installation fails</h2>
     <ul>
       <li><code>createPlot is not defined</code>: check that the module loaded and that <code>sketch.js</code> is a normal script. Call <code>createPlot()</code> inside <code>setup()</code>.</li>
@@ -92,7 +106,7 @@ function draw() {
   </main>
   <footer>
     <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; Sebastien Vanblaere &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine</p>
-    <p class="footer-sub">MIT License &middot; v0.2.5</p>
+    <p class="footer-sub">MIT License &middot; v0.3.0</p>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
 </body>

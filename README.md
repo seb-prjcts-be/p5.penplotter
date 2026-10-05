@@ -22,18 +22,18 @@ Each job is prepared before plotting. `plot.sequence()` calculates one object, p
 
 ## Install
 
-The current browser bundle is v0.2.5. Load it from the fixed release URL below.
+The current browser bundle is v0.3.0. Load it from the fixed release URL below.
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"></script>
 <script type="module">
-  import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5/dist/p5.penplotter.js";
+  import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.3.0/dist/p5.penplotter.js";
   install(p5);
 </script>
 <script src="sketch.js"></script>
 ```
 
-The browser bundle contains the adapter, core and EBB driver from one tested source combination. It performs no GitHub lookup and loads no separate core modules. p5.js stays separate. The CDN URL uses a fixed release tag; keep that tag to preserve a sketch. The bundle pins vanilla.penplotter 0.3.1 at commit `c72ba7fb8ea60c0ea2d84f7e36dd03d161fbd7c8`.
+The browser bundle contains the adapter, vanilla.penplotter 0.5.0 and the EBB and DrawCore drivers. p5.js stays separate. Keep the release tag fixed so the sketch continues to use the same code. The exact core commit is recorded in `browser/core-source.json`.
 
 Preview and export work without connecting a plotter. Web Serial is opened only after a user gesture. The original `installP5Penplotter(p5, PlotterEngine, { driver })` API remains available from the root adapter module for explicit integrations.
 
@@ -79,7 +79,29 @@ See [the physical starting corner in Setup](https://seb-prjcts-be.github.io/p5.p
 
 The plot contains the shape calls recorded since the last `plot.clear()`. Clear at the start of `draw()` to replace each frame, and use `noLoop()` for a stable drawing. Screen transforms and styling are not recorded.
 
-Tested on one machine: iDraw HSE / A2 (EBB firmware 3.0.2) on 2026-09-21. Plotted from the p5.js Web Editor on 2026-10-01.
+Tested on iDraw HSE / A2 (EBB firmware 3.0.2) on 2026-09-21. Plotted from the p5.js Web Editor on 2026-10-01. Small DrawCore tests on an A3 H passed on 2026-10-05.
+
+## A3 H with DrawCore
+
+The same brand can contain a different controller. When you connect, the library reads its version and chooses the EBB or DrawCore driver. `paper: "A3"` sets the paper; the machine settings below set its movement and pen heights.
+
+Replace the `createPlot()` line in `setup()` with this configuration for the tested A3 H:
+
+```js
+plot = createPlot({
+  paper: "A3", paperX: 0, paperY: 0, margin: 12,
+  drawcore: {
+    travel: { width: 420, height: 297 },
+    penUp: 0.5, penDown: 5, penFeed: 1000,
+    drawFeed: 600, travelFeed: 900,
+    axes: { swapXY: true, xDirection: -1, yDirection: -1 }
+  }
+});
+```
+
+Leave `width` out to fit the drawing inside the paper margins. Your drawing calls and `plot.go()` stay the same. Set the XY work origin before plotting; DrawCore does not take the carriage's current position as zero automatically. The [A3 H test page](docs/drawcore-test.html) lets you read the controller, test the pen and set that origin before trying a short line.
+
+A 10 mm line and square, pen movement and return to the origin were tested with DrawCore V2.09. Larger drawings and stopping during motion still need a physical test. Stop requests feed-hold; queued moves can remain paused and the pen can remain down. DrawCore supports one drawing at a time; `plot.sequence()` and automatic resume are not implemented for it.
 
 ## Requirements
 
@@ -92,10 +114,10 @@ The browser examples use the bundled core. Building and source-level integration
 | `p5.penplotter` | vanilla.penplotter ≥ 0.2.0 | the adapter contains no plotting or machine code; with a driver attached it refuses an older core with a clear message |
 | `p5.penplotter` | p5.js ≥ 2.2.2 | tested with 2.2.2, in global and instance mode |
 | direct plotting | Chrome or Edge, on `localhost` or https | Web Serial; the browser shows its port list only after a click or keypress |
-| direct plotting | iDraw HSE / A2 with EBB firmware 3.0.2 | the only physically tested profile (`idraw-hse-a2`) |
+| direct plotting | iDraw HSE / A2 (EBB 3.0.2), A3 H (DrawCore V2.09) | HSE/A2 profile tested; A3 H small plots tested with explicit settings |
 | examples | wave formulas, vanilla.waves (pinned commit) | examples only; neither library depends on them |
 
-The release bundles `vanilla.penplotter` 0.3.1 with `p5.penplotter` 0.2.5. Automated comparisons cover plans, SVG and EBB commands against adapter 0.2.2. Physical checks specific to this bundle have not been recorded.
+The release bundles `vanilla.penplotter` 0.5.0 with `p5.penplotter` 0.3.0. Automated comparisons cover plans, SVG and EBB commands against adapter 0.2.2. The A3 H physical test used the development bundle before the release; its log is kept in vanilla.penplotter.
 
 The browser examples load the fixed release bundle, which includes its core and driver. They do not load a sibling library or resolve the latest commits at startup.
 <!-- vereisten:end -->
@@ -103,7 +125,7 @@ The browser examples load the fixed release bundle, which includes its core and 
 ## Instance mode
 
 ```js
-import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5/dist/p5.penplotter.js";
+import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.3.0/dist/p5.penplotter.js";
 install(p5);
 
 new p5(function sketch(p) {

@@ -9,11 +9,13 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const core = path.resolve(root, "..", "vanilla.penplotter");
 const source = JSON.parse(fs.readFileSync(path.join(root, "browser/core-source.json"), "utf8"));
 const execute = promisify(execFile);
+const development = process.argv.includes("--development");
 const head = (await execute("git", ["-C", core, "rev-parse", "HEAD"])).stdout.trim();
-if (head !== source.commit) throw new Error(`Build needs core ${source.commit}; found ${head}.`);
+if (!development && head !== source.commit) throw new Error(`Build needs core ${source.commit}; found ${head}.`);
 const changed = (await execute("git", ["-C", core, "status", "--porcelain", "--untracked-files=all", "--", "src", "vanilla.penplotter.js"])).stdout.trim();
-if (changed) throw new Error("Build needs unchanged core source files.");
-const output = process.env.PENPLOTTER_BUILD_DIR || path.join(root, "dist");
+if (changed && !development) throw new Error("Build needs unchanged core source files.");
+const output = process.env.PENPLOTTER_BUILD_DIR || path.join(root, development ? "node_modules/.development-bundle" : "dist");
+if (development && path.resolve(output) === path.join(root, "dist")) throw new Error("Development builds must not overwrite release dist files.");
 const common = {
   absWorkingDir: root,
   bundle: true,
@@ -21,7 +23,7 @@ const common = {
   target: "es2022",
   charset: "utf8",
   legalComments: "inline",
-  define: { __PENPLOTTER_CORE_COMMIT__: JSON.stringify(source.commit) },
+  define: { __PENPLOTTER_CORE_COMMIT__: JSON.stringify(head), __PENPLOTTER_DEVELOPMENT__: String(development) },
   banner: { js: "/*! p5.penplotter + vanilla.penplotter — MIT License — Sebastien Vanblaere */" },
   metafile: true
 };
@@ -34,4 +36,4 @@ for (const [entry, filename, format] of [
     if (value.imports.length) throw new Error("Browser bundle must contain all its modules.");
   }
 }
-console.log(`Browser bundles built with core ${source.commit}.`);
+console.log(`${development ? "Development browser" : "Browser"} bundles built with core ${head}${development ? " plus working-tree changes" : ""}.`);

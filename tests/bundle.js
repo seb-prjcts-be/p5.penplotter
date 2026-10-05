@@ -8,10 +8,11 @@ import { pathToFileURL } from "node:url";
 import { installP5Penplotter } from "../p5.penplotter.js";
 import { PlotterEngine } from "../../vanilla.penplotter/vanilla.penplotter.js";
 import * as Ebb from "../../vanilla.penplotter/src/driver/ebb.js";
-import * as bundle from "../dist/p5.penplotter.js";
 
 const execute = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");
+const bundleDirectory = process.env.PENPLOTTER_TEST_BUNDLE_DIR || path.join(root, "dist");
+const bundle = await import(pathToFileURL(path.join(bundleDirectory, "p5.penplotter.js")).href);
 const source = JSON.parse(fs.readFileSync(path.join(root, "browser/core-source.json")));
 assert.equal(bundle.metadata.coreCommit, source.commit);
 assert.equal(bundle.metadata.version, JSON.parse(fs.readFileSync(path.join(root, "package.json"))).version);
@@ -53,7 +54,7 @@ assert.equal(bundle.install(P5), P5);
 const method = P5.prototype.createPlot;
 bundle.install(P5);
 assert.equal(P5.prototype.createPlot, method, "reinstallation preserves methods");
-const fresh = await import(pathToFileURL(path.join(root, "dist/p5.penplotter.js")).href + "?second-copy");
+const fresh = await import(pathToFileURL(path.join(bundleDirectory, "p5.penplotter.js")).href + "?second-copy");
 fresh.install(P5);
 assert.equal(P5.prototype.createPlot, method, "loading another copy of this bundle is harmless");
 assert.throws(() => bundle.install(undefined), /Load p5/);
@@ -67,13 +68,13 @@ assert.throws(() => bundle.install(explicit), /outside this bundle/);
 
 const directory = fs.mkdtempSync(path.join(os.tmpdir(), "penplotter-build-"));
 try {
-  await execute(process.execPath, ["tools/build-browser.js"], { cwd: root, env: { ...process.env, PENPLOTTER_BUILD_DIR: directory } });
+  await execute(process.execPath, ["tools/build-browser.js", ...(bundle.metadata.development ? ["--development"] : [])], { cwd: root, env: { ...process.env, PENPLOTTER_BUILD_DIR: directory } });
   for (const file of ["p5.penplotter.js", "p5.penplotter.browser.js"]) {
-    assert.deepEqual(fs.readFileSync(path.join(directory, file)), fs.readFileSync(path.join(root, "dist", file)), "repeatable build bytes");
+    assert.deepEqual(fs.readFileSync(path.join(directory, file)), fs.readFileSync(path.join(bundleDirectory, file)), "repeatable build bytes");
   }
   const queueTest = fs.readFileSync(path.resolve(root, "../vanilla.penplotter/tests/ebb-queue.js"), "utf8")
-    .replace('import { PlotterEngine } from "../vanilla.penplotter.js";', `import { PlotterEngine } from ${JSON.stringify(pathToFileURL(path.join(root, "dist/p5.penplotter.js")).href)};`)
-    .replace('import { EbbDriver, compileEbbPlan } from "../src/driver/ebb.js";', `import { Ebb } from ${JSON.stringify(pathToFileURL(path.join(root, "dist/p5.penplotter.js")).href)}; const { EbbDriver, compileEbbPlan } = Ebb;`);
+    .replace('import { PlotterEngine } from "../vanilla.penplotter.js";', `import { PlotterEngine } from ${JSON.stringify(pathToFileURL(path.join(bundleDirectory, "p5.penplotter.js")).href)};`)
+    .replace('import { EbbDriver, compileEbbPlan } from "../src/driver/ebb.js";', `import { Ebb } from ${JSON.stringify(pathToFileURL(path.join(bundleDirectory, "p5.penplotter.js")).href)}; const { EbbDriver, compileEbbPlan } = Ebb;`);
   const queueFile = path.join(directory, "bundled-queue-test.mjs");
   fs.writeFileSync(queueFile, queueTest + "\nexport const completed = true;\n");
   const regression = await import(pathToFileURL(queueFile).href);

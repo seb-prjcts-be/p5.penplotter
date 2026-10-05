@@ -26,7 +26,7 @@
   </nav>
   <main class="page">
     <header class="page-header">
-      <div class="section-tag">p5.js addon library · v0.2.5</div>
+      <div class="section-tag">p5.js addon library · v0.3.0</div>
       <h1>How p5.penplotter works</h1>
       <p class="guide-intro">How a supported p5 shape becomes recorded geometry for the pen.</p>
     </header>
@@ -41,6 +41,10 @@
 <p><code>plot.sequence()</code> clears the recording, asks your function to draw one object, plots it and waits for physical idle before asking for the next. The driver keeps its position and motor steps between objects. After the last object it returns home and releases the motors. The <a href="guide.html#werkwijzen">Guide</a> shows how to use it.</p>
 <p>The underlying driver session was tested on 2026-10-03 with three successive lines on the iDraw HSE / A2 and EBB 3.0.2, followed by one return home. Stop and fault cases were tested with simulated connections only. Adding geometry while the machine draws remains unimplemented.</p>
 <figure class="doc-animation"><img src="images/animations/ebb.gif" width="600" height="400" loading="lazy" alt="The JavaScript driver connects the plan to the EBB controller; the connectors show data flow."><figcaption>The JavaScript driver connects the plan to the EBB controller; the connectors show data flow.</figcaption></figure>
+<h2 id="choosing-the-connection">Choosing the connection</h2>
+<p>When you connect, vanilla.penplotter reads the controller response and selects EBB or DrawCore. The p5 adapter passes the drawing plan to that driver. It still needs the machine bounds, pen heights and axis directions; a controller response does not identify the whole plotter.</p>
+<p>For DrawCore, supply these in the <code>drawcore</code> options of <code>createPlot()</code>. They also set the bed used for paper placement. <code>paper: "A3"</code> selects the sheet. The <a href="setup.html#drawcore">Setup page</a> uses the settings from the small A3 H hardware test.</p>
+<p>DrawCore waits for physical idle before finishing a drawing. Its stop is GRBL feed-hold, which can leave the pen down and movements paused in the controller. Object-by-object sessions remain available through the EBB driver.</p>
 <h2 id="recording-limits">Recording limits</h2>
 <p>The adapter records shape arguments, without reading p5's drawing state. <code>translate()</code>, <code>rotate()</code> and <code>scale()</code> do not transform recorded geometry. Rectangles use corner coordinates; ellipses use centre coordinates, regardless of screen modes. Colours, stroke weight and ordinary p5 fills stay on screen.</p>
 <p>Text, general Bézier curves and arbitrary p5 sketches are not captured. For transformed shapes, calculate the coordinates before passing them to the plot. The <a href="guide.html#reference">Guide</a> lists the available calls.</p>
@@ -69,7 +73,7 @@ import { installP5Penplotter } from "../p5.penplotter/p5.penplotter.js";</code><
   </main>
   <footer>
     <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; Sebastien Vanblaere &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine</p>
-    <p class="footer-sub">MIT License &middot; v0.2.5</p>
+    <p class="footer-sub">MIT License &middot; v0.3.0</p>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
 </body>

@@ -39,5 +39,7 @@ jobs:
         working-directory: p5.penplotter
       - run: npm run test:browser
         working-directory: p5.penplotter
+      - run: node tools/build-hardware-test.js && node tests/hardware-page.js && PENPLOTTER_TEST_SITE=1 node tests/hardware-page.js
+        working-directory: p5.penplotter
       - run: npm run docs && npm run manifest && npm run examples:cdn && git diff --exit-code -- docs examples dist
         working-directory: p5.penplotter

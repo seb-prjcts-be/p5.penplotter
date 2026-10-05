@@ -1,14 +1,14 @@
-# Browser bundle for v0.2.5
+# Browser bundle for v0.3.0
 
-The published v0.2.2 release and its tag remain unchanged. Version `0.2.5` includes the browser bundle. Existing Web Editor reference sketches are preserved.
+The published v0.2.2 release and its tag remain unchanged. Version `0.3.0` includes controller recognition and the EBB and DrawCore drivers. Existing Web Editor reference sketches are preserved.
 
 ## User setup
 
-Load p5.js 2.2.2 before the module block. The module bundle supplies the matching adapter, core and EBB driver:
+Load p5.js 2.2.2 before the module block. The module bundle supplies the matching adapter, core and both drivers:
 
 ```html
 <script type="module">
-  import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5/dist/p5.penplotter.js";
+  import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.3.0/dist/p5.penplotter.js";
   install(p5);
 </script>
 ```
@@ -21,7 +21,7 @@ Global and instance mode retain their existing drawing methods. The root `p5.pen
 
 ## Reproduce the build
 
-Use Node 22 or newer. Keep the existing sibling checkouts. `browser/core-source.json` pins vanilla.penplotter to `c72ba7fb8ea60c0ea2d84f7e36dd03d161fbd7c8`. The build rejects another core HEAD or changed core source. It does not reset a user's checkout.
+Use Node 22 or newer. Keep the existing sibling checkouts. `browser/core-source.json` pins vanilla.penplotter to `7371fab23382b9a2e6ab08a008560fd5c0ba675c`. The build rejects another core HEAD or changed core source. It does not reset a user's checkout.
 
 ```sh
 npm ci --legacy-peer-deps
@@ -41,8 +41,8 @@ The browser runner uses `/usr/bin/chromium` when available, `PENPLOTTER_CHROMIUM
 
 Automated checks cover v0.2.2 geometry, plan, SVG and EBB-command equivalence, double/conflicting installation, missing/old p5, deterministic build bytes and the actual bundled driver's FIFO regression. Real Chromium checks all nine repository sketches at fixed seeds against the explicit v0.2.2 adapter with the pinned core. They also check module, classic and instance startup with actual p5 2.2.2. Chaos Game must wait for a click before starting its sequence.
 
-The gallery and example pages link to the matching Web Editor sketches. These copies use the fixed v0.2.5 CDN and the repository sketch code. All nine public previews were checked in Chrome after saving the updates; no physical plots were performed.
+The gallery keeps its existing Web Editor links. Those saved copies retain their older imports. The repository pages use v0.3.0 and all nine sketches are checked locally in Chromium with verified dependencies.
 
-Physical checks specific to this bundle remain unrecorded. Record results on iDraw HSE/A2 with EBB 3.0.2: Wave Lines, Molnar Grid, Spirograph, Calibration Sheet, U/D and a short Chaos Game sequence. Check controlled stop and the next job after parking the carriage again. Preview, mock/simulation and physical outcomes remain separate.
+The A3 H development bundle was tested on paper on 2026-10-05 with DrawCore V2.09. The core repository keeps the log for a 10 mm line and square, pen movement, one pen-up direction test and return to the origin. The release bundle has not had a separate physical run. Larger drawings and feed-hold during movement still need tests.
 
 The release is published at the maintainer’s request on the basis of automated and browser checks. This does not establish a completed physical test of the bundle. An unexplained geometry or command difference requires investigation. No existing release tag or asset is overwritten; correction after publication requires a new release.

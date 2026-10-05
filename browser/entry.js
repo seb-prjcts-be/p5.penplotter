@@ -1,10 +1,12 @@
 import { PlotterEngine } from "../../vanilla.penplotter/vanilla.penplotter.js";
 import * as Ebb from "../../vanilla.penplotter/src/driver/ebb.js";
+import * as Driver from "../../vanilla.penplotter/src/driver/index.js";
 import { installP5Penplotter, P5Penplotter, P5Plot, drawPlanWithP5 } from "../p5.penplotter.js";
 
-export { PlotterEngine, Ebb, P5Plot, drawPlanWithP5 };
+export { PlotterEngine, Ebb, Driver, P5Plot, drawPlanWithP5 };
 export const metadata = Object.freeze({
   version: P5Penplotter.version,
+  development: __PENPLOTTER_DEVELOPMENT__,
   coreVersion: PlotterEngine.version,
   coreCommit: __PENPLOTTER_CORE_COMMIT__
 });
@@ -32,7 +34,7 @@ export function install(p5Constructor) {
   if (p5Constructor.prototype.createPlot) {
     throw new Error("p5.penplotter is already installed outside this bundle. Load one installation per sketch.");
   }
-  installP5Penplotter(p5Constructor, PlotterEngine, { driver: Ebb });
+  installP5Penplotter(p5Constructor, PlotterEngine, { driver: Driver });
   Object.defineProperty(p5Constructor, installation, { value: metadata });
   return p5Constructor;
 }

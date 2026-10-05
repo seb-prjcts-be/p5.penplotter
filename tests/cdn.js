@@ -39,7 +39,8 @@ const examples = {
     "PvTDYl1Gd"
   ]
 };
-const expected = "<script type=\"module\">\n    import { install } from \"https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5/dist/p5.penplotter.js\";\n    install(p5);\n  </script>";
+const { version } = JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url)));
+const expected = "<script type=\"module\">\n    import { install } from \"https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v" + version + "/dist/p5.penplotter.js\";\n    install(p5);\n  </script>";
 for (const [example, [oldId, newId]] of Object.entries(examples)) {
   const folder = new URL('../examples/' + example + '/', import.meta.url);
   const page = fs.readFileSync(new URL('index.html', folder), 'utf8');
@@ -53,4 +54,4 @@ for (const [example, [oldId, newId]] of Object.entries(examples)) {
   assert.ok(!page.includes('/sketches/' + oldId));
 }
 assert.throws(() => extractModule('<script src="sketch.js"></script>'), /No.*module/);
-console.log('p5.penplotter CDN: all nine examples use the v0.2.5 bundle and matching editor links');
+console.log(`p5.penplotter CDN: all nine examples use the v${version} bundle and matching editor links`);

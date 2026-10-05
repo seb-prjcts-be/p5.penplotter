@@ -22,6 +22,14 @@ The underlying driver session was tested on 2026-10-03 with three successive lin
 
 ![The JavaScript driver connects the plan to the EBB controller; the connectors show data flow.](images/animations/ebb.gif)
 
+## Choosing the connection
+
+When you connect, vanilla.penplotter reads the controller response and selects EBB or DrawCore. The p5 adapter passes the drawing plan to that driver. It still needs the machine bounds, pen heights and axis directions; a controller response does not identify the whole plotter.
+
+For DrawCore, supply these in the `drawcore` options of `createPlot()`. They also set the bed used for paper placement. `paper: "A3"` selects the sheet. The [Setup page](setup.html#drawcore) uses the settings from the small A3 H hardware test.
+
+DrawCore waits for physical idle before finishing a drawing. Its stop is GRBL feed-hold, which can leave the pen down and movements paused in the controller. Object-by-object sessions remain available through the EBB driver.
+
 ## Recording limits
 
 The adapter records shape arguments, without reading p5's drawing state. `translate()`, `rotate()` and `scale()` do not transform recorded geometry. Rectangles use corner coordinates; ellipses use centre coordinates, regardless of screen modes. Colours, stroke weight and ordinary p5 fills stay on screen.

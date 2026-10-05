@@ -109,7 +109,7 @@ export class P5Plot {
       if (!(Number.isFinite(p.width) && p.width > 0 && Number.isFinite(p.height) && p.height > 0)) {
         throw new RangeError("Create a canvas with positive dimensions before choosing paper.");
       }
-      const bed = this.kit?.EBB_PROFILES?.[this.profileId]?.travel;
+      const bed = this.options.drawcore?.travel || this.kit?.EBB_PROFILES?.[this.profileId]?.travel;
       const requested = options.orientation ?? "auto";
       if (!["auto", "portrait", "landscape"].includes(requested)) throw new RangeError("Use auto, portrait or landscape for paper orientation.");
       let orientation = requested === "auto" ? (p.width >= p.height ? "landscape" : "portrait") : requested;
@@ -141,7 +141,7 @@ export class P5Plot {
   }
 
   clear() {
-    const travel = this.kit?.EBB_PROFILES?.[this.profileId]?.travel;
+    const travel = this.options.drawcore?.travel || this.kit?.EBB_PROFILES?.[this.profileId]?.travel;
     this.engine = new this.EngineClass({
       units: "mm",
       page: travel
@@ -358,15 +358,23 @@ export class P5Plot {
     this.requireKit();
     if (this.transport) return this;
     const granted = globalThis.navigator?.serial ? await navigator.serial.getPorts() : [];
-    const transport = this.kit.createWebSerialTransport(granted[0] ?? null, { filters: [] });
+    const createTransport = this.kit.createAutoSerialTransport || this.kit.createWebSerialTransport;
+    const transport = createTransport(granted[0] ?? null, { filters: [] });
     try {
       await transport.open();
     } catch (error) {
       if (!/No port selected/i.test(error.message)) throw error;
       throw new Error("No plotter was chosen. If no list appeared at all, open this page in Chrome or Edge itself.");
     }
+    try {
+      this.driver = this.kit.detectDriver
+        ? await this.kit.detectDriver(transport, { profile: this.profileId, drawcore: this.options.drawcore })
+        : new this.kit.EbbDriver({ transport, profile: this.profileId });
+    } catch (error) {
+      await transport.close();
+      throw error;
+    }
     this.transport = transport;
-    this.driver = new this.kit.EbbDriver({ transport, profile: this.profileId });
     this.say("connected");
     return this;
   }
@@ -438,7 +446,7 @@ export class P5Plot {
       this.say(`plot ${result.status}`);
       return result;
     } catch (error) {
-      this.say(`stopped safely: ${error.message}`);
+      this.say(`plot stopped: ${error.message}`);
       throw error;
     } finally {
       if (target) target.removeEventListener("click", stopOnClick);
@@ -549,7 +557,7 @@ export function installP5Penplotter(p5Constructor, EngineClass, installOptions =
 }
 
 export const P5Penplotter = Object.freeze({
-  version: "0.2.5",
+  version: "0.3.0",
   requires: REQUIRES,
   install: installP5Penplotter,
   draw: drawPlanWithP5

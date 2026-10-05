@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="nl">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A3 H DrawCore: test</title>
+<style>
+body{font:16px system-ui;max-width:860px;margin:32px auto;padding:0 16px;color:#222}label{display:inline-block;margin:8px}input{width:80px;padding:6px}button{padding:10px;margin:4px}pre{background:#f3f3f3;padding:16px;white-space:pre-wrap}canvas{border:1px solid #ccc}#stop{background:#a22;color:white}
+</style>
+<h1>A3 H DrawCore: test</h1>
+<p>Deze pagina gebruikt p5.penplotter v0.3.0. Herkenning en statusuitlezing bewegen de machine niet. De Z-startwaarden komen uit de onderzochte iDraw-extensie; ze zijn nog niet op jouw machine gekalibreerd.</p>
+<fieldset id="settings"><legend>Machine-instellingen</legend>
+<label>Bereik X (mm) <input id="travelX" type="number" value="420" min="1"></label>
+<label>Bereik Y (mm) <input id="travelY" type="number" value="297" min="1"></label>
+<label>Pen omhoog Z <input id="penUp" type="number" value="0.5" min="0" max="10" step="0.1"></label>
+<label>Pen omlaag Z <input id="penDown" type="number" value="5" min="0" max="10" step="0.1"></label>
+<label>Penfeed (mm/min) <input id="penFeed" type="number" value="1000" min="1"></label>
+<label><input id="swapXY" type="checkbox" checked> XY omwisselen</label>
+<label>GRBL X-richting <select id="xDirection"><option value="-1">Omgekeerd (-1)</option><option value="1">Normaal (+1)</option></select></label>
+<label>GRBL Y-richting <select id="yDirection"><option value="-1">Omgekeerd (-1)</option><option value="1">Normaal (+1)</option></select></label>
+</fieldset>
+<p>Leg voor de eerste beweging geen pen op papier. Controleer eerst het omhoogcommando. Parkeer daarna de carriage op het gewenste beginpunt en stel daar bewust het XY-nulpunt in. Controleer richting en schaal met de pen-op-tests van 1 mm. De asstartwaarden volgen de onderzochte iDraw-extensie (omwisselen en beide richtingen omkeren). De lijn loopt in tekeningcoördinaten van (12, 12) naar (22, 12) mm; het vierkant is 10 × 10 mm.</p>
+<div id="actions">
+<button id="connect">1. Verbinden en herkennen</button>
+<button id="status">Status uitlezen</button>
+<button id="controllerSettings">Controllerinstellingen uitlezen ($$)</button>
+<button id="up">2. Pen omhoog testen</button>
+<button id="origin">3. XY-nulpunt hier instellen</button>
+<button id="jogX">4. Tekening-X: 1 mm heen en terug, pen op</button>
+<button id="jogY">Tekening-Y: 1 mm heen en terug, pen op</button>
+<button id="line">5. Lijn van 10 mm</button>
+<button id="square">Vierkant van 10 mm</button>
+<button id="disconnect">Verbinding sluiten</button>
+</div>
+<button id="stop">Stop: feed-hold aanvragen</button>
+<button id="save">Log downloaden</button>
+<p>Feed-hold pauzeert de controller en kan bewegingen in de wachtrij laten staan. Deze test hervat of reset de controller niet automatisch en belooft geen penlift na stoppen. Controleer de status voordat je verdergaat.</p>
+<div id="canvas"></div><pre id="log" aria-live="polite"></pre>
+<script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.min.js"></script>
+<script type="module">
+import { install, Driver, P5Plot, PlotterEngine, metadata } from '../dist/p5.penplotter.js';
+install(p5);
+const $ = id => document.getElementById(id);
+let transport, driver, busy = false;
+const entries = [];
+function say(message) { const line = new Date().toISOString() + ' ' + message; entries.push(line); $('log').textContent = entries.join('\n'); }
+say('Bundle ' + JSON.stringify(metadata));
+window.setup = () => { createCanvas(400,400).parent('canvas'); background(255); noLoop(); };
+window.draw = () => {};
+function settings() {
+  const value = id => Number($(id).value);
+  const result = {travel:{width:value('travelX'),height:value('travelY')},penUp:value('penUp'),penDown:value('penDown'),penFeed:value('penFeed'),drawFeed:600,travelFeed:900,axes:{swapXY:$('swapXY').checked,xDirection:value('xDirection'),yDirection:value('yDirection')}};
+  Driver.compileDrawCorePlan({units:'mm',moves:[]},result);
+  return result;
+}
+function requireDrawCore() {
+  if (!driver || driver.identity.protocol !== 'drawcore') throw new Error('Verbind eerst met een herkende DrawCore-controller.');
+}
+async function idle() {
+  requireDrawCore();
+  const status = await driver.status();
+  say('Status ' + JSON.stringify(status));
+  if (status.state !== 'Idle') throw new Error('Controller is niet Idle; geen nieuwe beweging verstuurd.');
+}
+function lock(value) {
+  busy = value;
+  for (const button of $('actions').querySelectorAll('button')) button.disabled = value;
+  $('settings').disabled = value;
+}
+function action(id, operation, motion = false) {
+  $(id).onclick = async () => {
+    if (busy) return;
+    lock(true);
+    try { await operation(); }
+    catch (error) { if (motion && driver?.identity.protocol === 'drawcore') await driver.safeStop(); say('Fout: ' + error.message); }
+    finally { lock(false); }
+  };
+}
+action('connect', async () => {
+  if (transport) throw new Error('Sluit eerst de huidige verbinding.');
+  const candidate = Driver.createAutoSerialTransport();
+  try {
+    await candidate.open();
+    const selected = await Driver.detectDriver(candidate,{drawcore:settings()});
+    transport = candidate; driver = selected;
+    const originalSend = transport.send.bind(transport);
+    transport.send = async (...args) => { say('TX ' + args[0]); const reply = await originalSend(...args); say('RX ' + (reply || 'ok')); return reply; };
+    say('Herkend ' + JSON.stringify(driver.identity));
+  } catch (error) { await candidate.close(); throw error; }
+});
+action('status', async () => {
+  if (!transport) throw new Error('Verbind eerst.');
+  if (driver.identity.protocol === 'drawcore') say(JSON.stringify(await driver.status()));
+  else say('EBB status ' + await transport.send('QM'));
+});
+action('controllerSettings', async () => {
+  await idle();
+  say('Controllerinstellingen\n' + await transport.send('$$'));
+});
+action('up', async () => {
+  await idle();
+  const config = settings();
+  if (!confirm('Pen omhoog bewegen naar Z' + config.penUp + '? Controleer de penhouder en houd de machine vrij.')) return;
+  driver.aborted = false;
+  for (const command of ['G21','G90','G94',`G1 Z${config.penUp} F${config.penFeed}`]) {
+    if (driver.aborted) { say('Stop aangevraagd.'); return; }
+    await transport.send(command);
+  }
+  await driver.waitIdle(30000);
+  say(driver.aborted ? 'Stop aangevraagd.' : 'Pencommando voltooid; controleer de fysieke hoogte.');
+}, true);
+action('origin', async () => {
+  await idle();
+  if (!confirm('De carriage staat op het gewenste beginpunt? Stel alleen X en Y hier op nul; Z blijft ongewijzigd.')) return;
+  await transport.send('G92 X0 Y0');
+  driver.offset = null;
+  say('XY-werknulpunt expliciet ingesteld. ' + JSON.stringify(await driver.status()));
+});
+async function shape(square) {
+  await idle();
+  const config = settings();
+  driver.options = { ...config, transport };
+  background(255); stroke(0); noFill();
+  const plot = new P5Plot(window,PlotterEngine,{driver:Driver,paper:'A3',paperX:0,paperY:0,margin:12,width:10,x:12,y:12,drawcore:config,gesture:()=>true,log:say,confirm:()=>confirm('Test tekenen op het ingestelde XY-nulpunt? Controleer penhoogtes, plaatsing en bewegingsruimte.')});
+  plot.transport = transport; plot.driver = driver;
+  if (square) plot.rect(0,0,400,400); else plot.line(0,0,400,0);
+  say('Resultaat ' + JSON.stringify(await plot.go()));
+}
+async function jog(axis) {
+  await idle();
+  const config = settings();
+  driver.options = { ...config, transport };
+  if (!confirm('Pen-op-test: 1 mm langs tekening-' + axis + ' en terug naar het ingestelde nulpunt?')) return;
+  const result = await driver.run({units:'mm',moves:[{type:'travel',to:{x:axis==='X'?1:0,y:axis==='Y'?1:0}}]}, {confirmed:true,travelFeed:60});
+  say('Pen-op-richtingstest ' + axis + ': ' + JSON.stringify(result));
+}
+action('jogX',()=>jog('X'),true);
+action('jogY',()=>jog('Y'),true);
+action('line',()=>shape(false),true);
+action('square',()=>shape(true),true);
+action('disconnect',async()=>{if(transport)await transport.close();transport=null;driver=null;say('Verbinding gesloten.');});
+$('stop').onclick=()=>{if(driver){driver.abort();say('Feed-hold aangevraagd; status en penpositie moeten worden gecontroleerd.');}};
+$('save').onclick=()=>{const url=URL.createObjectURL(new Blob([entries.join('\n')],{type:'text/plain'}));const a=document.createElement('a');a.href=url;a.download='drawcore-test-log.txt';a.click();URL.revokeObjectURL(url);};
+</script>
+</html>

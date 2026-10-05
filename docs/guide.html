@@ -26,7 +26,7 @@
   </nav>
   <main class="page">
     <header class="page-header">
-      <div class="section-tag">p5.js addon library · v0.2.5</div>
+      <div class="section-tag">p5.js addon library · v0.3.0</div>
       <h1>Guide</h1>
     </header>
 
@@ -72,6 +72,7 @@ plot.polyline(points);</code></pre>
 <p><code>background()</code> clears the screen. Add <code>plot.clear()</code> before the drawing calls when a key or button redraws your sketch; it replaces the previous recording. Without it, each redraw adds more shapes to the same plot. Keep <code>noLoop()</code> for a drawing that changes only when requested.</p>
 
 <p class="editor-demo-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/5Ubv0-CQZ" target="_blank" rel="noopener noreferrer">p5.js Web Editor</a></p>
+<p>For an A3 H with DrawCore, use the <a href="setup.html#drawcore">machine settings in Setup</a>. The drawing calls remain the same. DrawCore currently plots one complete drawing at a time; the object-by-object sequence below uses EBB.</p>
     <h2 id="paper">2. Paper and placement</h2>
     <p>Your sketch uses pixels. The plotter uses millimetres. <code>createPlot()</code> sets the size and position of the drawing on your paper.</p>
     <h3>Let the library fit the drawing</h3>
@@ -213,7 +214,7 @@ async function plotTwoObjects() {
     <pre><code class="language-markup">&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
 &lt;script type="module" src="sketch.js"&gt;&lt;/script&gt;</code></pre>
     <h4>sketch.js</h4>
-    <pre><code class="language-javascript">import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5/dist/p5.penplotter.js";
+    <pre><code class="language-javascript">import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.3.0/dist/p5.penplotter.js";
 install(p5);
 
 new p5(function sketch(p) {
@@ -246,7 +247,7 @@ new p5(function sketch(p) {
     <pre><code class="language-markup">&lt;script src="https://cdn.jsdelivr.net/npm/p5@2.2.2/lib/p5.js"&gt;&lt;/script&gt;
 &lt;script type="module" src="sketch.js"&gt;&lt;/script&gt;</code></pre>
     <h4>sketch.js</h4>
-    <pre><code class="language-javascript">import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5/dist/p5.penplotter.js";
+    <pre><code class="language-javascript">import { install } from "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.3.0/dist/p5.penplotter.js";
 install(p5);
 
 let plot;
@@ -282,7 +283,7 @@ window.draw = draw;</code></pre>
 &lt;script type="importmap"&gt;
 {
   "imports": {
-    "p5.penplotter": "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.2.5/dist/p5.penplotter.js"
+    "p5.penplotter": "https://cdn.jsdelivr.net/gh/seb-prjcts-be/p5.penplotter@v0.3.0/dist/p5.penplotter.js"
   }
 }
 &lt;/script&gt;
@@ -292,7 +293,7 @@ install(p5);</code></pre>
 <p class="editor-demo-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/qvfeTbOqQ" target="_blank" rel="noopener noreferrer">p5.js Web Editor</a></p>
 
     <p>The import map must appear before the first module script. Bare names like <code>"p5.penplotter"</code> are what a package manager would resolve; the import map does the same job in the browser, without one.</p>
-    <p>The bundle includes core 0.3.1 and its EBB driver. Keep the bundle URL fixed to preserve this tested source combination.</p>
+    <p>The bundle includes core 0.5.0 and its EBB and DrawCore drivers. Keep the bundle URL fixed so the sketch keeps using the same code.</p>
 
     </details>
 
@@ -319,7 +320,7 @@ install(p5);</code></pre>
   </main>
   <footer>
     <p><a href="https://github.com/seb-prjcts-be/p5.penplotter" target="_blank">p5.penplotter</a> &middot; Sebastien Vanblaere &middot; the <a href="https://seb-prjcts-be.github.io/vanilla.penplotter/">vanilla.penplotter</a> engine</p>
-    <p class="footer-sub">MIT License &middot; v0.2.5</p>
+    <p class="footer-sub">MIT License &middot; v0.3.0</p>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
 </body>

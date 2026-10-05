@@ -21,6 +21,7 @@ var P5PenplotterBundle = (() => {
   // browser/classic.js
   var classic_exports = {};
   __export(classic_exports, {
+    Driver: () => driver_exports,
     Ebb: () => ebb_exports,
     P5Plot: () => P5Plot,
     PlotterEngine: () => PlotterEngine,
@@ -841,11 +842,11 @@ var P5PenplotterBundle = (() => {
     // s
   });
   function planTiming(options = {}) {
-    const positive3 = (value, fallback) => Number.isFinite(Number(value)) && Number(value) > 0 ? Number(value) : fallback;
+    const positive4 = (value, fallback) => Number.isFinite(Number(value)) && Number(value) > 0 ? Number(value) : fallback;
     const atLeastZero = (value, fallback) => Number.isFinite(Number(value)) && Number(value) >= 0 ? Number(value) : fallback;
     return {
-      drawSpeed: positive3(options.drawSpeed, PLAN_DEFAULTS.drawSpeed),
-      travelSpeed: positive3(options.travelSpeed, PLAN_DEFAULTS.travelSpeed),
+      drawSpeed: positive4(options.drawSpeed, PLAN_DEFAULTS.drawSpeed),
+      travelSpeed: positive4(options.travelSpeed, PLAN_DEFAULTS.travelSpeed),
       acceleration: atLeastZero(options.acceleration, PLAN_DEFAULTS.acceleration),
       travelAcceleration: atLeastZero(options.travelAcceleration, PLAN_DEFAULTS.travelAcceleration),
       liftDelay: atLeastZero(options.liftDelay, PLAN_DEFAULTS.liftDelay),
@@ -1162,6 +1163,28 @@ ${travel}
     }
   };
 
+  // ../vanilla.penplotter/src/driver/index.js
+  var driver_exports = {};
+  __export(driver_exports, {
+    DrawCoreDriver: () => DrawCoreDriver,
+    EBB_COMPATIBILITY: () => EBB_COMPATIBILITY,
+    EBB_PROFILES: () => EBB_PROFILES,
+    EbbDriver: () => EbbDriver,
+    MACHINE_PROFILES: () => MACHINE_PROFILES,
+    SimulationDriver: () => SimulationDriver,
+    WebSerialTextDriver: () => WebSerialTextDriver,
+    compileDrawCorePlan: () => compileDrawCorePlan,
+    compileEbbPlan: () => compileEbbPlan,
+    createAutoSerialTransport: () => createAutoSerialTransport,
+    createLogTransport: () => createLogTransport,
+    createWebSerialTransport: () => createWebSerialTransport,
+    detectDriver: () => detectDriver,
+    identifyController: () => identifyController,
+    mixCoreXY: () => mixCoreXY,
+    parseGrblStatus: () => parseGrblStatus,
+    planStroke: () => planStroke
+  });
+
   // ../vanilla.penplotter/src/driver/ebb.js
   var ebb_exports = {};
   __export(ebb_exports, {
@@ -1408,14 +1431,14 @@ ${travel}
     let drawing = null;
     const pen = (down) => {
       if (penDown === down) return;
-      const delay2 = down ? profile.penDownDelay : profile.penUpDelay;
-      const entry = { cmd: `SP,${down ? 0 : 1},${delay2}`, kind: down ? "pen-down" : "pen-up", durationMs: delay2 };
+      const delay3 = down ? profile.penDownDelay : profile.penUpDelay;
+      const entry = { cmd: `SP,${down ? 0 : 1},${delay3}`, kind: down ? "pen-down" : "pen-up", durationMs: delay3 };
       if (!down && drawing !== null) {
         entry.completes = drawing;
         drawing = null;
       }
       commands.push(entry);
-      stats.durationMs += delay2;
+      stats.durationMs += delay3;
       if (down) stats.penDowns += 1;
       penDown = down;
     };
@@ -1558,6 +1581,13 @@ ${travel}
       return reply;
     }
     async safeStop() {
+      if (this.transport.faulted && this.transport.stop) {
+        try {
+          await this.transport.stop();
+        } catch {
+        }
+        return;
+      }
       for (const cmd of ["ES", "SP,1", "EM,0,0"]) {
         try {
           await this.transport.send(cmd, { timeoutMs: 2e3 });
@@ -1870,6 +1900,312 @@ ${travel}
     };
   }
 
+  // ../vanilla.penplotter/src/driver/grbl.js
+  var scaleByUnit = { mm: 1, cm: 10, in: 25.4 };
+  var delay2 = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  function positive3(value, name) {
+    if (!Number.isFinite(value) || value <= 0) throw new RangeError(`${name} must be positive.`);
+    return value;
+  }
+  function compileDrawCorePlan(plan, options = {}) {
+    const scale = scaleByUnit[plan.units];
+    if (!scale || !Array.isArray(plan.moves)) throw new Error("A physical plot plan is required.");
+    const { travel, penUp, penDown } = options;
+    positive3(travel?.width, "Travel width");
+    positive3(travel?.height, "Travel height");
+    for (const [name, value] of [["penUp", penUp], ["penDown", penDown]]) {
+      if (!Number.isFinite(value) || value < 0 || value > 10) throw new RangeError(`${name} must be an explicit Z position between 0 and 10.`);
+    }
+    if (penUp === penDown) throw new RangeError("Pen positions must differ.");
+    const axes = options.axes;
+    if (!axes || typeof axes.swapXY !== "boolean" || ![1, -1].includes(axes.xDirection) || ![1, -1].includes(axes.yDirection)) {
+      throw new Error("Supply an explicit axes mapping: swapXY, xDirection and yDirection (+1 or -1).");
+    }
+    const drawFeed = positive3(options.drawFeed ?? 1200, "Drawing feed");
+    const travelFeed = positive3(options.travelFeed ?? 1800, "Travel feed");
+    const penFeed = positive3(options.penFeed ?? 1e3, "Pen feed");
+    const number2 = (value) => Number(value.toFixed(4));
+    const xy = (point2) => {
+      const x = point2?.x * scale, y = point2?.y * scale;
+      if (![x, y].every(Number.isFinite) || x < 0 || y < 0 || x > travel.width || y > travel.height) throw new RangeError("A point falls outside the configured machine bounds.");
+      const a = axes.swapXY ? y : x, b = axes.swapXY ? x : y;
+      return `X${number2(a * axes.xDirection)} Y${number2(b * axes.yDirection)}`;
+    };
+    const up = `G1 Z${number2(penUp)} F${penFeed}`;
+    const down = `G1 Z${number2(penDown)} F${penFeed}`;
+    const commands = ["G21", "G90", "G94", up];
+    const tools = /* @__PURE__ */ new Set();
+    for (const move of plan.moves) {
+      if (move.type === "tool-change") {
+        tools.add(move.toolId);
+        if (tools.size > 1) throw new Error("DrawCore jobs currently support one pen.");
+      } else if (move.type === "travel") {
+        commands.push(up, `G1 ${xy(move.to)} F${travelFeed}`);
+      } else if (move.type === "draw") {
+        if (!Array.isArray(move.points) || move.points.length < 2) throw new Error("A drawing move needs at least two points.");
+        commands.push(up, `G1 ${xy(move.points[0])} F${travelFeed}`, down);
+        for (const point2 of move.points.slice(1)) commands.push(`G1 ${xy(point2)} F${drawFeed}`);
+        commands.push(up);
+      } else throw new Error(`Unsupported move type: ${move.type}`);
+    }
+    commands.push(up);
+    if (options.returnHome !== false) commands.push(`G1 X0 Y0 F${travelFeed}`);
+    return { commands };
+  }
+  function parseGrblStatus(reply) {
+    const match = /^<([^|>]+)\|(.+)>$/.exec(reply.trim());
+    if (!match) throw new Error(`Invalid GRBL status: ${reply}`);
+    const fields = Object.fromEntries(match[2].split("|").map((field) => {
+      const at = field.indexOf(":");
+      return [field.slice(0, at), field.slice(at + 1).split(",").map(Number)];
+    }));
+    const position = fields.WPos || (fields.MPos && fields.WCO ? fields.MPos.map((n, i) => n - fields.WCO[i]) : null);
+    return { state: match[1], position, machinePosition: fields.MPos, offset: fields.WCO };
+  }
+  var DrawCoreDriver = class {
+    constructor(options = {}) {
+      if (!options.transport) throw new TypeError("DrawCoreDriver needs a transport.");
+      this.transport = options.transport;
+      this.options = options;
+      this.aborted = false;
+      this.stopPromise = null;
+    }
+    abort() {
+      this.aborted = true;
+      this.stopPromise = this.transport.writeRealtime("!").then(() => true, () => false);
+    }
+    async safeStop() {
+      this.abort();
+      await this.stopPromise;
+    }
+    async emergencyStop() {
+      await this.safeStop();
+    }
+    async status() {
+      const status = parseGrblStatus(await this.transport.send("?"));
+      if (status.offset) this.offset = status.offset;
+      if (!status.position && status.machinePosition && this.offset) status.position = status.machinePosition.map((n, i) => n - this.offset[i]);
+      return status;
+    }
+    async waitIdle(timeoutMs) {
+      const until = Date.now() + timeoutMs;
+      while (Date.now() < until) {
+        if (this.aborted) return;
+        const status = await this.status();
+        if (status.state === "Idle") return;
+        if (status.state !== "Run") throw new Error(`Controller is ${status.state}; job cannot continue.`);
+        await delay2(100);
+      }
+      throw new Error("Timed out waiting for physical idle.");
+    }
+    async run(plan, options = {}) {
+      if (options.confirmed !== true) throw new Error("A physical job requires confirmed: true.");
+      if (this.busy) throw new Error("The DrawCore driver is already running.");
+      const settings = { ...this.options, ...options };
+      const compiled = compileDrawCorePlan(plan, settings);
+      this.busy = true;
+      this.aborted = false;
+      this.offset = null;
+      try {
+        let initial = await this.status();
+        for (let attempt = 0; initial.state === "Idle" && !initial.position && attempt < 12; attempt++) {
+          if (this.aborted) return { status: "aborted", holdRequested: await this.stopPromise };
+          await delay2(100);
+          initial = await this.status();
+        }
+        if (initial.state !== "Idle") throw new Error(`Controller must be Idle, found ${initial.state}.`);
+        if (!initial.position || initial.position.length < 2 || !initial.position.slice(0, 2).every((n) => Number.isFinite(n) && Math.abs(n) < 0.05)) {
+          throw new Error("Set the machine's work origin to X0 Y0 before plotting. No automatic homing or coordinate reset is performed.");
+        }
+        for (const command of compiled.commands) {
+          if (this.aborted) break;
+          await this.transport.send(command);
+        }
+        if (!this.aborted) await this.waitIdle(settings.idleTimeoutMs ?? 12e4);
+        if (this.aborted) {
+          return { status: "aborted", holdRequested: await this.stopPromise };
+        }
+        return { status: "complete", commands: compiled.commands.length };
+      } catch (error) {
+        await this.safeStop();
+        throw error;
+      } finally {
+        this.busy = false;
+      }
+    }
+  };
+
+  // ../vanilla.penplotter/src/driver/auto.js
+  function identifyController(response) {
+    const text = String(response).trim();
+    if (/^EBB(?:\b|v\d)/i.test(text)) return { protocol: "ebb", response: text };
+    if (/\bDrawCore\s+V[\d.]+/i.test(text)) return { protocol: "drawcore", response: text };
+    if (/^Grbl\b/i.test(text) || /\[VER:1\.1/.test(text)) return { protocol: "grbl", response: text };
+    return { protocol: "unknown", response: text };
+  }
+  async function detectDriver(transport, options = {}) {
+    let identity = transport.identity;
+    if (!identity || identity.protocol === "unknown") {
+      try {
+        identity = identifyController(await transport.send("V"));
+      } catch (error) {
+        if (!/^GRBL error:/.test(error.message)) throw error;
+        identity = identifyController(await transport.send("$I"));
+      }
+    }
+    if (identity.protocol === "unknown") throw new Error(`Unknown controller: ${identity.response}`);
+    if (identity.protocol === "grbl") throw new Error("GRBL detected; a machine-specific pen driver is required. This driver supports DrawCore only.");
+    transport.protocol = identity.protocol;
+    const driver = identity.protocol === "ebb" ? new EbbDriver({ transport, profile: options.profile }) : new DrawCoreDriver({ ...options.drawcore, transport });
+    driver.identity = identity;
+    return driver;
+  }
+  function createAutoSerialTransport(port = null, options = {}) {
+    const encoder = new TextEncoder(), decoder = new TextDecoder();
+    let reader, writer, active = false, pending = null, buffer = "", fault = null;
+    const requests = [];
+    let writes = Promise.resolve();
+    const transport = {
+      identity: null,
+      protocol: null,
+      get faulted() {
+        return Boolean(fault);
+      },
+      async open() {
+        if (!port) {
+          if (!globalThis.navigator?.serial) throw new Error("Web Serial is not available.");
+          port = await navigator.serial.requestPort({ filters: [] });
+        }
+        if (!port.readable) await port.open({ baudRate: options.baudRate ?? 115200 });
+        reader = port.readable.getReader();
+        writer = port.writable.getWriter();
+        active = true;
+        pump();
+      },
+      async writeRealtime(text) {
+        if (!writer) throw new Error("The serial port is closed.");
+        writes = writes.catch(() => {
+        }).then(() => writer.write(encoder.encode(text)));
+        await writes;
+      },
+      send(command, sendOptions = {}) {
+        if (!active || fault) return Promise.reject(fault || new Error("Open the serial transport first."));
+        if (pending && transport.protocol !== "ebb") return Promise.reject(new Error("Another serial request is pending."));
+        return new Promise((resolve, reject) => {
+          const timer = setTimeout(() => fail(new Error(`No reply to ${command}.`)), sendOptions.timeoutMs ?? options.timeoutMs ?? 3e3);
+          requests.push({ command, lines: [], resolve, reject, timer });
+          pending = requests[0];
+          writes = writes.then(() => {
+            if (fault) throw fault;
+            return writer.write(encoder.encode(command === "?" ? "?" : `${command}\r`));
+          });
+          writes.catch(fail);
+        });
+      },
+      async stop() {
+        fail(new Error("The controller connection was stopped."));
+        if (transport.protocol === "ebb") await transport.writeRealtime("ES\rSP,1\rEM,0,0\r");
+        else if (transport.protocol === "drawcore" || transport.protocol === "grbl") await transport.writeRealtime("!");
+      },
+      async close() {
+        active = false;
+        fail(new Error("The serial port was closed."));
+        if (reader) {
+          try {
+            await reader.cancel();
+          } catch {
+          }
+          reader.releaseLock();
+        }
+        try {
+          await writes;
+        } catch {
+        }
+        if (writer) {
+          writer.releaseLock();
+          writer = null;
+        }
+        if (port) await port.close();
+      }
+    };
+    function finish(error, response) {
+      if (!pending) return;
+      const item = pending;
+      requests.shift();
+      pending = requests[0] || null;
+      clearTimeout(item.timer);
+      if (error) item.reject(error);
+      else item.resolve(response);
+    }
+    function fail(error) {
+      fault = error;
+      while (pending) finish(error);
+    }
+    function deliver(line2) {
+      const identity = identifyController(line2);
+      if (identity.protocol !== "unknown") {
+        const previousIdentity = transport.identity;
+        transport.identity = identity;
+        transport.protocol = identity.protocol;
+        if (pending?.command === "V") {
+          finish(null, line2);
+          return;
+        }
+        if (/^Grbl\b/i.test(line2) && (pending || previousIdentity)) {
+          fail(new Error("Controller restarted; reconnect before continuing."));
+          return;
+        }
+      }
+      if (/^(?:error:|ALARM:)/i.test(line2)) {
+        const error = new Error(`GRBL error: ${line2}`);
+        if (/^ALARM:/i.test(line2)) fail(error);
+        else finish(error);
+        return;
+      }
+      if (!pending) return;
+      if (pending.command === "?" && line2.startsWith("<")) {
+        finish(null, line2);
+        return;
+      }
+      if (line2 === "ok" || line2 === "OK") {
+        finish(null, pending.lines.join("\n"));
+        return;
+      }
+      if (line2.startsWith("!")) {
+        finish(new Error(`EBB error: ${line2}`));
+        return;
+      }
+      if (["V", "QM"].includes(pending.command)) {
+        finish(null, line2);
+        return;
+      }
+      if (line2.startsWith("<")) return;
+      pending.lines.push(line2);
+    }
+    async function pump() {
+      try {
+        while (active) {
+          const { value, done } = await reader.read();
+          if (done) {
+            if (active) fail(new Error("Serial connection ended."));
+            return;
+          }
+          buffer += decoder.decode(value, { stream: true });
+          for (; ; ) {
+            const at = buffer.search(/[\r\n]/);
+            if (at < 0) break;
+            const line2 = buffer.slice(0, at).trim();
+            buffer = buffer.slice(at + 1);
+            if (line2) deliver(line2);
+          }
+        }
+      } catch (error) {
+        if (active) fail(error);
+      }
+    }
+    return transport;
+  }
+
   // ../vanilla.penplotter/src/driver/index.js
   var MACHINE_PROFILES = Object.freeze({
     "generic-grbl": {
@@ -1908,7 +2244,7 @@ ${travel}
       drawSpeed: 35,
       travelSpeed: 80,
       direct: false,
-      note: "Protocol support varies by model. The iDraw HSE / A2 has its own profile; iDraw 2.0 uses a different board and is not supported."
+      note: "Protocol varies by controller. HSE/A2 uses EBB; DrawCore uses its own driver with explicit machine settings."
     },
     "idraw-hse-a2": {
       id: "idraw-hse-a2",
@@ -1921,9 +2257,75 @@ ${travel}
       note: "Plots directly through EbbDriver; machine facts live in EBB_PROFILES."
     }
   });
+  var SimulationDriver = class {
+    constructor(options = {}) {
+      this.options = options;
+      this.aborted = false;
+    }
+    abort() {
+      this.aborted = true;
+    }
+    async run(plan, handlers = {}) {
+      this.aborted = false;
+      const total = plan.moves.length;
+      for (let index = 0; index < total; index += 1) {
+        if (this.aborted) return { status: "aborted", index };
+        const move = plan.moves[index];
+        if (handlers.onMove) await handlers.onMove(move, index, total);
+      }
+      return { status: "complete", moves: total };
+    }
+  };
+  var WebSerialTextDriver = class {
+    constructor(options = {}) {
+      this.options = { baudRate: 115200, lineDelay: 0, ...options };
+      this.port = null;
+      this.writer = null;
+      this.aborted = false;
+    }
+    async connect(filters = []) {
+      if (!globalThis.navigator?.serial) {
+        throw new Error("Web Serial is not available in this browser/context.");
+      }
+      this.port = await navigator.serial.requestPort({ filters });
+      await this.port.open({ baudRate: this.options.baudRate });
+      this.writer = this.port.writable.getWriter();
+    }
+    abort() {
+      this.aborted = true;
+    }
+    async send(text, options = {}) {
+      if (!this.writer) throw new Error("Connect the serial driver first.");
+      if (options.confirmed !== true) {
+        throw new Error("Direct plotting requires { confirmed: true } after a physical dry run.");
+      }
+      this.aborted = false;
+      const encoder = new TextEncoder();
+      const lines = String(text).split(/\r?\n/);
+      for (let index = 0; index < lines.length; index += 1) {
+        if (this.aborted) return { status: "aborted", line: index };
+        await this.writer.write(encoder.encode(`${lines[index]}
+`));
+        if (this.options.lineDelay > 0) {
+          await new Promise((resolve) => setTimeout(resolve, this.options.lineDelay));
+        }
+      }
+      return { status: "complete", lines: lines.length };
+    }
+    async disconnect() {
+      if (this.writer) {
+        this.writer.releaseLock();
+        this.writer = null;
+      }
+      if (this.port) {
+        await this.port.close();
+        this.port = null;
+      }
+    }
+  };
 
   // ../vanilla.penplotter/vanilla.penplotter.js
-  var VERSION = "0.3.1";
+  var VERSION = "0.5.0";
   var PlotterEngine = class {
     static version = VERSION;
     static paperSize = paperSize;
@@ -2146,7 +2548,7 @@ ${travel}
         if (!(Number.isFinite(p.width) && p.width > 0 && Number.isFinite(p.height) && p.height > 0)) {
           throw new RangeError("Create a canvas with positive dimensions before choosing paper.");
         }
-        const bed = this.kit?.EBB_PROFILES?.[this.profileId]?.travel;
+        const bed = this.options.drawcore?.travel || this.kit?.EBB_PROFILES?.[this.profileId]?.travel;
         const requested = options.orientation ?? "auto";
         if (!["auto", "portrait", "landscape"].includes(requested)) throw new RangeError("Use auto, portrait or landscape for paper orientation.");
         let orientation = requested === "auto" ? p.width >= p.height ? "landscape" : "portrait" : requested;
@@ -2177,7 +2579,7 @@ ${travel}
       this.clear();
     }
     clear() {
-      const travel = this.kit?.EBB_PROFILES?.[this.profileId]?.travel;
+      const travel = this.options.drawcore?.travel || this.kit?.EBB_PROFILES?.[this.profileId]?.travel;
       this.engine = new this.EngineClass({
         units: "mm",
         page: travel ? { ...travel } : { width: this.paper ? this.paper.x + this.paper.width : this.offset.x + this.p.width * this.scale, height: this.paper ? this.paper.y + this.paper.height : this.offset.y + this.p.height * this.scale }
@@ -2368,15 +2770,21 @@ ${travel}
       this.requireKit();
       if (this.transport) return this;
       const granted = globalThis.navigator?.serial ? await navigator.serial.getPorts() : [];
-      const transport = this.kit.createWebSerialTransport(granted[0] ?? null, { filters: [] });
+      const createTransport = this.kit.createAutoSerialTransport || this.kit.createWebSerialTransport;
+      const transport = createTransport(granted[0] ?? null, { filters: [] });
       try {
         await transport.open();
       } catch (error) {
         if (!/No port selected/i.test(error.message)) throw error;
         throw new Error("No plotter was chosen. If no list appeared at all, open this page in Chrome or Edge itself.");
       }
+      try {
+        this.driver = this.kit.detectDriver ? await this.kit.detectDriver(transport, { profile: this.profileId, drawcore: this.options.drawcore }) : new this.kit.EbbDriver({ transport, profile: this.profileId });
+      } catch (error) {
+        await transport.close();
+        throw error;
+      }
       this.transport = transport;
-      this.driver = new this.kit.EbbDriver({ transport, profile: this.profileId });
       this.say("connected");
       return this;
     }
@@ -2443,7 +2851,7 @@ ${travel}
         this.say(`plot ${result.status}`);
         return result;
       } catch (error) {
-        this.say(`stopped safely: ${error.message}`);
+        this.say(`plot stopped: ${error.message}`);
         throw error;
       } finally {
         if (target) target.removeEventListener("click", stopOnClick);
@@ -2545,7 +2953,7 @@ ${travel}
     return p5Constructor;
   }
   var P5Penplotter = Object.freeze({
-    version: "0.2.5",
+    version: "0.3.0",
     requires: REQUIRES,
     install: installP5Penplotter,
     draw: drawPlanWithP5
@@ -2554,8 +2962,9 @@ ${travel}
   // browser/entry.js
   var metadata = Object.freeze({
     version: P5Penplotter.version,
+    development: false,
     coreVersion: PlotterEngine.version,
-    coreCommit: "c72ba7fb8ea60c0ea2d84f7e36dd03d161fbd7c8"
+    coreCommit: "7371fab23382b9a2e6ab08a008560fd5c0ba675c"
   });
   var installation = /* @__PURE__ */ Symbol.for("p5.penplotter.installation");
   function install(p5Constructor) {
@@ -2579,7 +2988,7 @@ ${travel}
     if (p5Constructor.prototype.createPlot) {
       throw new Error("p5.penplotter is already installed outside this bundle. Load one installation per sketch.");
     }
-    installP5Penplotter(p5Constructor, PlotterEngine, { driver: ebb_exports });
+    installP5Penplotter(p5Constructor, PlotterEngine, { driver: driver_exports });
     Object.defineProperty(p5Constructor, installation, { value: metadata });
     return p5Constructor;
   }
