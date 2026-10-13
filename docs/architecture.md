@@ -8,7 +8,7 @@ The recording contains the shapes added since the last `plot.clear()`. Clear rep
 
 ## Paper and coordinates
 
-Paper dimensions come from `PlotterEngine.paperSize()`. The adapter resolves the sheet's orientation and position, then calculates the drawing's scale and offset. `plan()` checks the recorded strokes against the selected paper margins before connecting. The driver checks machine travel separately.
+Paper dimensions come from `PlotterEngine.paperSize()`. The adapter resolves the sheet's orientation and position, then calculates the drawing's scale and offset. After connecting, automatic paper placement is recalculated against the selected driver's configured bed; recorded geometry moves with the paper without changing scale, while explicit `paperX`, `paperY`, `x` and `y` remain unchanged. `plan()` checks the recorded strokes against the selected paper margins before connecting. The driver checks machine travel separately.
 
 A bed preview displays the resolved sheet and plan. It does not change either. Paper placement does not establish a machine origin or reverse motor directions. See [Setup](setup.html#machine-origin) for the physical origin and [Guide](guide.html#paper) for placement examples.
 
@@ -28,7 +28,7 @@ When you connect, vanilla.penplotter reads the controller response and selects E
 
 For DrawCore, supply these in the `drawcore` options of `createPlot()`. They also set the bed used for paper placement. `paper: "A3"` selects the sheet. The [Setup page](setup.html#drawcore) uses the settings from the small A3 H hardware test.
 
-DrawCore waits for physical idle before finishing a drawing. Normal Stop waits for accepted motion, raises the pen and confirms Idle. Errors and emergencyStop request feed-hold; penlift is not guaranteed. Object-by-object sessions remain available through the EBB driver.
+DrawCore waits for physical idle before finishing a drawing. Normal Stop waits for accepted motion, raises the pen and confirms Idle; the latest pen lift on stop has not been physically confirmed yet. Errors and emergencyStop request feed-hold; penlift is not guaranteed. Plot commands use `commandTimeoutMs` (default 120000 ms), while identity and status queries keep short timeouts. Object-by-object sessions remain available through the EBB driver.
 
 ## Recording limits
 

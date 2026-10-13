@@ -77,11 +77,10 @@ function draw() {
 <h3 id="machine-origin">Prepare the paper and pen</h3>
 <figure><img src="images/animations/setup-plotter.gif?v=2" width="640" height="480" style="max-width:100%;height:auto;image-rendering:pixelated" alt="CGA-style plotter with its pen at the bottom-left starting corner and a controller card with a blinking red button."></figure>
 <p>On my iDraw HSE / A2, the starting corner is bottom left when the long rails run away from you. With the motors off, move the carriage to that corner. The driver takes this position as zero; the machine does not find it automatically.</p>
-<p>Place the paper with its corner at that origin, as set by <code>paperX: 0</code> and <code>paperY: 0</code> above. Check its position in the bed preview.</p>
+<p>Place the paper where the bed preview shows it, or add <code>paperX: 0, paperY: 0</code> to <code>createPlot()</code> to put the sheet in the starting corner.</p>
 <p>Click the drawing. Select the plotter in the browser's port list and click Connect. A second click on the drawing requests a stop.</p>
 <p>If your machine has a different starting corner or motor direction, confirm its origin before plotting. Moving the carriage to another corner does not change the driver's directions.</p>
 <p>After an EBB stop or error, switch off the motors and return the carriage to the starting corner before trying again.</p>
-<p>Examples start on A4 and fit the chosen sheet. Change <code>paper</code> for another format. Paper and machine travel are separate settings. Automatic placement is recalculated after connection; explicit paper and drawing offsets remain unchanged. The calibration sheet keeps a fixed physical scale.</p>
 <h2 id="drawcore">A3 H with DrawCore</h2>
 <p>For the tested A3 H, replace the <code>createPlot()</code> line in <code>setup()</code> with:</p>
 <pre><code class="language-javascript">plot = createPlot({
@@ -93,9 +92,9 @@ function draw() {
     axes: { swapXY: true, xDirection: -1, yDirection: -1 }
   }
 });</code></pre>
-<p>Keep the drawing calls and <code>plot.go()</code>. Without <code>width</code>, the canvas fits inside the paper margins. A 300 mm square does not fit on A3 with a 12 mm margin.</p>
+<p>Keep the drawing calls and <code>plot.go()</code>. Without <code>width</code>, the canvas fits inside the paper margins.</p>
 <p>Open the <a href="drawcore-test.html">A3 H test page</a> in Chrome or Edge on the computer connected to the plotter. Click Connect, read Status and Controller settings, then try Pen up. With the carriage at your starting point, use the XY-origin button and test the 1 mm moves before drawing the 10 mm line. The page can save its command log.</p>
-<p>The library recognises DrawCore from the controller response. The pen heights and axis directions above were tested with DrawCore V2.09 on one A3 H. Stop lets accepted moves finish, raises the pen and confirms Idle. It is not an immediate emergency stop. Errors and emergencyStop request feed-hold; penlift is not guaranteed. The latest stop with penlift has not been physically tested. Plot commands use <code>commandTimeoutMs</code>, default 120000 ms; identity and status checks keep short timeouts. It does not reset or resume automatically.</p>
+<p>The library recognises DrawCore from the controller response. The pen heights and axis directions above were tested with DrawCore V2.09 on one A3 H for a 10 mm line and square. Larger drawings and stopping during motion still need a physical test. Stop lets accepted moves finish and is not an immediate emergency stop; the latest pen lift on stop has not been tested on the machine yet. DrawCore plots one drawing at a time and does not reset or resume automatically.</p>
     <h2 id="troubleshooting">If the installation fails</h2>
     <ul>
       <li><code>createPlot is not defined</code>: check that the module loaded and that <code>sketch.js</code> is a normal script. Call <code>createPlot()</code> inside <code>setup()</code>.</li>

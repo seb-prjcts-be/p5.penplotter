@@ -81,9 +81,7 @@ The plot contains the shape calls recorded since the last `plot.clear()`. Clear 
 
 Tested on iDraw HSE / A2 (EBB firmware 3.0.2) on 2026-09-21. Plotted from the p5.js Web Editor on 2026-10-01. Small DrawCore tests on an A3 H passed on 2026-10-05.
 
-Examples start on A4 and fit the canvas inside its margins. Change `paper` to use another sheet; optional machine settings are shown as comments in the sketches. Paper dimensions do not set the machine travel. The calibration sheet keeps a fixed 200 × 280 mm canvas so its ruler stays in millimetres.
-
-Automatic paper placement is recalculated after connecting, using the selected driver's configured bed. Recorded geometry moves with the paper without changing scale. Explicit `paperX`, `paperY`, `x` and `y` remain unchanged; positions that do not fit are rejected before plotting.
+When you connect, automatic paper placement uses the detected driver's bed; explicit `paperX`, `paperY`, `x` and `y` stay as set. Positions that do not fit are rejected before plotting.
 
 ## A3 H with DrawCore
 
@@ -105,7 +103,7 @@ plot = createPlot({
 
 Leave `width` out to fit the drawing inside the paper margins. Your drawing calls and `plot.go()` stay the same. Set the XY work origin before plotting; DrawCore does not take the carriage's current position as zero automatically. The [A3 H test page](docs/drawcore-test.html) lets you read the controller, test the pen and set that origin before trying a short line.
 
-A 10 mm line and square, pen movement and return to the origin were tested with DrawCore V2.09. Larger drawings and stopping during motion still need a physical test. Stop lets accepted moves finish, raises the pen, then confirms Idle. This is a controlled stop, not an immediate emergency stop. Errors and emergencyStop request feed-hold, which does not guarantee penlift. Plot commands use `commandTimeoutMs` (default 120000 ms); identity and status queries retain short timeouts. The newest controlled stop with penlift has not been physically confirmed. DrawCore supports one drawing at a time; `plot.sequence()` and automatic resume are not implemented for it.
+A 10 mm line and square, pen movement and return to the origin were tested with DrawCore V2.09. Larger drawings and stopping during motion still need a physical test. Stop lets accepted moves finish and is not an immediate emergency stop; the latest pen lift on stop has not been tested on the machine yet. DrawCore plots one drawing at a time; `plot.sequence()` and automatic resume are not implemented for it.
 
 ## Requirements
 
@@ -197,7 +195,7 @@ plot.polyline(points);
 
 ## Examples
 
-Each one is a standalone page under `examples/`; the [examples page](https://seb-prjcts-be.github.io/p5.penplotter/docs/examples.html) shows them live.
+Each one is a standalone page under `examples/`; the [examples page](https://seb-prjcts-be.github.io/p5.penplotter/docs/examples.html) shows them live. Examples start on A4 and fit the canvas inside its margins; the calibration sheet keeps a fixed 200 × 280 mm canvas so its ruler stays in millimetres.
 
 Start with the two ways to work:
 
