@@ -40,7 +40,8 @@ async function setup() {
   pixelDensity(1);
   // Change paper to "A3" or "A2"; the drawing fits the chosen sheet.
   // Add width: 120 for a fixed drawing width in mm (it must fit the margins).
-  // Add paperX: 0, paperY: 0 to place the sheet at the machine origin.
+  // paperX: 0, paperY: 0 puts the sheet in the starting corner of the machine.
+  // Leave both out to centre the sheet on the bed; showBed() shows where it lies.
   // For an A3 H with DrawCore, add these explicit machine settings:
   // drawcore: {
   //   travel: { width: 420, height: 297 },
@@ -48,7 +49,7 @@ async function setup() {
   //   penUp: 0.5, penDown: 5, penFeed: 1000,
   //   drawFeed: 600, travelFeed: 900
   // }
-  plot = createPlot({ paper: "A4", margin: 12 });
+  plot = createPlot({ paper: "A4", paperX: 0, paperY: 0, margin: 12 });
 
   noLoop();
 }

@@ -14,7 +14,10 @@ for tick in range(8):
     im.putpalette(PALETTE)
     d = ImageDraw.Draw(im)
     d.rectangle((92,12,224,220), outline=1)
-    d.rectangle((106,20,213,168), fill=3)
+    d.rectangle((106,20,213,168), outline=1)
+    # A4 in the starting corner, as in the first circle sketch: 297 mm along
+    # the rails (X), 210 mm across (Y).
+    d.rectangle((106,94,158,168), fill=3)
     for x in (96,100,219,223):
         d.line((x,15,x,205), fill=1)
     # H gantry, parked at the lower end of the rails.

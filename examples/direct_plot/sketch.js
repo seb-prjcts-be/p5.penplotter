@@ -1,5 +1,5 @@
-// Fit the canvas on the chosen sheet, with a 12 mm paper margin.
-const PLACE = { paper: "A4", margin: 12 };
+// The sheet lies in the starting corner; the canvas fits inside a 12 mm margin.
+const PLACE = { paper: "A4", paperX: 0, paperY: 0, margin: 12 };
 
 let waveSeed = Math.floor(Math.random() * 35);
 
@@ -12,7 +12,8 @@ async function setup() {
 
   // Change paper to "A3" or "A2"; the drawing fits the chosen sheet.
   // Add width: 120 for a fixed drawing width in mm (it must fit the margins).
-  // Add paperX: 0, paperY: 0 to place the sheet at the machine origin.
+  // paperX: 0, paperY: 0 puts the sheet in the starting corner of the machine.
+  // Leave both out to centre the sheet on the bed; showBed() shows where it lies.
   // For an A3 H with DrawCore, add these explicit machine settings:
   // drawcore: {
   //   travel: { width: 420, height: 297 },

@@ -92,6 +92,7 @@ plot.polyline(points);</code></pre>
     <h3>Use the paper on your machine</h3>
     <p>Set <code>paper</code> to its format. <code>paperX</code> and <code>paperY</code> locate the paper corner from the machine's starting point. Use zero when the paper starts at that point.</p>
     <p>In my setup, X runs along the long rails and Y across them. The pen starts at the lower-left corner. The <a href="setup.html#machine-origin">starting point</a> stays fixed when you move the paper.</p>
+    <p>With <code>orientation: "auto"</code>, a canvas at least as wide as it is high gets a landscape sheet: its long side lies along X. A taller canvas gets a portrait sheet, with its long side along Y. If that sheet does not fit the bed, the other orientation is used. The library turns the sheet, never the drawing. On my machine X runs away from you, so a landscape sheet looks upright from where you stand.</p>
     <details>
       <summary>Place the drawing near the paper corner</summary>
     <p>Replace <code>createPlot()</code> in the first sketch with:</p>
@@ -108,7 +109,7 @@ plot.polyline(points);</code></pre>
 
     <p><code>width: 80</code> makes the canvas 80 mm wide on paper. Its proportions stay the same. <code>x</code> and <code>y</code> place the canvas corner 12 mm from the machine's starting point along each axis.</p>
     <figure class="canvas-placement-diagram">
-      <img src="images/animations/paper-placement.gif" width="640" height="480" style="max-width:100%;height:auto;image-rendering:pixelated" alt="CGA drawing of the plotter seen from above, with the pen at the lower-left origin, X along the rails, Y across the bed and a small drawing area near the paper corner.">
+      <img src="images/animations/paper-placement.gif?v=2" width="640" height="480" style="max-width:100%;height:auto;image-rendering:pixelated" alt="CGA drawing of the plotter seen from above: an A4 sheet in the lower-left starting corner with its long side along the rails (X), and an 80 mm square drawing area 12 mm from that corner along X and Y.">
     </figure>
     <p>If the paper starts elsewhere, enter its position in <code>paperX</code> and <code>paperY</code>. For the same corner placement, set <code>x</code> to <code>paperX + margin</code> and <code>y</code> to <code>paperY + margin</code>. These are distances from the machine origin, not from the paper corner.</p>
     </details>
@@ -116,7 +117,7 @@ plot.polyline(points);</code></pre>
     <p>Keep this after the drawing calls, before <code>plot.go()</code>:</p>
     <pre><code class="language-javascript">plot.showBed();</code></pre>
     <p>The preview shows the paper and the recorded drawing. Its red cross marks the machine origin. The preview turns X to the right and Y down; on my physical machine, X runs up the rails and Y to the right. Match the axes when you compare it with the machine.</p>
-    <p><code>margin</code> leaves space around the drawing. Paper or drawings that do not fit are refused before plotting. <code>orientation: "auto"</code> chooses an orientation that fits; use <code>"portrait"</code> or <code>"landscape"</code> to specify it. The resolved paper settings are available in <code>plot.paper</code>.</p>
+    <p><code>margin</code> leaves space around the drawing. Paper or drawings that do not fit are refused before plotting. <code>orientation: "auto"</code> follows the canvas and switches when the sheet would not fit the bed; use <code>"portrait"</code> or <code>"landscape"</code> to specify it. The resolved paper settings are available in <code>plot.paper</code>.</p>
 
 <h2 id="fills">3. Fills</h2>
 <p>Replace the circle call with the square below. Keep <code>noFill()</code> for the screen drawing.</p>
@@ -200,7 +201,7 @@ async function plotTwoObjects() {
       <figcaption>Ochre shows the imported geometry becoming pen strokes. Sage connectors lead from one plan to three export formats; those connectors explain the workflow and are not plotter travel. A file can be a starting point too. <code>plot.engine.importSVG()</code> reads supported SVG geometry; the engine can then export SVG, HPGL or G-code. Try the engine’s <a href="../../vanilla.penplotter/examples/svg_to_pen/index.html">SVG to pen</a> page with a simple drawing of your own.</figcaption>
     </figure>
 
-<p>To save the recorded drawing as SVG, use <code>plot.engine.exportSVG()</code>. It returns SVG text which you can save as a file. Exporting does not open the plotter connection.</p>
+<p>To save the recorded drawing as SVG, use <code>plot.engine.exportSVG()</code>. It returns SVG text which you can save as a file. With the browser bundle, the SVG page is the machine bed (594 × 432 mm for the iDraw HSE / A2), not the sheet; the drawing keeps its position on the bed. Exporting does not open the plotter connection.</p>
 
 <p class="editor-demo-link"><a href="https://editor.p5js.org/seb_prjcts.be/sketches/6zLLSMygK" target="_blank" rel="noopener noreferrer">p5.js Web Editor</a></p>
     <details class="module-setups">
@@ -222,7 +223,7 @@ new p5(function sketch(p) {
 
   p.setup = function () {
     p.createCanvas(400, 400);
-    plot = p.createPlot({ paper: "A4", width: 100 });
+    plot = p.createPlot({ paper: "A4", paperX: 0, paperY: 0, width: 100 });
     p.noLoop();
   };
 
@@ -254,7 +255,7 @@ let plot;
 
 function setup() {
   createCanvas(400, 400);
-  plot = createPlot({ paper: "A4", width: 100 });
+  plot = createPlot({ paper: "A4", paperX: 0, paperY: 0, width: 100 });
   noLoop();
 }
 
@@ -301,13 +302,13 @@ install(p5);</code></pre>
     <div class="table-wrap">
     <table><thead><tr><th>Call or option</th><th>Units and behaviour</th></tr></thead><tbody>
       <tr><td><code>createPlot(options)</code></td><td>Returns a <code>P5Plot</code>. Shape coordinates are canvas pixels. <code>width</code>, <code>x</code> and <code>y</code> are millimetres; without paper or scale options, one pixel maps to one millimetre.</td></tr>
-      <tr><td><code>paper, margin, orientation</code></td><td>A0–A6; default margin 12 mm and orientation <code>auto</code>. Fits and centres the canvas. <code>width</code> or <code>mmPerPixel</code> overrides fitting; <code>paperX/paperY</code> locate the sheet from the machine origin. Set both to zero for paper in the starting corner; omitted values centre the sheet on the bed.</td></tr>
+      <tr><td><code>paper, margin, orientation</code></td><td>A0–A6; default margin 12 mm and orientation <code>auto</code>. Landscape puts the long side along X, portrait along Y. Fits and centres the canvas. <code>width</code> or <code>mmPerPixel</code> overrides fitting; <code>paperX/paperY</code> locate the sheet from the machine origin. Set both to zero for paper in the starting corner; omitted values centre the sheet on the bed.</td></tr>
       <tr><td><code>point, line, circle, ellipse, arc</code></td><td>Draw on screen and record geometry. Coordinates and sizes are canvas pixels; circle takes a diameter. A point records a 0.24 mm dash. Angles follow <code>angleMode()</code>.</td></tr>
       <tr><td><code>rect, square, triangle, quad</code></td><td>Draw and record shapes in canvas pixels. Rectangles use corner coordinates. Screen transforms and rounded corners are not recorded.</td></tr>
       <tr><td><code>polyline(points), polygon(points)</code></td><td>Accept <code>[x, y]</code> pairs or <code>{ x, y }</code> objects in canvas pixels. Polygon closes the path.</td></tr>
       <tr><td><code>hatch(points, spacing, angle), crossHatch(points, spacing, angle)</code></td><td>Fill a polygon with lines in one or two directions. Points are canvas pixels; spacing is millimetres on paper. Angles follow <code>angleMode()</code>.</td></tr>
       <tr><td><code>stipple(points, count, seed)</code></td><td>Fill a polygon with small marks. Points are canvas pixels. Count sets the number of marks; seed repeats their positions.</td></tr>
-      <tr><td><code>plot.engine.exportSVG()</code></td><td>Returns the recorded drawing as SVG text in physical units. Does not open a plotter connection.</td></tr>
+      <tr><td><code>plot.engine.exportSVG()</code></td><td>Returns the recorded drawing as SVG text in millimetres. With the browser bundle, the page is the machine bed, not the sheet. Does not open a plotter connection.</td></tr>
       <tr><td><code>clear(), plan(options)</code></td><td>Clear starts an empty recording. Plan returns the core PlotPlan and checks selected paper margins. <code>strategy: "drawn"</code> preserves drawing order.</td></tr>
       <tr><td><code>sequence(prepare, options)</code></td><td>One click starts the sequence. Clears before preparing each object and waits for completion. Return false to finish. Use plan to choose drawing order.</td></tr>
       <tr><td><code>showBed([canvas])</code></td><td>Shows the bed and paper with a red origin cross. Creates and reuses a separate preview when no canvas is supplied. Call after recording the drawing.</td></tr>

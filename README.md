@@ -48,7 +48,7 @@ let plot;
 
 function setup() {
   createCanvas(400, 400);
-  plot = createPlot({ paper: "A4", width: 100 });
+  plot = createPlot({ paper: "A4", paperX: 0, paperY: 0, width: 100 });
   noLoop();
 }
 
@@ -61,7 +61,9 @@ function draw() {
 }
 ```
 
-This example centres A4 paper on the configured machine bed. Set `paper` to the format on your plotter. `showBed()` displays the drawing's placement.
+This example places an A4 sheet in the machine's starting corner (`paperX: 0, paperY: 0`) and centres the drawing on that sheet. Set `paper` to the format on your plotter. `showBed()` displays the sheet and the drawing on the bed. Without `paperX` and `paperY`, the sheet is centred on the bed instead.
+
+The canvas is square, so the sheet lies landscape: its long side (297 mm) along X. On the iDraw HSE / A2, X runs along the long rails.
 
 `width: 100` makes the canvas 100 mm wide on paper. This circle has a diameter of 75 mm.
 
@@ -91,7 +93,7 @@ Replace the `createPlot()` line in `setup()` with this configuration for the tes
 
 ```js
 plot = createPlot({
-  paper: "A4", margin: 12,
+  paper: "A4", paperX: 0, paperY: 0, margin: 12,
   drawcore: {
     travel: { width: 420, height: 297 },
     penUp: 0.5, penDown: 5, penFeed: 1000,
@@ -102,6 +104,8 @@ plot = createPlot({
 ```
 
 Leave `width` out to fit the drawing inside the paper margins. Your drawing calls and `plot.go()` stay the same. Set the XY work origin before plotting; DrawCore does not take the carriage's current position as zero automatically. The [A3 H test page](docs/drawcore-test.html) lets you read the controller, test the pen and set that origin before trying a short line.
+
+With these axes, drawing X (up to 420 mm) is sent as the controller's −Y and drawing Y (up to 297 mm) as −X; `travel` is given in drawing coordinates. A line and a square look the same when mirrored, so the small test does not confirm this mapping over the whole bed. Before a larger plot, move the carriage over the full range with the pen up and plot an asymmetric shape such as the letter F. The axis labels in the bed preview describe the iDraw HSE / A2, not the A3 H.
 
 A 10 mm line and square, pen movement and return to the origin were tested with DrawCore V2.09. Larger drawings and stopping during motion still need a physical test. Stop lets accepted moves finish and is not an immediate emergency stop; the latest pen lift on stop has not been tested on the machine yet. DrawCore plots one drawing at a time; `plot.sequence()` and automatic resume are not implemented for it.
 
@@ -135,7 +139,7 @@ new p5(function sketch(p) {
 
   p.setup = function () {
     p.createCanvas(400, 400);
-    plot = p.createPlot({ paper: "A4", width: 100 });
+    plot = p.createPlot({ paper: "A4", paperX: 0, paperY: 0, width: 100 });
     p.noLoop();
   };
 
@@ -195,7 +199,7 @@ plot.polyline(points);
 
 ## Examples
 
-Each one is a standalone page under `examples/`; the [examples page](https://seb-prjcts-be.github.io/p5.penplotter/docs/examples.html) shows them live. Examples start on A4 and fit the canvas inside its margins; the calibration sheet keeps a fixed 200 × 280 mm canvas so its ruler stays in millimetres.
+Each one is a standalone page under `examples/`; the [examples page](https://seb-prjcts-be.github.io/p5.penplotter/docs/examples.html) shows them live. Examples place an A4 sheet in the starting corner and fit the canvas inside its margins; the calibration sheet keeps a fixed 200 × 280 mm canvas so its ruler stays in millimetres.
 
 Start with the two ways to work:
 
@@ -229,7 +233,7 @@ See [About](https://seb-prjcts-be.github.io/p5.penplotter/docs/about.html#relate
 - `plot.drawBed(canvas, { sheet })`: draws the planned strokes on the bed. Optional `sheet` describes actual paper with `x`, `y`, `width` and `height` in millimetres. By default it uses `plot.paper` when paper was selected, otherwise the mapped canvas area. Preview never scales or moves the drawing.
 - `drawPlanWithP5(p, plan, options)`: the same renderer without the prototype helper.
 
-`createPlot()` options: `paper`, `margin`, `orientation`, `paperX`, `paperY`, `width` or `mmPerPixel`, `x`, `y`, `profile`, `confirm`, `log`. Start with a paper format and margin; add a width when the drawing needs a fixed physical size. Use `clear()`, `plan()`, `connect()`, `go()` and `stop()` to control the job.
+`createPlot()` options: `paper`, `margin`, `orientation`, `paperX`, `paperY`, `width` or `mmPerPixel`, `x`, `y`, `profile`, `confirm`, `log`. Start with a paper format and margin; add a width when the drawing needs a fixed physical size. `paperX: 0, paperY: 0` puts the sheet in the starting corner; without them it is centred on the bed. A landscape sheet has its long side along X, a portrait sheet along Y. Use `clear()`, `plan()`, `connect()`, `go()` and `stop()` to control the job.
 
 The [Guide](https://seb-prjcts-be.github.io/p5.penplotter/docs/guide.html#paper) explains paper formats, orientation and placement.
 
