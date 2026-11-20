@@ -8,13 +8,16 @@ frames=[]
 for tick in range(4):
  im=Image.new('P',(320,240),0); im.putpalette(palette); d=ImageDraw.Draw(im)
  # Physical bed at 1 pixel / 4 mm: 432 across, 594 along the rails.
- d.rectangle((184,32,291,180),fill=3)
- d.rectangle((184,32,288,180),outline=1)
+ d.rectangle((184,32,291,180),outline=1)
+ # A4 in the starting corner (paperX: 0, paperY: 0). A square canvas gives a
+ # landscape sheet: 297 mm along X (up the rails), 210 mm across Y.
+ d.rectangle((184,106,236,180),fill=3)
  for x in (178,181,295,298): d.line((x,29,x,187),fill=1)
  d.rectangle((175,180,301,187),outline=1)
- # 400 x 250 canvas, width 80 mm: 80 along X, 50 across Y.
- d.rectangle((187,158,199,177),fill=2)
- d.line((193,161,193,175),fill=0)
+ # 400 x 400 canvas, width 80 mm, x: 12, y: 12: an 80 mm square, 12 mm from
+ # the starting corner along both axes. Its circle is 60 mm across.
+ d.rectangle((187,157,207,177),fill=2)
+ d.ellipse((190,160,204,174),outline=0)
  d.rectangle((181,176,188,189),fill=0,outline=2)
  d.line((181,181,187,187),fill=4 if tick%2==0 else 3)
  d.line((181,187,187,181),fill=4 if tick%2==0 else 3)
@@ -22,10 +25,10 @@ for tick in range(4):
  d.text((301,22),'X',font=font,fill=1)
  d.line((191,205,283,205),fill=1); d.line((283,205,277,202),fill=1); d.line((283,205,277,208),fill=1)
  d.text((237,211),'Y',font=font,fill=1)
- for y,label,color in [(35,'Paper: A2',1),(73,'Drawing: 80 mm',2),(111,'x: 12   y: 12',2),(149,'Start: 0,0',4)]:
+ for y,label,color in [(35,'Paper: A4',1),(73,'Drawing: 80 mm',2),(111,'x: 12   y: 12',2),(149,'Start: 0,0',4)]:
   d.text((12,y),label,font=font,fill=color)
- d.line((105,45,166,45,184,55),fill=1)
- d.line((125,88,158,88,193,158),fill=2)
+ d.line((105,45,166,45,186,108),fill=1)
+ d.line((125,88,158,88,197,157),fill=2)
  d.line((116,161,152,161,181,183),fill=4)
  frames.append(im.resize((640,480),Image.Resampling.NEAREST))
 frames[0].save(OUT,save_all=True,append_images=frames[1:],duration=700,loop=0,optimize=False,disposal=2)
